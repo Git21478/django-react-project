@@ -1,0 +1,9 @@
+/* Footer */
+.footer_container {
+    display: flex;
+    justify-content: center;
+    /* flex: 0 0 auto; */
+    background-color: #AC1A1A;
+    color: white;
+    margin-top: auto;
+}

@@ -1,0 +1,16 @@
+.sort_bar_left_wrapper {
+    color: white;
+    background-color: #767165;
+    border: 2px solid #AC1A1A;
+    width: 360px;
+    height: 680px;
+    padding: 20px;
+}
+
+.product_sort_menu_header {
+    text-align: center;
+}
+
+.filter_element {
+    margin: 20px 0;
+}

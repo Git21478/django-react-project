@@ -1,0 +1,27 @@
+.header_right {
+    display: flex;
+}
+
+.header_icon {
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
+    /* border: 1px solid black; */
+}
+.header_icon:hover {
+    cursor: pointer;
+}
+
+.header_favorites_icon {
+    position: relative;
+    top: 1px;
+}
+
+.header_avatar_icon {
+    border-radius: 50%;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}

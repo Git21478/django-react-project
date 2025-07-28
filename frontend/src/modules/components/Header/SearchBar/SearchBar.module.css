@@ -1,0 +1,17 @@
+.search_bar {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    height: 30px;
+}
+
+.search_bar_element {
+    height: 30px;
+    width: 480px;
+    border: none;
+    padding: 0 10px;
+}
+
+.search_bar button {
+    cursor: pointer;
+}

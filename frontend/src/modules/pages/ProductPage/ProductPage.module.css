@@ -1,0 +1,13 @@
+.product_page_wrapper {
+    margin: 20px 120px;
+    color: white;
+}
+
+.product_page_reviews_section {
+    display: flex;
+}
+
+.product_page_sorting_and_reviews_section {
+    width: 100%;
+    margin: 0 0 20px 20px;
+}

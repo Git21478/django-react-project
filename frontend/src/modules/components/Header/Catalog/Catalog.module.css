@@ -1,0 +1,22 @@
+.catalog_wrapper {
+    position: fixed;
+    top: 84px;
+    left: 120px;
+    background-color: grey;
+    width: 480px;
+    font-size: 24px;
+}
+
+.category {
+    padding: 12px 20px;
+    border: 1px solid black;
+    list-style-type: none;
+}
+
+.category a {
+    text-decoration: none;
+    color: white;
+}
+.category a:hover {
+    color: #AC1A1A;
+}

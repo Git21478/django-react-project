@@ -1,0 +1,19 @@
+.header_wrapper {
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    height: 32px;
+    padding: 16px;
+    background-color: #AC1A1A;
+    color: white;
+}
+
+.header_wrapper a {
+    text-decoration: none;
+    color: white;
+}
+.header_wrapper a:hover {
+    cursor: pointer;
+    color: #a7a7a7;
+}

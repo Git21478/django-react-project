@@ -1,0 +1,28 @@
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    /* padding: 10px; */
+}
+
+.pagination span {
+    color: white;
+    border: 1px solid white;
+    margin: 5px;
+    padding: 10px;
+}
+
+.pagination a {
+    color: white;
+    text-decoration: none;
+}
+
+.pagination .current_page {
+    border: 1px solid red;
+    margin: 5px;
+    padding: 10px;
+}
+
+.pagination .current_page a {
+    color: rgb(255, 0, 0);
+}

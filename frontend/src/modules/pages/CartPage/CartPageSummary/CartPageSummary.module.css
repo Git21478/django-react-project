@@ -1,0 +1,30 @@
+.cart_page_summary_section_wrapper {
+    padding: 20px;
+    width: 360px;
+    height: 608px;
+}
+
+.cart_page_summary_section_header {
+    text-align: center;
+}
+
+.cart_page_summary_section_row {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.cart_page_summary_section_button_wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.cart_page_summary_section_button {
+    width: 100%;
+    height: 45px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 2px solid black;
+    background-color: #ac1a1a;;
+    color: white;
+}

@@ -1,0 +1,53 @@
+.review {
+    background-color: #767165;
+    color: #ccc;
+    border: 2px solid #AC1A1A;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+.review_title_date {
+    display: flex;
+    justify-content: space-between;
+    align-content: baseline;
+}
+
+.rate_author {
+    display: flex;
+}
+
+.review_title {
+    color: white;
+}
+
+.review_buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit_button {
+    background-color: rgb(27, 78, 34);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 12px 24px;
+}
+
+.delete_button {
+    background-color:  #AC1A1A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 12px 24px;
+}
+
+.star_icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 1px;
+    margin-right: 3px;
+}

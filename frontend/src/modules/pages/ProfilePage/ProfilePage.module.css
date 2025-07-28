@@ -1,0 +1,24 @@
+.profile_page_wrapper {
+    color: #ccc;
+}
+
+.profile_page_section {
+    background-color: #d4ccb471;
+    width: 480px;
+    margin: 24px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #AC1A1A;
+}
+
+.profile_header {
+    color: white;
+}
+
+.profile_info {
+    display: flex;
+}
+
+.profile_avatar_image {
+    border: 2px solid black;
+}

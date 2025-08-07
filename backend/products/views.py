@@ -8,6 +8,7 @@ from rest_framework.pagination import PageNumberPagination, CursorPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from django.shortcuts import render
+from django.db.models import Avg
 
 #Brand
 class BrandCategoryList(generics.ListAPIView):
@@ -44,26 +45,30 @@ class ProductList(generics.ListAPIView):
     permission_classes = [AllowAny] # AllowAny / IsAdmin
 
     pagination_class = ProductPaginationPages
-    filter_backends = (SearchFilter, OrderingFilter)
+    filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ["name", "description"]
     ordering_fields = ["price", "rating"]
 
     def get_queryset(self):
-        return Product.objects.all()
+        return Product.objects.annotate(rating=Avg("reviews__rating"))
 
 class ProductCategoryList(generics.ListAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
     pagination_class = ProductPaginationPages
-    filter_backends = (SearchFilter, OrderingFilter)
+    filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ["name", "description"]
     ordering_fields = ["price", "rating"]
 
     def get_queryset(self):
-        price_min = self.request.query_params.get("priceMin", 0)
-        price_max = self.request.query_params.get("priceMax", 1000000000)
-        return Product.objects.filter(category__slug=self.kwargs["category_slug"], price__range=(price_min, price_max))
+        price_min = self.request.query_params.get("price_min", 0)
+        price_max = self.request.query_params.get("price_max", 1000000000)
+        selected_brands_ids = self.request.query_params.get("selected_brands_ids")
+        if selected_brands_ids:
+            selected_brands_ids = [int(i) for i in selected_brands_ids.split(",")]
+            return Product.objects.filter(category=self.kwargs["pk"], price__range=(price_min, price_max), brand__in=selected_brands_ids)
+        return Product.objects.filter(category=self.kwargs["pk"], price__range=(price_min, price_max))
 
 class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
@@ -84,8 +89,8 @@ class ReviewListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     pagination_class = ReviewPaginationPages
-    filter_backends = (OrderingFilter,)
-    ordering_fields = ("created_at", "rating")
+    filter_backends = [OrderingFilter]
+    ordering_fields = ["created_at", "rating"]
 
     def get_queryset(self):
         return Review.objects.filter(product=self.kwargs["product_id"])

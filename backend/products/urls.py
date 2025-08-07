@@ -7,7 +7,7 @@ urlpatterns = [
     path("categories/", views.CategoryList.as_view(), name="category-list"),
 
     path("products/", views.ProductList.as_view(), name="product-list"),
-    path("catalog/<slug:category_slug>/products/", views.ProductCategoryList.as_view(), name="product-list"),
+    path("catalog/<int:pk>/products/", views.ProductCategoryList.as_view(), name="product-list"),
     path("products/<int:pk>/", views.ProductRetrieveUpdateDestroy.as_view(), name="product-retrieve-change-delete"),
 
     path("products/<int:product_id>/reviews/", views.ReviewListCreate.as_view(), name="product-review-list"),

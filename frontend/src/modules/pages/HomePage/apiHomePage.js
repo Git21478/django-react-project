@@ -22,16 +22,24 @@ export const getCategoryProducts = (setProducts, setProductsAmount, currentPage,
         .catch((err) => console.log(err));
 };
 
-export const getFilteredProducts = (appData, priceMin, priceMax, selectedBrands) => {
+export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
+    const selectedBrandsIds = brands
+        .filter(brand => brand.checked === true)
+        .map(brand => brand.id);
+
+    console.log(appData);
     let url = `/api/catalog/${appData.currentCategory.id}/products/?pageSize=${appData.pageSize}&page=${appData.currentPage}&ordering=${appData.ordering}&search=${appData.search}`;
-    if (priceMin !== "") url += `&priceMin=${priceMin}`;
-    if (priceMax !== "") url += `&priceMax=${priceMax}`;
+    if (priceMin !== "") url += `&price_min=${priceMin}`;
+    if (priceMax !== "") url += `&price_max=${priceMax}`;
+    if (selectedBrandsIds !== "") url += `&selected_brands_ids=${selectedBrandsIds}`
 
     console.log(priceMin, priceMax);
-    console.log(selectedBrands.value);
+    console.log(selectedBrandsIds);
+
     api
         .get(url)
         .then((res) => {
+            console.log(res.data.results);
             appData.setIsGetFilteredProducts(true);
             appData.setProducts(res.data.results);
             appData.setProductsAmount(res.data.count);

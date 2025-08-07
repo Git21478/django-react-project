@@ -10,8 +10,13 @@ function SortBarLeft() {
     const appData = useContext(AppContext);
     const priceMin = useInput("");
     const priceMax = useInput("");
-    const selectedBrands = useInput("");
-    const [brands, setBrands] = useState("");
+    const [brands, setBrands] = useState();
+
+    const handleCheckboxChange = (id) => {
+        setBrands(brands.map(brand => {
+            return brand.id === id ? {...brand, checked: !brand.checked} : brand;
+        }));
+    };
 
     useEffect(() => {
         getCurrentCategoryBrands(appData.currentCategory, setBrands);
@@ -31,11 +36,13 @@ function SortBarLeft() {
                 <div className={styles.filter_element}>
                     <h2>Производитель</h2>
                     <div>
-                        {brands !== "" && brands.map((el) => {
+                        {brands && brands !== "" && brands.map((brand) => {
                             return (
-                                <div key={el.id}>
-                                    <input type="checkbox" id={el.id} value={el.name}/>
-                                    <label htmlFor={el.id}>{el.name}</label>
+                                <div key={brand.id}>
+                                    <label>
+                                        <input type="checkbox" checked={brand.checked} onChange={() => handleCheckboxChange(brand.id)}/>
+                                        {brand.name}
+                                    </label>
                                 </div>
                             )
                         })}
@@ -43,7 +50,7 @@ function SortBarLeft() {
                 </div>
 
                 <div className={styles.filter_element}>
-                    <input type="submit" value="Применить" onClick={() => getFilteredProducts(appData, priceMin.value, priceMax.value, selectedBrands)}/>
+                    <input type="submit" value="Применить" onClick={() => getFilteredProducts(appData, priceMin.value, priceMax.value, brands)}/>
                     <input type="submit" value="Сбросить" onClick={() => clearFilters(priceMin, priceMax)}/>
                 </div>
             </div>

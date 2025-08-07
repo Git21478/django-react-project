@@ -21,7 +21,7 @@ export const getProduct = (productId, setProduct) => {
 
 export const getReviews = (productId, reviewsOrdering, setReviews) => {
     api
-        .get(`/api/products/${productId}/reviews/?reviewsOrdering=${reviewsOrdering}`)
+        .get(`/api/products/${productId}/reviews/?ordering=${reviewsOrdering}`)
         .then((res) => {
             console.log(res.data.results);
             setReviews(res.data.results);

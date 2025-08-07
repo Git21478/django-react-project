@@ -17,7 +17,7 @@ function SortBarCenter({ setProductsOrdering }) {
 
             <select className={styles.select} {...productsOrderingType.input}>
                 <option value="price">По цене</option>
-                <option value="favorite_product_id">По сердечку</option>
+                {/* <option value="favorite_product_id">По сердечку</option> */}
                 <option value="rating">По рейтингу</option>
             </select>
 

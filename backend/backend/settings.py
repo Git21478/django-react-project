@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'products.apps.ProductsConfig',
     'rest_framework',
     'corsheaders',
+    'django_cleanup',
 ]
 
 MIDDLEWARE = [

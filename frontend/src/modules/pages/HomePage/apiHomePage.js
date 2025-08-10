@@ -11,9 +11,9 @@ export const getProducts = (setProducts, setProductsAmount, currentPage, pageSiz
         .catch((err) => console.log(err));
 };
 
-export const getCategoryProducts = (setProducts, setProductsAmount, currentPage, pageSize, ordering, search="", categorySlug="") => {
+export const getCategoryProducts = (setProducts, setProductsAmount, currentPage, pageSize, ordering, search="", categoryId="") => {
     api
-        .get(`/api/catalog/${categorySlug}/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${ordering}&search=${search}`)
+        .get(`/api/catalog/${categoryId}/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${ordering}&search=${search}`)
         .then((res) => {
             setProducts(res.data.results);
             setProductsAmount(res.data.count);

@@ -4,19 +4,16 @@ from .models import Product, Category
 
 @receiver(post_save, sender=Product)
 def update_category_brands(sender, instance, created, **kwargs):
-    if created and instance.category and instance.brand:
+    if instance.category and instance.brand:
         category = instance.category
         category.brands.add(instance.brand)
         category.save()
 
-# @receiver(post_delete, sender=Product)
-# def delete_category_brand(sender, instance, **kwargs):
-#     if instance.category and instance.brand:
-#         category = instance.category
-#         current_category_products = Product.objects.filter(category=category)
-#         print(current_category_products)
-#         print(current_category_products)
-#         print(current_category_products)
-#         if not current_category_products:
-#             category.brands.remove(instance.brand)
-#             category.save()
+@receiver(post_delete, sender=Product)
+def delete_category_brand(sender, instance, **kwargs):
+    if instance.category and instance.brand:
+        category_products_with_same_brand = Product.objects.filter(category=instance.category, brand=instance.brand)
+        if not category_products_with_same_brand:
+            category = instance.category
+            category.brands.remove(instance.brand)
+            category.save()

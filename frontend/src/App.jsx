@@ -5,9 +5,7 @@ import RegistrationPage from "./modules/pages/RegistrationPage/RegistrationPage"
 import NotFoundPage from "./modules/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "./modules/pages/ProfilePage/ProfilePage";
 import PasswordResetPage from "./modules/pages/PasswordResetPages/PasswordResetPage/PasswordResetPage";
-import PasswordResetDone from "./modules/pages/PasswordResetPages/PasswordResetDonePage/PasswordResetDonePage";
 import PasswordResetConfirm from "./modules/pages/PasswordResetPages/PasswordResetConfirmPage/PasswordResetConfirmPage";
-import PasswordResetComplete from "./modules/pages/PasswordResetPages/PasswordResetCompletePage/PasswordResetCompletePage";
 import CartPage from "./modules/pages/CartPage/CartPage";
 import CategoryPage from "./modules/pages/CategoryPage/CategoryPage";
 import HomePage from "./modules/pages/HomePage/HomePage";
@@ -22,11 +20,7 @@ function Logout() {
 
 function RegisterAndLogout() {
     localStorage.clear();
-    return (
-        <AppProvider>
-            <RegistrationPage/>
-        </AppProvider>
-    );
+    return <RegistrationPage/>;
 };
 
 function App() {
@@ -71,16 +65,25 @@ function App() {
                     </AppProvider>
                 }/>
                 <Route path="/logout" element={<Logout/>}/>
-                <Route path="/registration" element={<RegisterAndLogout/>}/>
+                <Route path="/registration" element={
+                    <AppProvider>
+                        <RegisterAndLogout/>
+                    </AppProvider>
+                }/>
 
                 <Route path="/password-reset" element={
                     <AppProvider>
                         <PasswordResetPage/>
                     </AppProvider>
                 }/>
-                <Route path="/password-reset-done" element={<PasswordResetDone/>}/>
-                <Route path="/password-reset-confirm/:uidb64/:token" element={<PasswordResetConfirm/>}/>
-                <Route path="/password-reset-complete" element={<PasswordResetComplete/>}/>
+
+                <Route path="/password-reset/confirm" element={
+                    <AppProvider>
+                        <PasswordResetConfirm/>
+                    </AppProvider>
+                }/>
+
+                {/* <Route path="/password-reset-confirm/:uidb64/:token" element={<PasswordResetConfirm/>}/> */}
                 
                 <Route path="*" element={<NotFoundPage/>}/>
             </Routes>

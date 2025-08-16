@@ -89,7 +89,7 @@ function AppProvider({ children }) {
             : !isGetFilteredProducts
                 ? getCategoryProducts(setProducts, setProductsAmount, currentPage, pageSize, productsOrdering, search, currentCategory.id)
                 : setIsGetFilteredProducts(false);
-    }, [currentPage, productsOrdering, productsAmount, currentCategory, cartProductsObject]);
+    }, [isAuthenticated, currentPage, productsOrdering, productsAmount, currentCategory, cartProductsObject]);
     
     return (
         <>

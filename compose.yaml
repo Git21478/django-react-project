@@ -9,8 +9,14 @@ services:
     container_name: backend_container
     build: ./backend
     depends_on:
-        - database
-    env_file: ./backend/.env
+      database:
+        condition: service_healthy
+        restart: true
+    env_file: ./backend/.env.django
+    environment:
+        DB_HOST: database
+    volumes:
+        - media_volume:/app/media
     ports:
         - "8000:8000"
   
@@ -18,20 +24,26 @@ services:
     container_name: database_container
     image: postgres:17.5-alpine3.22
     restart: always
+    secrets:
+        - postgres_password
+    env_file: .env.postgres
     environment:
-        POSTGRES_DB: postgres_db
-        POSTGRES_USER: postgres_admin
-        POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+        POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
     ports:
         - "5432:5432"
-    secrets:
-        - db_password
-    volumes:
-        - db-data:/var/lib/postgresql/data
 
 secrets:
-    db_password:
-        file: db_password.txt
+    postgres_password:
+        file: postgres_password.txt
 
 volumes:
-    db-data:
+    postgres_data:
+    media_volume:

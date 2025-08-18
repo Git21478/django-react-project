@@ -10,6 +10,7 @@
 }
 
 .product_image img {
+    box-sizing: border-box;
     border: 2px solid black;
     width: 160px;
     height: 160px;
@@ -58,6 +59,11 @@
     justify-content: space-between;
 }
 
+.product_bottom_left_section {
+    position: relative;
+    top: 10px;
+}
+
 .product_icon {
     width: 30px;
     height: 30px;
@@ -67,11 +73,10 @@
 }
 
 .star_icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     position: relative;
-    top: 3px;
-    right: -2px;
+    top: 4px;
 }
 
 .product_add_to_cart_button {

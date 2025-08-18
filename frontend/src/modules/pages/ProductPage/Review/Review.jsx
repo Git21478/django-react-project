@@ -17,19 +17,20 @@ function Review({ reviewObject, reviewsOrdering, setReviews }) {
         <div className={styles.review}>
             <div className={styles.review_title_date}>
                 <h2 className={styles.review_title}>{review.title}</h2>
-                <h3>{formattedDate}</h3>
+                <h3 className={styles.author_username}>@{review.authorUsername}</h3>
             </div>
+
             <p>{review.content}</p>
 
-            {showRatingStars(review.rating)}
+            <div className={styles.review_bottom}>
+                <div className={styles.rating_stars}>
+                    {showRatingStars(review.rating)}
+                </div>
 
-            <div className={styles.review_buttons}>
-                <span/>
-                <h2>@{review.authorUsername}</h2>
-                {isAllowed
-                    ? <button className={styles.delete_button} onClick={() => deleteReview(review, reviewsOrdering, setReviews)}>Delete</button>
-                    : <span/>
-                }
+                <div className={styles.review_bottom_right}>
+                    {isAllowed && <button className={styles.delete_button} onClick={() => deleteReview(review, reviewsOrdering, setReviews)}>Удалить</button>}
+                    <h4>{formattedDate}</h4>
+                </div>
             </div>
         </div>
     );

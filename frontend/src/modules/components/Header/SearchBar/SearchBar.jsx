@@ -31,7 +31,7 @@ function SearchBar() {
                 ref={searchInputRef}
             />
             <img
-                className={styles.header_icon}
+                className={`${styles.header_icon} ${styles.search_bar_icon}`}
                 src={search_icon}
                 alt="Search"
                 onClick={() => {

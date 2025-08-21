@@ -1,0 +1,4 @@
+.env.postgres
+*.dump
+compose.yaml
+postgres_password.txt

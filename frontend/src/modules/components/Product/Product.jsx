@@ -22,7 +22,12 @@ function Product({ product, setProducts }) {
                 </div>
 
                 <div className={styles.product_bottom}>
-                    <h3 className={styles.product_bottom_left_section}><img className={styles.star_icon} src={star_icon} alt="Star icon"/> {product.rating} | {product.review_amount} {pluralizedReviews}</h3>
+                    <h3 className={styles.product_bottom_left_section}>
+                        {product.review_amount != 0
+                            ? <span><img className={styles.star_icon} src={star_icon} alt="Star icon"/> {product.rating} | {product.review_amount} {pluralizedReviews}</span>
+                            : <span>Нет отзывов</span>
+                        } 
+                    </h3>
                     <div>
                         {!product.is_favorite_product
                             ? <img className={styles.product_icon} src={favorites_0_icon} alt="Favorites" onClick={() => addFavoriteProduct(product.id, setProducts)}/>

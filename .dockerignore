@@ -1,4 +1,9 @@
-.env.postgres
+.env*
+.gitignore
 *.dump
+*.md
+Dockerfile
 compose.yaml
 postgres_password.txt
+node_modules
+venv

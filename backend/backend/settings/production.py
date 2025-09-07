@@ -1,7 +1,8 @@
-from .base import *
 from dotenv import load_dotenv
 
-load_dotenv(".env.django.production")
+load_dotenv('.env.production')
+
+from .base import *
 
 DEBUG = False
 

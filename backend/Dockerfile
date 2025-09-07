@@ -1,5 +1,7 @@
 FROM python:3.13.5-alpine3.22
 
+ENV DJANGO_ENV=development
+
 WORKDIR /app
 
 RUN pip install --upgrade pip

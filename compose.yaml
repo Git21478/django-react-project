@@ -1,27 +1,27 @@
 services:
   frontend:
-    container_name: frontend_container
-    build: ./frontend
-    ports:
-        - "5173:5173"
+    container_name: frontend-container
+    build:
+        context: .
+        dockerfile: frontend/Dockerfile
+    env_file: ./frontend/.env.production
+    expose:
+        - 5173
 
   backend:
-    container_name: backend_container
+    container_name: backend-container
     build: ./backend
     depends_on:
       database:
         condition: service_healthy
         restart: true
-    env_file: ./backend/.env.django.production
-    environment:
-        DB_HOST: database
     volumes:
         - media_volume:/app/media
-    ports:
-        - "8000:8000"
+    expose:
+        - 8000
   
   database:
-    container_name: database_container
+    container_name: database-container
     image: postgres:17.5-alpine3.22
     restart: always
     secrets:
@@ -37,19 +37,17 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
-    ports:
-        - "5432:5432"
+    expose:
+        - 5432
     
   nginx:
-    container_name: nginx_container
-    image: nginx:1.29.1-alpine
+    container_name: nginx-container
+    build: ./nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
-    - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    - ./frontend/build:/usr/share/nginx/html:ro
-    - media_volume:/app/media:ro
+      - media_volume:/app/media
     depends_on:
       - backend
       - frontend

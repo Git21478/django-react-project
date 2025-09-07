@@ -1,7 +1,8 @@
-from .base import *
 from dotenv import load_dotenv
 
-load_dotenv(".env.django.development")
+load_dotenv('.env.development')
+
+from .base import *
 
 DEBUG = True
 

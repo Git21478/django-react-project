@@ -1,5 +1,4 @@
 import styles from "./CartProduct.module.css";
-import { frontendBaseURL } from "../../../../constants.js";
 import { useInput } from "../../../../hooks/useInput.js";
 import { changeCartProductQuantity, addFavoriteProduct, deleteFavoriteProduct, deleteCartProduct } from "./apiCartProduct.js";
 import favorites_0_icon from "../../../../assets/icons/favorites_0.png";
@@ -27,7 +26,7 @@ function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsI
 
             <div className={styles.cart_product_info}>
                 <div className={styles.cart_product_title_date}>
-                    <h2 className={styles.cart_product_title}><a href={`${frontendBaseURL}/products/${cartProduct.product.id}`}>{cartProduct.product.name}</a></h2>
+                    <h2 className={styles.cart_product_title}><a href={`/products/${cartProduct.product.id}`}>{cartProduct.product.name}</a></h2>
                 </div>
 
                 <div className={styles.cart_product_bottom}>

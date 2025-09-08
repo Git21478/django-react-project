@@ -4,8 +4,6 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY')
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -33,6 +31,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_cleanup',
     'django_rest_passwordreset',
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
+    'health_check.contrib.migrations',
 ]
 
 MIDDLEWARE = [

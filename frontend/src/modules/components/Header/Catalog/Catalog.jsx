@@ -1,6 +1,5 @@
 import styles from "./Catalog.module.css";
 import { useContext } from "react";
-import { frontendBaseURL } from "../../../../constants";
 import { AppContext } from "../../../AppProvider/AppProvider";
 
 function Catalog() {
@@ -13,7 +12,7 @@ function Catalog() {
                     {appData.categories.sort((a, b) => a.id - b.id).map(category => {
                         return (
                             <li className={styles.category} key={category.id}>
-                                <a href={`${frontendBaseURL}/catalog/${category.slug}`}>{category.name}</a>
+                                <a href={`/catalog/${category.slug}`}>{category.name}</a>
                             </li>
                         )
                     })}

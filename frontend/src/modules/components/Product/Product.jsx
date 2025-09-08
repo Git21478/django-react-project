@@ -1,5 +1,4 @@
 import styles from "./Product.module.css";
-import { frontendBaseURL } from "../../../constants.js";
 import star_icon from "../../../assets/icons/star.png";
 import favorites_0_icon from "../../../assets/icons/favorites_0.png";
 import favorites_1_icon from "../../../assets/icons/favorites_1.png";
@@ -17,7 +16,7 @@ function Product({ product, setProducts }) {
 
             <div className={styles.product_info}>
                 <div className={styles.product_title_date}>
-                    <h2 className={styles.product_title}><a href={`${frontendBaseURL}/products/${product.id}`}>{product.name}</a></h2>
+                    <h2 className={styles.product_title}><a href={`/products/${product.id}`}>{product.name}</a></h2>
                     <h2>{product.price} &#8381;</h2>
                 </div>
 
@@ -36,7 +35,7 @@ function Product({ product, setProducts }) {
 
                         {!product.is_cart_product
                             ? <button className={styles.product_add_to_cart_button} onClick={() => addCartProduct(product.id, setProducts)}>Купить</button>
-                            : <button className={styles.product_cart_page_link_button}><a href={`${frontendBaseURL}/cart`}>В корзине</a></button>
+                            : <button className={styles.product_cart_page_link_button}><a href="/cart">В корзине</a></button>
                         }
                     </div>
                 </div>

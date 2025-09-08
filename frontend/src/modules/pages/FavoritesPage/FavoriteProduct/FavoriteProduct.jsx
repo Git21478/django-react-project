@@ -1,5 +1,4 @@
 import styles from "./FavoriteProduct.module.css";
-import { frontendBaseURL } from "../../../../constants.js";
 import favorites_1_icon from "../../../../assets/icons/favorites_1.png";
 import { handleCheckboxFavoriteProduct, pluralize } from "./utilsFavoriteProduct.js";
 import { addCartProduct, deleteFavoriteProduct } from "./apiFavoriteProduct.js";
@@ -22,7 +21,7 @@ function FavoriteProduct({ favoriteProduct, setFavoriteProducts, selectedFavorit
 
             <div className={styles.favorite_product_info}>
                 <div className={styles.favorite_product_title_date}>
-                    <h2 className={styles.favorite_product_title}><a href={`${frontendBaseURL}/products/${favoriteProduct.product.id}`}>{favoriteProduct.product.name}</a></h2>
+                    <h2 className={styles.favorite_product_title}><a href={`/products/${favoriteProduct.product.id}`}>{favoriteProduct.product.name}</a></h2>
                     <h2>{favoriteProduct.product.price} &#8381;</h2>
                 </div>
 
@@ -33,7 +32,7 @@ function FavoriteProduct({ favoriteProduct, setFavoriteProducts, selectedFavorit
 
                         {!favoriteProduct.product.is_cart_product
                             ? <button className={styles.favorite_product_add_to_cart_button} onClick={() => addCartProduct(favoriteProduct.product.id, setFavoriteProducts)}>Купить</button>
-                            : <button className={styles.favorite_product_cart_page_link_button}><a href={`${frontendBaseURL}/cart`}>В корзине</a></button>
+                            : <button className={styles.favorite_product_cart_page_link_button}><a href="/cart">В корзине</a></button>
                         }
                     </div>
                 </div>

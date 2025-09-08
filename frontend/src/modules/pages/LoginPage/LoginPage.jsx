@@ -1,5 +1,4 @@
 import styles from "../AuthPage.module.css";
-import { frontendBaseURL } from "../../../constants.js";
 import { useInput } from "../../../hooks/useInput.js";
 import { login } from "./apiLoginPage.js";
 import { useNavigate } from "react-router-dom";
@@ -60,8 +59,8 @@ function LoginPage() {
                         </div>
 
                         <div className={styles.auth_links}>
-                            <a href={`${frontendBaseURL}/password-reset`}>Забыли пароль?</a>
-                            <a href={`${frontendBaseURL}/registration`}>Регистрация</a>
+                            <a href="/password-reset">Забыли пароль?</a>
+                            <a href="/registration">Регистрация</a>
                         </div>
                     </div>
                 </form>

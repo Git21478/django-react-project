@@ -1,14 +1,14 @@
+import os
 from dotenv import load_dotenv
 
 load_dotenv('.env.development')
 
 from .base import *
 
+SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
-
 ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://localhost:5173']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 
 DATABASES = {
     'default': {

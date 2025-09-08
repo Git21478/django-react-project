@@ -1,7 +1,6 @@
 import styles from "../AuthPage.module.css";
 import { useNavigate } from "react-router-dom";
 import { useInput } from "../../../hooks/useInput";
-import { frontendBaseURL } from "../../../constants";
 import { register } from "./apiRegistrationPage";
 import PageTemplate from "../../PageTemplate/PageTemplate";
 
@@ -69,7 +68,7 @@ function RegistrationPage() {
 
                         <div className={styles.auth_links}>
                             <span></span>
-                            <a href={`${frontendBaseURL}/login`}>Вход в аккаунт</a>
+                            <a href="/login">Вход в аккаунт</a>
                         </div>
                     </div>
                 </form>

@@ -9,4 +9,9 @@ urlpatterns = [
 
     path("api/", include("users.urls")),
     path("api/", include("products.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    path("health/", include('health_check.urls')),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

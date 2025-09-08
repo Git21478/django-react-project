@@ -2,10 +2,11 @@ FROM nginx:1.29.1-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx-main.conf /etc/nginx/nginx.conf
 
-RUN mkdir -p /app/backend/media
+COPY reverse-proxy.conf /etc/nginx/conf.d/default.conf
 
-RUN chown -R nginx:nginx /app
+EXPOSE 80
+# EXPOSE 80 443
 
-EXPOSE 80 443
+CMD ["nginx", "-g", "daemon off;"]

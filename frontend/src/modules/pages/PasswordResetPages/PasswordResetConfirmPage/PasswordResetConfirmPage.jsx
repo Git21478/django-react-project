@@ -1,6 +1,5 @@
 import styles from "../../AuthPage.module.css";
 import PageTemplate from "../../../PageTemplate/PageTemplate";
-import { frontendBaseURL } from "../../../../constants";
 import { useInput } from "../../../../hooks/useInput";
 import { resetPasswordConfirm } from "./apiPasswordResetConfirm";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -44,8 +43,8 @@ function PasswordResetConfirmPage() {
                     </div>
 
                     <div className={styles.auth_links}>
-                        <a href={`${frontendBaseURL}/registration`}>Регистрация</a> 
-                        <a href={`${frontendBaseURL}/login`}>Вход в аккаунт</a>
+                        <a href="/registration">Регистрация</a> 
+                        <a href="/login">Вход в аккаунт</a>
                     </div>
                 </form>
             </div>

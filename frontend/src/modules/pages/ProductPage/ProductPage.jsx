@@ -6,7 +6,6 @@ import ReviewCreation from "./ReviewCreation/ReviewCreation";
 import Review from "./Review/Review";
 import Product from "../../components/Product/Product";
 import { AppContext } from "../../AppProvider/AppProvider";
-import { frontendBaseURL } from "../../../constants";
 import PageTemplate from "../../PageTemplate/PageTemplate";
 import ReviewSortBar from "./ReviewSortBar/ReviewSortBar";
 
@@ -39,7 +38,7 @@ function ProductPage() {
         <PageTemplate>
             <div className={styles.product_page_wrapper}>
                 <div>
-                    <a href={`${frontendBaseURL}/catalog/${category.slug}`}>{category.name}</a> {">"} {pageTitle}
+                    <a href={`/catalog/${category.slug}`}>{category.name}</a> {">"} {pageTitle}
                 </div>
 
                 <div>

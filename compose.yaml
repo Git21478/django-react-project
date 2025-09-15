@@ -22,6 +22,7 @@ services:
     networks:
       - app-network
     volumes:
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
@@ -63,6 +64,7 @@ services:
     networks:
       - app-network
     volumes:
+      - static_volume:/app/staticfiles:ro
       - media_volume:/app/media:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /var/www/certbot:/var/www/certbot
@@ -83,4 +85,5 @@ secrets:
 
 volumes:
   postgres_data:
+  static_volume:
   media_volume:

@@ -13,7 +13,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p /app/staticfiles
+RUN mkdir -p /app/staticfiles /app/media && \
+    chmod -R 755 /app/staticfiles /app/media
 
 EXPOSE 8000
 

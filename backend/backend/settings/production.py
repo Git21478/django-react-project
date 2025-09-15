@@ -7,8 +7,8 @@ from .base import *
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = False
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://djangostore.ru']
+ALLOWED_HOSTS = ['djangostore.ru', 'www.djangostore.ru']
+CSRF_TRUSTED_ORIGINS = ['https://djangostore.ru', 'https://www.djangostore.ru']
 # CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
 DATABASES = {

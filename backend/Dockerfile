@@ -1,4 +1,4 @@
-FROM python:3.13.5-alpine3.22
+FROM python:3.13.5-alpine3.22 AS builder
 
 RUN apk add --no-cache curl
 
@@ -12,6 +12,20 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
+
+RUN python manage.py collectstatic --noinput
+
+FROM python:3.13.5-alpine3.22 AS production
+
+RUN apk add --no-cache curl
+
+ENV DJANGO_ENV=development
+
+WORKDIR /app
+
+COPY --from=builder /root/.local /root/.local
+COPY --from=builder /app /app
+COPY --from=builder /app/staticfiles /app/staticfiles
 
 EXPOSE 8000
 

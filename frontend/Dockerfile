@@ -1,4 +1,4 @@
-FROM node:22.17.1-alpine3.21 AS builder
+FROM node:22.17-alpine3.21 AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN npm run build
 
 
 
-FROM nginx:1.29.1-alpine AS production
+FROM nginx:1.29-alpine AS production
 
 RUN rm /etc/nginx/conf.d/default.conf
 

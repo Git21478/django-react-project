@@ -13,9 +13,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p /app/staticfiles /app/media && \
-    chmod -R 755 /app/staticfiles /app/media
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["sh", "-c", " python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn -c gunicorn.py --bind 0.0.0.0:8000 backend.wsgi:application"]
+CMD ["sh", "-c", " python manage.py migrate --noinput && gunicorn -c gunicorn.py --bind 0.0.0.0:8000 backend.wsgi:application"]

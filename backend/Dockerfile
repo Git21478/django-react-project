@@ -6,7 +6,7 @@ ENV DJANGO_ENV=development
 
 WORKDIR /app
 
-RUN pip install --user --upgrade pip
+RUN pip install --upgrade pip
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
@@ -14,6 +14,8 @@ RUN pip install -r requirements.txt
 COPY . .
 
 RUN python manage.py collectstatic --noinput
+
+
 
 FROM python:3.13.5-alpine3.22 AS production
 
@@ -23,9 +25,10 @@ ENV DJANGO_ENV=development
 
 WORKDIR /app
 
-COPY --from=builder /root/.local /root/.local
 COPY --from=builder /app /app
 COPY --from=builder /app/staticfiles /app/staticfiles
+
+RUN pip install -r requirements.txt
 
 EXPOSE 8000
 

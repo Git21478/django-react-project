@@ -6,7 +6,7 @@ ENV DJANGO_ENV=development
 
 WORKDIR /app
 
-RUN pip install --upgrade pip
+RUN pip install --user --upgrade pip
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt

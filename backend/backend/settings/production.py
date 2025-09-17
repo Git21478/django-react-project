@@ -7,7 +7,14 @@ from .base import *
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = False
-ALLOWED_HOSTS = ['djangostore.ru', 'www.djangostore.ru']
+ALLOWED_HOSTS = [
+    'djangostore.ru',
+    'www.djangostore.ru',
+    'localhost',
+    '127.0.0.1',
+    'backend-container',
+    '::1',
+]
 CSRF_TRUSTED_ORIGINS = ['https://djangostore.ru', 'https://www.djangostore.ru']
 # CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
@@ -24,6 +31,10 @@ DATABASES = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

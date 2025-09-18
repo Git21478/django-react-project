@@ -31,7 +31,6 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         "username": reset_password_token.user.username,
         "email": reset_password_token.user.email,
         "reset_password_url": "{}?token={}".format(
-            # instance.request.build_absolute_uri(reverse("password-reset:reset-password-confirm")),
             "{}/password-reset/confirm/".format(instance.request.get_host()),
             reset_password_token.key)
     }

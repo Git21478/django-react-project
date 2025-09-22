@@ -17,6 +17,7 @@ function Product({ product, setProducts }) {
             <div className={styles.product_info}>
                 <div className={styles.product_title_date}>
                     <h2 className={styles.product_title}><a href={`/products/${product.id}`}>{product.name}</a></h2>
+                    <h3>{product.description}</h3>
                     <h2>{product.price} &#8381;</h2>
                 </div>
 

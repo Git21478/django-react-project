@@ -1,8 +1,10 @@
+import styles from "./InfoField.module.css";
+
 function InfoField({ editing=true, fieldName, fieldValue, setFieldValue, fieldType }) {
     if (!editing) {
         return (
             <tr>
-                <td>{fieldName}</td>
+                <td className={styles.field_name}>{fieldName}</td>
 
                 {(fieldType === "text" || fieldType === "tel") &&
                     <td>{fieldValue}</td>
@@ -22,7 +24,7 @@ function InfoField({ editing=true, fieldName, fieldValue, setFieldValue, fieldTy
     } else {
         return (
             <tr>
-                <td>{fieldName}</td>
+                <td className={styles.field_name}>{fieldName}</td>
 
                 {(fieldType === "text" || fieldType === "tel") &&
                     <td>

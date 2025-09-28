@@ -1,31 +1,25 @@
-.favorite_product_container {
-    display: flex;
+.product_container {
     background-color: #767165;
     color: white;
     border: 2px solid #AC1A1A;
-    height: 160px;
+    /* border-radius: 5px; */
+    height: 200px;
     margin: 20px 0;
     padding: 20px;
 }
 
-.favorite_product_image img {
+.product_top {
+    display: flex;
+}
+
+.product_image img {
+    box-sizing: border-box;
     border: 2px solid black;
     width: 160px;
     height: 160px;
 }
 
-.favorite_product_checkbox {
-    position: relative;
-    top: -20px;
-    right: -2px;
-}
-
-.favorite_product_container h2 {
-    margin: 0;
-    padding: 0;
-}
-
-.favorite_product_info {
+.product_info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -33,40 +27,44 @@
     width: 100%;
 }
 
-.content {
-    width: 100%;
-    height: 60px;
-    font-size: 1rem;
-}
-
-.favorite_product_title_date {
+.product_title {
     display: flex;
     justify-content: space-between;
-    align-content: baseline;
+    width: 100%;
+    white-space: nowrap;
 }
 
-.favorite_product_title a {
+.product_title_price {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 20px;
+}
+
+.product_title_name a {
     font-size: 1.6rem;
     text-decoration: none;
     color: white;
 }
-.favorite_product_title a:hover {
+.product_title_name a:hover {
     color: #ac1a1a;
 }
 
-.favorite_product_description {
+.product_description {
     color: #ccc;
-    height: 72px;
-    max-height: 72px;
     overflow: hidden;
 }
 
-.favorite_product_bottom {
+.product_bottom {
     display: flex;
     justify-content: space-between;
 }
 
-.favorite_product_icon {
+.product_bottom_left_section {
+    position: relative;
+    top: 10px;
+}
+
+.product_icon {
     width: 30px;
     height: 30px;
     position: relative;
@@ -81,7 +79,7 @@
     top: 4px;
 }
 
-.favorite_product_add_to_cart_button {
+.product_add_to_cart_button {
     width: 120px;
     height: 45px;
     font-size: 20px;
@@ -91,7 +89,7 @@
     color: black;
 }
 
-.favorite_product_cart_page_link_button {
+.product_cart_page_link_button {
     width: 120px;
     height: 45px;
     font-size: 20px;

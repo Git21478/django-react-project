@@ -9,19 +9,19 @@ export const getUserId = (setUserId) => {
         .catch((err) => console.log(err));
 };
 
-export const getProduct = (productId, setProduct) => {
+export const getProductPageProduct = (productPageProductId, setProductPageProduct) => {
     api
-        .get(`/api/products/${productId}/`)
+        .get(`/api/products/${productPageProductId}/`)
         .then((res) => {
             console.log(res.data);
-            setProduct(res.data);
+            setProductPageProduct(res.data);
         })
         .catch((err) => console.log(err));
 };
 
-export const getReviews = (productId, reviewsOrdering, setReviews) => {
+export const getReviews = (productPageProductId, reviewsOrdering, setReviews) => {
     api
-        .get(`/api/products/${productId}/reviews/?ordering=${reviewsOrdering}`)
+        .get(`/api/products/${productPageProductId}/reviews/?ordering=${reviewsOrdering}`)
         .then((res) => {
             console.log(res.data.results);
             setReviews(res.data.results);

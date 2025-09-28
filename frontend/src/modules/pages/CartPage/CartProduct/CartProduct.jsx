@@ -25,13 +25,14 @@ function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsI
             </div>
 
             <div className={styles.cart_product_info}>
-                <div className={styles.cart_product_title_date}>
+                <div className={styles.cart_product_top}>
                     <h2 className={styles.cart_product_title}><a href={`/products/${cartProduct.product.id}`}>{cartProduct.product.name}</a></h2>
+                    <p className={styles.cart_product_description}>{cartProduct.product.description}</p>
                 </div>
 
                 <div className={styles.cart_product_bottom}>
                     <div className={styles.cart_product_bottom_price}>
-                        <h3>{cartProduct.product.price} &#8381;</h3>
+                        <h3>{cartProduct.product.price} &#8381; &nbsp;</h3>
 
                         <h3>
                             <button onClick={() => {
@@ -55,7 +56,7 @@ function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsI
                         </h3>
                     
                         <h3 className={styles.cart_product_price}>
-                            {cartProduct.product.price * quantity.value} &#8381;
+                            &nbsp; {cartProduct.product.price * quantity.value} &#8381;
                         </h3>
                     </div>
 

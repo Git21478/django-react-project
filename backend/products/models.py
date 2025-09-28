@@ -57,7 +57,7 @@ class Product(models.Model):
         review_amount = len(reviews)
         if review_amount != 0:
             rating = sum([review.rating for review in reviews]) / review_amount
-            rating = round(rating, 2)
+            rating = {f"{rating:.1f}"}
             return rating
         return None
     

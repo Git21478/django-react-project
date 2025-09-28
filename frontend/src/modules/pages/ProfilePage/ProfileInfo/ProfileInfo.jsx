@@ -51,7 +51,7 @@ function ProfileInfo() {
                             <InfoField editing={editing} fieldName="Имя пользователя" fieldValue={username === null ? "" : username} setFieldValue={setUsername} fieldType="text"/>
                             <InfoField editing={editing} fieldName="Номер телефона" fieldValue={phone === null ? "" : phone} setFieldValue={setPhone} fieldType="tel"/>
                             <InfoField editing={editing} fieldName="Город" fieldValue={city === null ? "" : city} setFieldValue={setCity} fieldType="text"/>
-                            <InfoField editing={editing} fieldName="Аватар" fieldValue={avatar === null ? "" : avatar} setFieldValue={setAvatarFile} fieldType="image"/>
+                            {editing && <InfoField editing={editing} fieldName="Аватар" fieldValue={avatar === null ? "" : avatar} setFieldValue={setAvatarFile} fieldType="image"/>}
                         </tbody>
                     </table>
 

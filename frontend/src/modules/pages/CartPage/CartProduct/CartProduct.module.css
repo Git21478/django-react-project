@@ -45,18 +45,21 @@
     font-size: 1rem;
 }
 
-.cart_product_title_date {
-    display: flex;
-    justify-content: space-between;
-    align-content: baseline;
-}
-
-.cart_product_title a {
+.cart_product_title {
     font-size: 1.6rem;
     text-decoration: none;
+    height: 30px;
+    overflow: hidden;
 }
 .cart_product_title a:hover {
     color: #ac1a1a;
+}
+
+.cart_product_description {
+    color: #ccc;
+    height: 72px;
+    max-height: 72px;
+    overflow: hidden;
 }
 
 .cart_product_bottom {

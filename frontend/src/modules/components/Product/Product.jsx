@@ -15,7 +15,7 @@ function Product({ product, setProducts }) {
             </div>
 
             <div className={styles.product_info}>
-                <div className={styles.product_title_date}>
+                <div className={styles.product_top}>
                     <div className={styles.product_title}>
                         <h2 className={styles.product_title_name}><a href={`/products/${product.id}`}>{product.name}</a></h2>
                         <h2 className={styles.product_title_price}>{product.price} &#8381;</h2>

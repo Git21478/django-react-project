@@ -1,38 +1,38 @@
 import styles from "./ProductPage.module.css";
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { getProduct, getReviews } from "./apiProductPage";
+import { getProductPageProduct, getReviews } from "./apiProductPage";
 import ReviewCreation from "./ReviewCreation/ReviewCreation";
 import Review from "./Review/Review";
-import Product from "../../components/Product/Product";
 import { AppContext } from "../../AppProvider/AppProvider";
 import PageTemplate from "../../PageTemplate/PageTemplate";
 import ReviewSortBar from "./ReviewSortBar/ReviewSortBar";
+import ProductPageProduct from "./ProductPageProduct/ProductPageProduct";
 
 function ProductPage() {
     const [pageTitle, setPageTitle] = useState("Товар");
     document.title = `${pageTitle} | Магазин`;
     const appData = useContext(AppContext);
-    const productId = useParams().product_id;
+    const productPageProductId = useParams().product_id;
     const [category, setCategory] = useState("");
-    const [product, setProduct] = useState("");
+    const [productPageProduct, setProductPageProduct] = useState("");
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-        getProduct(productId, setProduct);
+        getProductPageProduct(productPageProductId, setProductPageProduct);
     }, []);
 
     useEffect(() => {
-        getReviews(productId, appData.reviewsOrdering, setReviews);
+        getReviews(productPageProductId, appData.reviewsOrdering, setReviews);
     }, [appData.reviewsOrdering]);
 
     useEffect(() => {
-        (appData.categories && product.category) && setCategory(appData.categories.find(category1 => category1.id === product.category));
-    }, [appData.categories, product]);
+        (appData.categories && productPageProduct.category) && setCategory(appData.categories.find(category1 => category1.id === productPageProduct.category));
+    }, [appData.categories, productPageProduct]);
 
     useEffect(() => {
-        product && setPageTitle(product.name);
-    }, [product]);
+        productPageProduct && setPageTitle(productPageProduct.name);
+    }, [productPageProduct]);
 
     return (
         <PageTemplate>
@@ -42,13 +42,13 @@ function ProductPage() {
                 </div>
 
                 <div>
-                    {product && <Product product={product}/>}
+                    {productPageProduct && <ProductPageProduct productPageProduct={productPageProduct} setProductPageProduct={setProductPageProduct}/>}
                 </div>
 
                 <div>
                     <div className={styles.product_page_reviews_section}>
                         <div>
-                            <ReviewCreation product_id={productId} reviewsOrdering={appData.reviewsOrdering} setReviews={setReviews}/>
+                            <ReviewCreation product_id={productPageProductId} reviewsOrdering={appData.reviewsOrdering} setReviews={setReviews}/>
                         </div>
 
                         <div className={styles.product_page_sorting_and_reviews_section}>

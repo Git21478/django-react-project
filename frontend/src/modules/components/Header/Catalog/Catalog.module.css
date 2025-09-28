@@ -6,6 +6,7 @@
     width: 480px;
     font-size: 24px;
     z-index: 1000;
+    isolation: isolate;
 }
 
 .category {

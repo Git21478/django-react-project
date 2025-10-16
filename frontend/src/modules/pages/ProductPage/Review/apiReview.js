@@ -1,16 +1,6 @@
 import api from "../../../../api";
 import { getReviews } from "../apiProductPage";
 
-export const getAuthorUsername = (review, setReview) => {
-    api.get(`/api/user/${review.author}/`)
-    .then((res) => {
-        console.log(res.data);
-        setReview({...review, authorUsername: res.data.username});
-        console.log(review);
-    })
-    .catch((err) => console.log(err));
-};
-
 export const reviewIsAllowedCheck = (review, setIsAllowed) => {
     api
         .get("/api/user/")

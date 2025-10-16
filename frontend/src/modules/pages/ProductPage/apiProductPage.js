@@ -23,6 +23,7 @@ export const getReviews = (productPageProductId, reviewsOrdering, setReviews) =>
     api
         .get(`/api/products/${productPageProductId}/reviews/?ordering=${reviewsOrdering}`)
         .then((res) => {
+            console.log(res);
             console.log(res.data.results);
             setReviews(res.data.results);
         })

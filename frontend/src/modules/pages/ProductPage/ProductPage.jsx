@@ -58,7 +58,7 @@ function ProductPage() {
 
                             <div>
                                 {reviews && reviews.map(review => (
-                                    <Review reviewObject={review} reviewsOrdering={appData.reviewsOrdering} setReviews={setReviews} key={review.id}/>
+                                    <Review review={review} reviewsOrdering={appData.reviewsOrdering} setReviews={setReviews} key={review.id}/>
                                 ))}
                             </div>
                         </div>

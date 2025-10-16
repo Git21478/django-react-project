@@ -1,4 +1,5 @@
 from .models import Brand, Category, Product, Review, FavoriteProduct, CartProduct
+from users.models import User
 from .serializers import BrandSerializer, CategorySerializer, ProductSerializer, ReviewSerializer, FavoriteProductSerializer, FavoriteProductCreateSerializer, CartProductSerializer, CartProductCreateSerializer
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.core.exceptions import ValidationError
@@ -93,7 +94,7 @@ class ReviewListCreate(generics.ListCreateAPIView):
     ordering_fields = ["created_at", "rating"]
 
     def get_queryset(self):
-        return Review.objects.filter(product=self.kwargs["product_id"])
+        return Review.objects.select_related("author").filter(product=self.kwargs["product_id"])
     
     def perform_create(self, serializer):
         duplicate = Review.objects.filter(product=self.request.data.get("product"), author=self.request.user)

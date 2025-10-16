@@ -43,10 +43,11 @@ class ProductSerializer(serializers.ModelSerializer):
         return obj.get_is_cart_product(self.context["request"].user)
 
 class ReviewSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source="author.username", read_only=True)
+
     class Meta:
         model = Review
         fields = ["id", "title", "content", "rating", "created_at", "author", "product"]
-        extra_kwargs = {"author": {"read_only": True}}
     
     def validate(self, data):
         if data["rating"] > 5:

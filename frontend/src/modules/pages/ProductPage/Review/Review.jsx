@@ -1,15 +1,13 @@
 import styles from "./Review.module.css";
 import { useEffect, useState } from "react";
-import { getAuthorUsername, deleteReview, reviewIsAllowedCheck } from "../../../pages/ProductPage/Review/apiReview";
+import { deleteReview, reviewIsAllowedCheck } from "../../../pages/ProductPage/Review/apiReview";
 import { showRatingStars } from "./utilsReview.jsx";
 
-function Review({ reviewObject, reviewsOrdering, setReviews }) {
-    const [review, setReview] = useState(reviewObject);
+function Review({ review, reviewsOrdering, setReviews }) {
     const [isAllowed, setIsAllowed] = useState(false);
-    const formattedDate = new Date(reviewObject.created_at).toLocaleDateString("en-US");
+    const formattedDate = new Date(review.created_at).toLocaleDateString("en-US");
     
     useEffect(() => {
-        getAuthorUsername(review, setReview);
         reviewIsAllowedCheck(review, setIsAllowed);
     }, []);
 
@@ -17,7 +15,7 @@ function Review({ reviewObject, reviewsOrdering, setReviews }) {
         <div className={styles.review}>
             <div className={styles.review_title_date}>
                 <h2 className={styles.review_title}>{review.title}</h2>
-                <h3 className={styles.author_username}>@{review.authorUsername}</h3>
+                <h3 className={styles.author_username}>@{review.author}</h3>
             </div>
 
             <p>{review.content}</p>

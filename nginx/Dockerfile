@@ -9,6 +9,6 @@ COPY reverse-proxy.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /app/staticfiles /app/media && \
     chmod -R 755 /app
 
-EXPOSE 80 443
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

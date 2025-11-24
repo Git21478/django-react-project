@@ -60,14 +60,14 @@ services:
     build: ./nginx
     ports:
       - "80:80"
-      - "443:443"
+      # - "443:443"
     networks:
       - app-network
     volumes:
       - static_volume:/app/staticfiles:ro
       - media_volume:/app/media:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /var/www/certbot:/var/www/certbot
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
+      # - /var/www/certbot:/var/www/certbot
     depends_on:
       frontend:
         condition: service_started

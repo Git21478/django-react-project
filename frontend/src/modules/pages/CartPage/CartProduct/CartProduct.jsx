@@ -9,7 +9,6 @@ import { getCartProducts } from "../apiCartPage.js";
 
 function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsIds, setSelectedCartProductsIds }) {
     const quantity = useInput(cartProduct.quantity);
-    console.log(cartProduct);
 
     return (
         <div className={styles.cart_product_container}>

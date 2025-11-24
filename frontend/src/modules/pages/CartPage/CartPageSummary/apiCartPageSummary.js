@@ -4,7 +4,6 @@ export const handleCheckout = (cartProducts, setCartProductsObject, setSelectedC
     const cartProductsIds = cartProducts.map(cartProduct => {
         return cartProduct.id;
     });
-    console.log(cartProductsIds);
 
     api
         .put("api/cart-products/delete-multiple/", {

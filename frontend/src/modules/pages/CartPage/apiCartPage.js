@@ -4,8 +4,7 @@ export const getCartProducts = (setCartProductsObject) => {
     api
         .get("api/cart-products/")
         .then((res) => {
-            console.log("res.data (cartpage)");
-            console.log(res.data);
+            // console.log(res.data);
             setCartProductsObject(res.data);
         })
         .catch((error) => {

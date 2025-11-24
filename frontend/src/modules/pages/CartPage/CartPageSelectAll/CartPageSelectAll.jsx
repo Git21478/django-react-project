@@ -2,11 +2,7 @@ import styles from "./CartPageSelectAll.module.css";
 import { deleteMultipleCartProducts } from "../apiCartPage";
 import { handleCheckboxAllCartProducts } from "../utilsCartPage";
 
-function CartPageSelectAll({ cartProductsObject, setCartProductsObject, selectedCartProductsIds, setSelectedCartProductsIds }) {
-    console.log(cartProductsObject);
-    console.log(cartProductsObject);
-    console.log(cartProductsObject);
-    
+function CartPageSelectAll({ cartProductsObject, setCartProductsObject, selectedCartProductsIds, setSelectedCartProductsIds }) { 
     return (
         <div className={styles.cart_page_select_section}>
             <div className={styles.cart_page_select_all}>

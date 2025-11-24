@@ -11,16 +11,10 @@ function CartPage() {
     document.title = "Корзина | Магазин";
     const appData = useContext(AppContext);
     const [selectedCartProductsIds, setSelectedCartProductsIds] = useState([]);
-    console.log(appData.cartProductsObject);
 
     useEffect(() => {
         getCartProducts(appData.setCartProductsObject);
-        console.log(appData.cartProductsObject);
     }, []);
-
-    useEffect(() => {
-        console.log(selectedCartProductsIds);
-    }, [selectedCartProductsIds]);
 
     return (
         <PageTemplate>

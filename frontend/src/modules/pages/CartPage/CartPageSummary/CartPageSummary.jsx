@@ -2,8 +2,6 @@ import styles from "./CartPageSummary.module.css";
 import { handleCheckout } from "./apiCartPageSummary";
 
 function CartPageSummary({ cartProductsObject, setCartProductsObject, setSelectedCartProductsIds }) {
-    console.log(cartProductsObject.total_quantity, cartProductsObject.total_price);
-
     return (
         <div className={styles.cart_page_summary_section_wrapper}>
             <h2 className={styles.cart_page_summary_section_header}>Условия заказа</h2>

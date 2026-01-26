@@ -49,12 +49,12 @@ class Product(models.Model):
         return self.name
 
     def clean(self):
-        if self.price < 0:
-            raise ValidationError("Price can't be negative")
+        if self.price <= 0:
+            raise ValidationError("Price should be a positive number")
     
     def get_rating(self):
         reviews = Review.objects.filter(product=self)
-        review_amount = len(reviews)
+        review_amount = reviews.count()
         if review_amount != 0:
             rating = sum([review.rating for review in reviews]) / review_amount
             rating = {f"{rating:.1f}"}
@@ -62,7 +62,7 @@ class Product(models.Model):
         return None
     
     def get_review_amount(self):
-        review_amount = len(Review.objects.filter(product=self.id))
+        review_amount = Review.objects.filter(product=self.id).count()
         return review_amount
     
     def get_favorite_product_id(self, current_user):

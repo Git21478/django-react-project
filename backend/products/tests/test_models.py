@@ -1,25 +1,26 @@
 import unittest
 from django.test import TestCase
-from .models import Product, Review
+from products.models import Brand, Product, Review
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 
 class ProductModelTest(TestCase):
-    def test_negative_price_constraint(self):
-        product = Product(name="Test Product", description="test product", price=-1000)
-        with self.assertRaises(IntegrityError):
-            product.save()
-    
-    def test_zero_price_constraint(self):
-        product = Product(name="Test Product", description="test product", price=0)
-        with self.assertRaises(IntegrityError):
-            product.save()
+    def test_clean_method_price_validation(self):
+        product1 = Product(name="Test Product 1", description="test product 1", price=1, slug="test_slug_1")
+        product1.full_clean()
 
-class ReviewModelTest(TestCase):  
-    def test_review_rating_higher_than_5(self):
-        review = Review(title="Test review", content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.", rating=6)
-        self.assertFalse(review.rating <= 5)
+        product2 = Product(name="Test Product 2", description="test product 2", price=0, slug="test_slug_2")
+        with self.assertRaises(ValidationError):
+            product2.full_clean()
+        
+        product3 = Product(name="Test Product 3", description="test product 3", price=-1, slug="test_slug_3")
+        with self.assertRaises(ValidationError) as context3:
+            product3.full_clean()
+        
+        self.assertIn("Price should be a positive number", str(context3.exception))
     
-    def test_review_rating_lower_than_1(self):
-        review = Review(title="Test review", content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.", rating=0)
-        self.assertFalse(review.rating >= 1)
+    def test_get_rating(self):
+        pass
+
+class CartProductTest(TestCase):
+    pass

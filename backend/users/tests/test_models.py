@@ -1,6 +1,6 @@
 import unittest
 from django.test import TestCase
-from .models import User, Profile, Product, Review
+from users.models import User, Profile
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 

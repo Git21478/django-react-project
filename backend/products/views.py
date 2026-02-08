@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 from rest_framework.pagination import PageNumberPagination, CursorPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError as DRFValidationError
 from django.shortcuts import render
 from django.db.models import Avg
 
@@ -27,13 +28,6 @@ class CategoryList(generics.ListAPIView):
     def get_queryset(self):
         return Category.objects.all()
 
-class CategoryRetrieve(generics.RetrieveAPIView):
-    serializer_class = CategorySerializer
-    permission_classes = [AllowAny]      
-
-    def get_queryset(self):
-        return Category.object.get(id=self.kwargs["category"])
-
 #Product
 class ProductPaginationPages(PageNumberPagination):
     page_query_param = "page"
@@ -41,7 +35,7 @@ class ProductPaginationPages(PageNumberPagination):
     page_size_query_param = 'pageSize'
     max_page_size = 100
 
-class ProductList(generics.ListAPIView):
+class BaseProductListView(generics.ListAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny] # AllowAny / IsAdmin
 
@@ -50,26 +44,23 @@ class ProductList(generics.ListAPIView):
     search_fields = ["name", "description"]
     ordering_fields = ["price", "rating"]
 
+class ProductList(BaseProductListView):
     def get_queryset(self):
-        return Product.objects.annotate(rating=Avg("reviews__rating"))
+        return Product.objects.annotate(rating=Avg("reviews__rating")).select_related("brand", "category").order_by("id")
 
-class ProductCategoryList(generics.ListAPIView):
-    serializer_class = ProductSerializer
-    permission_classes = [AllowAny]
-
-    pagination_class = ProductPaginationPages
-    filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ["name", "description"]
-    ordering_fields = ["price", "rating"]
-
+class ProductCategoryList(BaseProductListView):
     def get_queryset(self):
         price_min = self.request.query_params.get("price_min", 0)
         price_max = self.request.query_params.get("price_max", 1000000000)
         selected_brands_ids = self.request.query_params.get("selected_brands_ids")
+
         if selected_brands_ids:
-            selected_brands_ids = [int(i) for i in selected_brands_ids.split(",")]
-            return Product.objects.filter(category=self.kwargs["pk"], price__range=(price_min, price_max), brand__in=selected_brands_ids)
-        return Product.objects.filter(category=self.kwargs["pk"], price__range=(price_min, price_max))
+            try:
+                selected_brands_ids = [int(i) for i in selected_brands_ids.split(",")]
+                return Product.objects.filter(category=self.kwargs["pk"], price__range=(price_min, price_max), brand__in=selected_brands_ids).order_by("id")
+            except (ValueError, AttributeError):
+                raise DRFValidationError("Некорректные данные")
+        return Product.objects.filter(category=self.kwargs["pk"], price__range=(price_min, price_max)).order_by("id")
 
 class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer

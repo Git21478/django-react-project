@@ -56,14 +56,13 @@ class Product(models.Model):
         reviews = Review.objects.filter(product=self)
         review_amount = reviews.count()
         if review_amount != 0:
-            rating = sum([review.rating for review in reviews]) / review_amount
-            rating = {f"{rating:.1f}"}
+            rating = sum(review.rating for review in reviews) / review_amount
+            rating = f"{rating:.1f}"
             return rating
         return None
     
     def get_review_amount(self):
-        review_amount = Review.objects.filter(product=self.id).count()
-        return review_amount
+        return self.reviews.count()
     
     def get_favorite_product_id(self, current_user):
         favorite_product = FavoriteProduct.objects.filter(user=current_user.id, product=self.id).first()
@@ -80,20 +79,10 @@ class Product(models.Model):
             return None
     
     def get_is_favorite_product(self, current_user):
-        is_favorite_product = False
-        favorite_product_objects = FavoriteProduct.objects.filter(user=current_user.id)
-        favorite_products = [favorite_product_object.product for favorite_product_object in favorite_product_objects]
-        if self in favorite_products:
-            is_favorite_product = True
-        return is_favorite_product
+        return FavoriteProduct.objects.filter(user=current_user.id, product=self.id).exists()
     
     def get_is_cart_product(self, current_user):
-        is_cart_product = False
-        cart_product_objects = CartProduct.objects.filter(user=current_user.id)
-        cart_products = [cart_product_object.product for cart_product_object in cart_product_objects]
-        if self in cart_products:
-            is_cart_product = True
-        return is_cart_product
+        return CartProduct.objects.filter(user=current_user.id, product=self.id).exists()
 
 class Review(models.Model):
     title = models.CharField(max_length=100, verbose_name="Заголовок")

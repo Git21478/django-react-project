@@ -10,11 +10,11 @@ urlpatterns = [
     path("catalog/<int:pk>/products/", views.ProductCategoryList.as_view(), name="product-category-list"),
     path("products/<int:pk>/", views.ProductRetrieveUpdateDestroy.as_view(), name="product-retrieve-change-delete"),
 
-    path("products/<int:product_id>/reviews/", views.ReviewListCreate.as_view(), name="product-review-list"),
+    path("products/<int:product_id>/reviews/", views.ReviewListCreate.as_view(), name="product-review-list-create"),
     path("products/reviews/<int:pk>/", views.ReviewRetrieveUpdateDestroy.as_view(), name="product-review"),
 
     path("favorite-products/", views.FavoriteProductListCreate.as_view(), name="favorite-product-list-create"),
-    path("favorite-products/<int:pk>/", views.FavoriteProductRetrieveUpdateDestroy.as_view(), name="favorite-product"),
+    path("favorite-products/<int:pk>/", views.FavoriteProductRetrieveDestroy.as_view(), name="favorite-product"),
     path("favorite-products/delete-multiple/", views.FavoriteProductDeleteMultiple.as_view(), name="favorite-product-delete-multiple"),
 
     path("cart-products/", views.CartProductListCreate.as_view(), name="cart-product-list-create"),

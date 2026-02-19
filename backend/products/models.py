@@ -92,38 +92,41 @@ class Review(models.Model):
         MaxValueValidator(limit_value=5),
     ])
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews", verbose_name="Автор отзыва")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews", verbose_name="Отзыв к товару")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews", verbose_name="Автор отзыва")
 
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
+        unique_together = ["product", "author"]
 
     def __str__(self):
         return self.title
 
 #Favorites
 class FavoriteProduct(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="favorite_products", verbose_name="Пользователь")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="favorite_products", verbose_name="Товар")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="favorite_products", verbose_name="Пользователь")
 
     class Meta:
         verbose_name = "Избранный товар"
         verbose_name_plural = "Избранные товары"
+        unique_together = ["product", "user"]
     
     def __str__(self):
-        return Product.objects.get(id=self.product.id).name
+        return self.product.name
 
 #Cart
 class CartProduct(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="cart_products", verbose_name="Пользователь")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_products", verbose_name="Товар")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="cart_products", verbose_name="Пользователь")
     quantity = models.PositiveSmallIntegerField(verbose_name="Количество товара", default=1)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
 
     class Meta:
         verbose_name = "Товар в корзине"
         verbose_name_plural = "Товары в корзине"
+        unique_together = ["product", "user"]
     
     def __str__(self):
         return Product.objects.get(id=self.product.id).name

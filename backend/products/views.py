@@ -1,16 +1,14 @@
 from .models import Brand, Category, Product, Review, FavoriteProduct, CartProduct
-from users.models import User
 from .serializers import BrandSerializer, CategorySerializer, ProductSerializer, ReviewSerializer, FavoriteProductSerializer, FavoriteProductCreateSerializer, CartProductSerializer, CartProductCreateSerializer
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-from django.core.exceptions import ValidationError
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.pagination import PageNumberPagination, CursorPagination
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError as DRFValidationError
-from django.shortcuts import render
 from django.db.models import Avg
+from .permissions import IsAuthorOrReadOnly
 
 #Brand
 class BrandCategoryList(generics.ListAPIView):
@@ -83,26 +81,18 @@ class ReviewListCreate(generics.ListCreateAPIView):
     pagination_class = ReviewPaginationPages
     filter_backends = [OrderingFilter]
     ordering_fields = ["created_at", "rating"]
+    ordering = ["-created_at", "id"]
 
     def get_queryset(self):
         return Review.objects.select_related("author").filter(product=self.kwargs["product_id"])
     
     def perform_create(self, serializer):
-        duplicate = Review.objects.filter(product=self.request.data.get("product"), author=self.request.user)
-        if not duplicate:
-            if serializer.is_valid():
-                serializer.save(author=self.request.user)
-            else:
-                print(serializer.errors)
-        else:
-            raise ValidationError(message="Не более одного отзыва на товар от пользователя")
+        serializer.save(author=self.request.user)
 
 class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get_queryset(self):
-        return Review.objects.filter(author=self.request.user.id)
+    permission_classes = [IsAuthorOrReadOnly]
 
 #Favorites
 class FavoriteProductListCreate(generics.ListCreateAPIView):
@@ -121,14 +111,9 @@ class FavoriteProductListCreate(generics.ListCreateAPIView):
         return {"request": self.request}
     
     def perform_create(self, serializer):    
-        duplicate = FavoriteProduct.objects.filter(user=self.request.user, product=self.request.data.get("product"))
-        if not duplicate:
-            if serializer.is_valid():
-                serializer.save(user=self.request.user)
-            else:
-                print(serializer.errors)
+        serializer.save(user=self.request.user)
 
-class FavoriteProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class FavoriteProductRetrieveDestroy(generics.RetrieveDestroyAPIView):
     serializer_class = FavoriteProductSerializer
     permission_classes = [IsAuthenticated]
 
@@ -138,20 +123,21 @@ class FavoriteProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView
     def get_serializer_context(self):
         return {"request": self.request}
 
-class FavoriteProductDeleteMultiple(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = FavoriteProductSerializer
+class FavoriteProductDeleteMultiple(APIView):
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return FavoriteProduct.objects.filter(user=self.request.user)
-    
-    def update(self, request, *args, **kwargs):
-        selected_ids = self.request.data.get("favoriteProductsIds")
-        selected_objects = FavoriteProduct.objects.filter(id__in=selected_ids)
-        if len(selected_objects) > 0:
-            selected_objects.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_404_OK)
+    def delete(self, request, *args, **kwargs):
+        ids_param = request.query_params.get('ids', '')
+        if not ids_param:
+            return Response({"error": "Не указаны ID для удаления"}, status=status.HTTP_400_BAD_REQUEST)
+        selected_ids = [int(id.strip()) for id in ids_param.split(',')]
+        
+        user_favorite_products = FavoriteProduct.objects.filter(id__in=selected_ids, user=request.user)
+        
+        deleted_count, _ = user_favorite_products.delete()
+        if deleted_count == 0:
+            return Response({"error": "Избранные товары не найдены"}, status=status.HTTP_404_NOT_FOUND)
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 #Cart
 class CartProductListCreate(generics.ListCreateAPIView):
@@ -177,12 +163,7 @@ class CartProductListCreate(generics.ListCreateAPIView):
         return response
     
     def perform_create(self, serializer):
-        duplicate = CartProduct.objects.filter(user=self.request.user, product=self.request.data.get("product"))
-        if not duplicate:
-            if serializer.is_valid():
-                serializer.save(user=self.request.user)
-            else:
-                print(serializer.errors)
+        serializer.save(user=self.request.user)
 
 class CartProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CartProductSerializer
@@ -194,7 +175,7 @@ class CartProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_context(self):
         return {"request": self.request}
 
-class CartProductDeleteMultiple(generics.RetrieveUpdateDestroyAPIView):
+class CartProductDeleteMultiple(generics.ListAPIView):
     serializer_class = CartProductSerializer
     permission_classes = [IsAuthenticated]
 

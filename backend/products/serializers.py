@@ -50,8 +50,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "content", "rating", "created_at", "author", "product"]
     
     def validate(self, data):
-        if data["rating"] > 5:
-            raise serializers.ValidationError("Rating can't be higher than 5")
+        if "rating" in data:
+            if data["rating"] > 5:
+                raise serializers.ValidationError("Rating can't be higher than 5")
+            if data["rating"] < 1:
+                raise serializers.ValidationError("Rating can't be lower than 1")
         return data
 
 class FavoriteProductSerializer(serializers.ModelSerializer):
@@ -64,7 +67,16 @@ class FavoriteProductSerializer(serializers.ModelSerializer):
 class FavoriteProductCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteProduct
-        fields = ["id", "user", "product"]
+        fields = ["id", "product"]
+    
+    def validate(self, data):
+        request = self.context.get("request")
+        product = data.get("product")
+
+        if request and request.user.is_authenticated:
+            if FavoriteProduct.objects.filter(product=product, user=request.user).exists():
+                raise serializers.ValidationError("Этот товар уже добавлен в избранное")
+        return data
 
 class CartProductSerializer(serializers.ModelSerializer):
     product = ProductSerializer()

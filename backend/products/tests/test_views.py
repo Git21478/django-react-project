@@ -293,78 +293,75 @@ from django.db import IntegrityError
 #         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 #         assert Review.objects.filter(pk=review1.pk).exists()
 
-# @pytest.mark.django_db
-# class TestFavoriteProductListCreate:
-#     #list
-#     def test_list_favorites_unauthenticated(self, api_client, url_favorite_product_list_create):
-#         response = api_client.get(url_favorite_product_list_create)
-#         assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
-#     def test_list_favorites_authenticated(self, api_auth_client, favorite_product11, url_favorite_product_list_create):
-#         response = api_auth_client.get(url_favorite_product_list_create)
-#         assert response.status_code == status.HTTP_200_OK
-#         assert len(response.data) == 1
-#         assert response.data[0]["product"]["id"] == favorite_product11.product.id
-
-#     #create
-#     def test_create_favorite_product_unauthenticated(self, api_client, product1, url_favorite_product_list_create):
-#         response = api_client.post(url_favorite_product_list_create, {"product": product1.id})
-#         assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
-#     def test_create_favorite_product_authenticated(self, api_auth_client, product1, url_favorite_product_list_create):
-#         response = api_auth_client.post(url_favorite_product_list_create, {"product": product1.id})
-#         assert response.status_code == status.HTTP_201_CREATED
-#         assert FavoriteProduct.objects.count() == 1
-#         assert FavoriteProduct.objects.first().user.username == "User1"
-
-#     def test_create_favorite_product_duplicate(self, api_auth_client, favorite_product11, url_favorite_product_list_create):
-#         response = api_auth_client.post(url_favorite_product_list_create, {"product": favorite_product11.product.id})
-#         assert response.status_code == status.HTTP_400_BAD_REQUEST
-
-#     def test_create_favorite_product_nonexistent_product(self, api_auth_client, url_favorite_product_list_create):
-#         response = api_auth_client.post(url_favorite_product_list_create, {"product": 999})
-#         assert response.status_code == status.HTTP_400_BAD_REQUEST
-
-# @pytest.mark.django_db
-# class TestFavoriteProductRetrieveUpdateDestroy:
-#     #retrieve
-#     def test_retrieve_favorite_product_unauthorized(self, api_client, favorite_product11, url_favorite_product):
-#         response = api_client.get(url_favorite_product(favorite_product11.id))
-#         assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        
-#     def test_retrieve_favorite_product_authenticated(self, api_auth_client, favorite_product11, url_favorite_product):
-#         response = api_auth_client.get(url_favorite_product(favorite_product11.id))
-#         assert response.status_code == status.HTTP_200_OK
-#         assert response.data["product"]["id"] == favorite_product11.product.id
-
-#     def test_retrieve_favorite_product_different_user(self, api_auth_client, favorite_product21, url_favorite_product):
-#         response = api_auth_client.get(url_favorite_product(favorite_product21.id))
-#         assert response.status_code == status.HTTP_404_NOT_FOUND
-
-#     def test_retrieve_nonexistent_favorite_product(self, api_auth_client, url_favorite_product):
-#         response = api_auth_client.get(url_favorite_product(999))
-#         assert response.status_code == status.HTTP_404_NOT_FOUND
-
-#     #delete
-#     def test_delete_favorite_product_authenticated(self, api_auth_client, favorite_product11, url_favorite_product):
-#         response = api_auth_client.delete(url_favorite_product(favorite_product11.id))
-#         assert response.status_code == status.HTTP_204_NO_CONTENT
-#         assert FavoriteProduct.objects.count() == 0
-
-#     def test_delete_favorite_product_different_user(self, api_auth_client, favorite_product11, user2, url_favorite_product):
-#         favorite_product11.user = user2
-#         favorite_product11.save()
-#         response = api_auth_client.delete(url_favorite_product(favorite_product11.id))
-#         assert response.status_code == status.HTTP_404_NOT_FOUND
-#         assert FavoriteProduct.objects.count() == 1
-
-#     #update
-#     def test_update_favorite_product_not_allowed(self, api_auth_client, favorite_product11, product2, url_favorite_product):
-#         response = api_auth_client.put(url_favorite_product(favorite_product11.id), {"product": product2.id})
-#         assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
-
 @pytest.mark.django_db
-class TestFavoriteProductDeleteMultiple:
+class TestFavoriteProductViewSet:
+    #list
+    def test_list_favorites_unauthenticated(self, api_client, url_favorite_product_list_create):
+        response = api_client.get(url_favorite_product_list_create)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_list_favorites_authenticated(self, api_auth_client, favorite_product11, url_favorite_product_list_create):
+        response = api_auth_client.get(url_favorite_product_list_create)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 1
+        assert response.data[0]["product"]["id"] == favorite_product11.product.id
+
+    #create
+    def test_create_favorite_product_unauthenticated(self, api_client, product1, url_favorite_product_list_create):
+        response = api_client.post(url_favorite_product_list_create, {"product": product1.id})
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_create_favorite_product_authenticated(self, api_auth_client, product1, url_favorite_product_list_create):
+        response = api_auth_client.post(url_favorite_product_list_create, {"product": product1.id})
+        assert response.status_code == status.HTTP_201_CREATED
+        assert FavoriteProduct.objects.count() == 1
+        assert FavoriteProduct.objects.first().user.username == "User1"
+
+    def test_create_favorite_product_duplicate(self, api_auth_client, favorite_product11, url_favorite_product_list_create):
+        response = api_auth_client.post(url_favorite_product_list_create, {"product": favorite_product11.product.id})
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_create_favorite_product_nonexistent_product(self, api_auth_client, url_favorite_product_list_create):
+        response = api_auth_client.post(url_favorite_product_list_create, {"product": 999})
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    #retrieve
+    def test_retrieve_favorite_product_unauthorized(self, api_client, favorite_product11, url_favorite_product):
+        response = api_client.get(url_favorite_product(favorite_product11.id))
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        
+    def test_retrieve_favorite_product_authenticated(self, api_auth_client, favorite_product11, url_favorite_product):
+        response = api_auth_client.get(url_favorite_product(favorite_product11.id))
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["product"]["id"] == favorite_product11.product.id
+
+    def test_retrieve_favorite_product_different_user(self, api_auth_client, favorite_product21, url_favorite_product):
+        response = api_auth_client.get(url_favorite_product(favorite_product21.id))
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_retrieve_nonexistent_favorite_product(self, api_auth_client, url_favorite_product):
+        response = api_auth_client.get(url_favorite_product(999))
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    #delete
+    def test_delete_favorite_product_authenticated(self, api_auth_client, favorite_product11, url_favorite_product):
+        response = api_auth_client.delete(url_favorite_product(favorite_product11.id))
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert FavoriteProduct.objects.count() == 0
+
+    def test_delete_favorite_product_different_user(self, api_auth_client, favorite_product11, user2, url_favorite_product):
+        favorite_product11.user = user2
+        favorite_product11.save()
+        response = api_auth_client.delete(url_favorite_product(favorite_product11.id))
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert FavoriteProduct.objects.count() == 1
+
+    #update
+    def test_update_favorite_product_not_allowed(self, api_auth_client, favorite_product11, product2, url_favorite_product):
+        response = api_auth_client.put(url_favorite_product(favorite_product11.id), {"product": product2.id})
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    #delete_multiple
     def test_delete_multiple_favorite_products_unauthenticated(self, api_client, favorite_product11, favorite_product12, url_favorite_product_delete_multiple):
         response = api_client.delete(url_favorite_product_delete_multiple(favorite_product11.id, favorite_product12.id))
         assert response.status_code == status.HTTP_401_UNAUTHORIZED

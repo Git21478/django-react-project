@@ -1,7 +1,8 @@
 from .models import Brand, Category, Product, Review, FavoriteProduct, CartProduct
 from .serializers import BrandSerializer, CategorySerializer, ProductSerializer, ReviewSerializer, FavoriteProductSerializer, FavoriteProductCreateSerializer, CartProductSerializer, CartProductCreateSerializer
 from rest_framework import generics, status
-from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -35,7 +36,7 @@ class ProductPaginationPages(PageNumberPagination):
 
 class BaseProductListView(generics.ListAPIView):
     serializer_class = ProductSerializer
-    permission_classes = [AllowAny] # AllowAny / IsAdmin
+    permission_classes = [AllowAny]
 
     pagination_class = ProductPaginationPages
     filter_backends = [SearchFilter, OrderingFilter]
@@ -95,52 +96,51 @@ class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthorOrReadOnly]
 
 #Favorites
-class FavoriteProductListCreate(generics.ListCreateAPIView):
+class FavoriteProductViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
-
+    
     def get_queryset(self):
         return FavoriteProduct.objects.filter(user=self.request.user)
     
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.action == "create":
             return FavoriteProductCreateSerializer
-        else:
-            return FavoriteProductSerializer
+        return FavoriteProductSerializer
     
     def get_serializer_context(self):
         return {"request": self.request}
     
-    def perform_create(self, serializer):    
+    def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-class FavoriteProductRetrieveDestroy(generics.RetrieveDestroyAPIView):
-    serializer_class = FavoriteProductSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return FavoriteProduct.objects.filter(user=self.request.user)
     
-    def get_serializer_context(self):
-        return {"request": self.request}
-
-class FavoriteProductDeleteMultiple(APIView):
-    permission_classes = [IsAuthenticated]
-    def delete(self, request, *args, **kwargs):
-        ids_param = request.query_params.get('ids', '')
+    def update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def partial_update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    @action(detail=False, methods=["delete"], url_path="delete-multiple")
+    def delete_multiple(self, request):
+        ids_param = request.query_params.get("ids", "")
+        
         if not ids_param:
             return Response({"error": "Не указаны ID для удаления"}, status=status.HTTP_400_BAD_REQUEST)
-        selected_ids = [int(id.strip()) for id in ids_param.split(',')]
         
-        user_favorite_products = FavoriteProduct.objects.filter(id__in=selected_ids, user=request.user)
+        try:
+            selected_ids = [int(id.strip()) for id in ids_param.split(',')]
+        except ValueError:
+            return Response({"error": "Некорректный формат ID"}, status=status.HTTP_400_BAD_REQUEST)
         
+        user_favorite_products = self.get_queryset().filter(id__in=selected_ids)
         deleted_count, _ = user_favorite_products.delete()
+        
         if deleted_count == 0:
             return Response({"error": "Избранные товары не найдены"}, status=status.HTTP_404_NOT_FOUND)
         
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 #Cart
-class CartProductListCreate(generics.ListCreateAPIView):
+class CartProductViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -155,7 +155,7 @@ class CartProductListCreate(generics.ListCreateAPIView):
     def get_serializer_context(self):
         return {"request": self.request}
     
-    def get(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         total_quantity = response.data[0]["total_quantity"] if len(response.data) > 0 else 0
         total_price = response.data[0]["total_price"] if len(response.data) > 0 else 0
@@ -165,23 +165,6 @@ class CartProductListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class CartProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CartProductSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return CartProduct.objects.filter(user=self.request.user)
-
-    def get_serializer_context(self):
-        return {"request": self.request}
-
-class CartProductDeleteMultiple(generics.ListAPIView):
-    serializer_class = CartProductSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return CartProduct.objects.filter(user=self.request.user)
-    
     def update(self, request, *args, **kwargs):
         selected_ids = self.request.data.get("cartProductsIds")
         selected_objects = CartProduct.objects.filter(id__in=selected_ids)

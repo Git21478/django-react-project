@@ -1,5 +1,10 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
+
+router = DefaultRouter()
+router.register(r"favorite-products", views.FavoriteProductViewSet, basename="favorite-product")
+router.register(r"cart-products", views.CartProductViewSet, basename="cart-product")
 
 urlpatterns = [
     path("categories/<int:category>/brands/", views.BrandCategoryList.as_view(), name="category-brands"),
@@ -13,11 +18,5 @@ urlpatterns = [
     path("products/<int:product_id>/reviews/", views.ReviewListCreate.as_view(), name="product-review-list-create"),
     path("products/reviews/<int:pk>/", views.ReviewRetrieveUpdateDestroy.as_view(), name="product-review"),
 
-    path("favorite-products/", views.FavoriteProductListCreate.as_view(), name="favorite-product-list-create"),
-    path("favorite-products/<int:pk>/", views.FavoriteProductRetrieveDestroy.as_view(), name="favorite-product"),
-    path("favorite-products/delete-multiple/", views.FavoriteProductDeleteMultiple.as_view(), name="favorite-product-delete-multiple"),
-
-    path("cart-products/", views.CartProductListCreate.as_view(), name="cart-product-list-create"),
-    path("cart-products/<int:pk>/", views.CartProductRetrieveUpdateDestroy.as_view(), name="cart-product"),
-    path("cart-products/delete-multiple/", views.CartProductDeleteMultiple.as_view(), name="cart-product-delete-multiple"),
+    path("", include(router.urls)),
 ]

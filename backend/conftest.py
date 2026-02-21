@@ -105,11 +105,11 @@ def url_review_detail(db, review1):
 
 @pytest.fixture
 def url_favorite_product_list_create(db):
-    return reverse("favorite-product-list-create")
+    return reverse("favorite-product-list")
 @pytest.fixture
 def url_favorite_product(db):
     def _get_url(pk):
-        return reverse("favorite-product", kwargs={"pk": pk})
+        return reverse("favorite-product-detail", kwargs={"pk": pk})
     return _get_url
 @pytest.fixture
 def url_favorite_product_delete_multiple(db):

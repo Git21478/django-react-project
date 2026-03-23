@@ -96,4 +96,13 @@ class CartProductSerializer(serializers.ModelSerializer):
 class CartProductCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartProduct
-        fields = ["id", "user", "product", "quantity"]
+        fields = ["id", "product", "quantity"]
+
+    def validate(self, data):
+        request = self.context.get("request")
+        product = data.get("product")
+
+        if request and request.user.is_authenticated:
+            if CartProduct.objects.filter(product=product, user=request.user).exists():
+                raise serializers.ValidationError("Этот товар уже добавлен в корзину")
+        return data

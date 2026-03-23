@@ -41,10 +41,10 @@ def category3(db):
 
 @pytest.fixture
 def product1(db):
-    return Product.objects.create(name="Product1", description="description1", slug="product-1", price=1000)
+    return Product.objects.create(name="Product 1", description="description1", slug="product-1", price=1000)
 @pytest.fixture
 def product2(db):
-    return Product.objects.create(name="Product2", description="description2", slug="product-2", price=2000)
+    return Product.objects.create(name="Product 2", description="description2", slug="product-2", price=2000)
 
 @pytest.fixture
 def review1(db, user1, product1):
@@ -67,11 +67,17 @@ def favorite_product22(db, user2, product2):
     return FavoriteProduct.objects.create(user=user2, product=product2)
 
 @pytest.fixture
-def cart_product1(db, user1, product1):
+def cart_product11(db, user1, product1):
     return CartProduct.objects.create(user=user1, product=product1)
 @pytest.fixture
-def cart_product2(db, user1, product2):
+def cart_product12(db, user1, product2):
     return CartProduct.objects.create(user=user1, product=product2)
+@pytest.fixture
+def cart_product21(db, user2, product1):
+    return CartProduct.objects.create(user=user2, product=product1)
+@pytest.fixture
+def cart_product22(db, user2, product2):
+    return CartProduct.objects.create(user=user2, product=product2)
 
 
 
@@ -104,10 +110,10 @@ def url_review_detail(db, review1):
     return reverse("product-review", kwargs={"pk": review1.pk})
 
 @pytest.fixture
-def url_favorite_product_list_create(db):
+def url_favorite_product_list(db):
     return reverse("favorite-product-list")
 @pytest.fixture
-def url_favorite_product(db):
+def url_favorite_product_detail(db):
     def _get_url(pk):
         return reverse("favorite-product-detail", kwargs={"pk": pk})
     return _get_url
@@ -116,4 +122,19 @@ def url_favorite_product_delete_multiple(db):
     def _get_url(*ids):
         ids_str = ",".join(str(id) for id in ids)
         return f"{reverse("favorite-product-delete-multiple")}?ids={ids_str}"
+    return _get_url
+
+@pytest.fixture
+def url_cart_product_list(db):
+    return reverse("cart-product-list")
+@pytest.fixture
+def url_cart_product_detail(db):
+    def _get_url(pk):
+        return reverse("cart-product-detail", kwargs={"pk": pk})
+    return _get_url
+@pytest.fixture
+def url_cart_product_delete_multiple(db):
+    def _get_url(*ids):
+        ids_str = ",".join(str(id) for id in ids)
+        return f"{reverse("cart-product-delete-multiple")}?ids={ids_str}"
     return _get_url

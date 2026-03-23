@@ -4,7 +4,8 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import ManyToManyField
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
 class TestBrandModel:
     def test_create_brand(self, brand1):
         assert brand1.pk is not None
@@ -16,7 +17,6 @@ class TestBrandModel:
     def test_brand_can_be_created_without_categories(self, brand1):
         assert brand1.categories.count() == 0
 
-@pytest.mark.django_db
 class TestCategoryModel:
     def test_create_category(self, category1):
         assert category1.pk is not None
@@ -54,7 +54,6 @@ class TestCategoryModel:
         assert category1 in brand1.categories.all()
         assert category2 in brand1.categories.all()
 
-@pytest.mark.django_db
 class TestBrandCategoryRelations:
     def test_many_to_many_relationship(self, brand1, brand2, brand3, category1, category2, category3):
         brand1.categories.add(category1, category2)
@@ -96,7 +95,6 @@ class TestBrandCategoryRelations:
         assert brand1.categories.count() == 0
         assert brand2.categories.count() == 0
 
-@pytest.mark.django_db
 class TestProduct:
     def test_clean_method_price_validation(self, product1):
         product1.full_clean()
@@ -161,7 +159,6 @@ class TestProduct:
     def test_get_is_cart_product_true(self, user1, product2, cart_product2):
         assert product2.get_is_cart_product(user1)
 
-@pytest.mark.django_db
 class TestFavoriteProductModel:
     def test_create_favorite_with_user_and_product(self, user1, product1):
         favorite = FavoriteProduct.objects.create(user=user1, product=product1)
@@ -276,7 +273,6 @@ class TestFavoriteProductModel:
         assert fav1 in product1.favorite_products.all()
         assert fav2 in product1.favorite_products.all()
 
-@pytest.mark.django_db
 class TestCartProduct:
     def test_get_product_price(self, cart_product1):
         assert cart_product1.get_product_price() == 1000

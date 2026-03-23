@@ -18,8 +18,12 @@ const refreshToken = async (setIsAuthenticated) => {
             };
         })
         .catch((error) => {
-            setIsAuthenticated(false);
+        if (error.response?.status === 401) {
             console.log(error);
+            localStorage.removeItem(ACCESS_TOKEN);
+            localStorage.removeItem(REFRESH_TOKEN);
+        }
+            setIsAuthenticated(false);
         });
 };
 

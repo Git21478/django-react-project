@@ -105,7 +105,8 @@ class FavoriteProductViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "create":
             return FavoriteProductCreateSerializer
-        return FavoriteProductSerializer
+        else:
+            return FavoriteProductSerializer
     
     def get_serializer_context(self):
         return {"request": self.request}
@@ -147,7 +148,7 @@ class CartProductViewSet(ModelViewSet):
         return CartProduct.objects.filter(user=self.request.user)
     
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.action == "create":
             return CartProductCreateSerializer
         else:
             return CartProductSerializer
@@ -164,11 +165,23 @@ class CartProductViewSet(ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-    def update(self, request, *args, **kwargs):
-        selected_ids = self.request.data.get("cartProductsIds")
-        selected_objects = CartProduct.objects.filter(id__in=selected_ids)
-        if len(selected_objects) > 0:
-            selected_objects.delete()
+    
+    @action(detail=False, methods=["delete"], url_path="delete-multiple")
+    def delete_multiple(self, request):
+        ids_param = request.query_params.get("ids", "")
+        
+        if not ids_param:
+            return Response({"error": "Не указаны ID для удаления"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            selected_ids = [int(id.strip()) for id in ids_param.split(',')]
+        except ValueError:
+            return Response({"error": "Некорректный формат ID"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user_cart_products = self.get_queryset().filter(id__in=selected_ids)
+        deleted_count, _ = user_cart_products.delete()
+        
+        if deleted_count == 0:
+            return Response({"error": "Товары в корзине не найдены"}, status=status.HTTP_404_NOT_FOUND)
+        else:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_200_OK)

@@ -7,9 +7,14 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`
+        const publicPaths = ["/categories", "/products"];
+        const isPublic = publicPaths.some(path => config.url.includes(path));
+
+        if (!isPublic) {
+            const token = localStorage.getItem(ACCESS_TOKEN);
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`
+            };
         };
         return config;
     },

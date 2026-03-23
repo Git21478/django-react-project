@@ -15,7 +15,7 @@ class CreateUserView(generics.CreateAPIView):
     
 class UserList(generics.ListCreateAPIView):
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         return User.objects.filter(id=self.request.user.id)

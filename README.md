@@ -1,11 +1,11 @@
-#djangostore.ru
+# djangostore.ru
 Интернет-магазин на Django (DRF) + React
 
-##Preview
+## Preview
 
-##Stack
+## Stack
 - Python, Django, Django REST Framework, Pytest
 - PostgreSQL, Docker, Nginx, Git
 - HTML, CSS, JavaScript, React
 
-###Сайт проекта:   https://djangostore.ru
+### Сайт проекта:   https://djangostore.ru

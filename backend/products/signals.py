@@ -1,6 +1,6 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-from .models import Product, Category
+from .models import Product
 
 @receiver(post_save, sender=Product)
 def update_category_brands(sender, instance, created, **kwargs):

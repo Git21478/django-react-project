@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinLengthValidator, MaxLengthValidator, MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from users.models import User
 
@@ -65,21 +65,15 @@ class Product(models.Model):
         return self.reviews.count()
     
     def get_favorite_product_id(self, current_user):
-        favorite_product = FavoriteProduct.objects.filter(user=current_user.id, product=self.id).first()
-        if favorite_product:
-            return favorite_product.id
-        else:
-            return None
+        favorite_product = Favorites.objects.filter(user=current_user.id, product=self.id).first()
+        return favorite_product.id if favorite_product else None
 
     def get_cart_product_id(self, current_user):
         cart_product = CartProduct.objects.filter(user=current_user.id, product=self.id).first()
-        if cart_product:
-            return cart_product.id
-        else:
-            return None
+        return cart_product.id if cart_product else None
     
     def get_is_favorite_product(self, current_user):
-        return FavoriteProduct.objects.filter(user=current_user.id, product=self.id).exists()
+        return Favorites.objects.filter(user=current_user.id, product=self.id).exists()
     
     def get_is_cart_product(self, current_user):
         return CartProduct.objects.filter(user=current_user.id, product=self.id).exists()
@@ -104,48 +98,67 @@ class Review(models.Model):
         return self.title
 
 #Favorites
-class FavoriteProduct(models.Model):
+class BaseFavorite(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="favorite_products", verbose_name="Товар")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="favorite_products", verbose_name="Пользователь")
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        abstract = True
         verbose_name = "Избранный товар"
         verbose_name_plural = "Избранные товары"
-        unique_together = ["product", "user"]
     
     def __str__(self):
-        return self.product.name
+        return self.product.name    
+
+class Favorite(BaseFavorite):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorite_products", verbose_name="Пользователь")
+
+    class Meta:
+        unique_together = ["user", "product"]
+    
+class AnonymousFavorite(BaseFavorite):
+    session_key = models.CharField(max_length=40, unique=True, db_index=True)
+
+    class Meta:
+        unique_together = ["session_key", "product"]
 
 #Cart
+class BaseCart(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def total_price(self):
+        return sum(product.total_price for product in self.products.all())
+    
+    @property
+    def total_quantity(self):
+        return sum(product.quantity for product in self.products.all())
+
+class Cart(BaseCart):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+
+class AnonymousCart(BaseCart):
+    session_key = models.CharField(max_length=40, unique=True, db_index=True)
+
 class CartProduct(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True, related_name="products")
+    anonymous_cart = models.ForeignKey(AnonymousCart, on_delete=models.CASCADE, null=True, blank=True, related_name="products")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_products", verbose_name="Товар")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="cart_products", verbose_name="Пользователь")
     quantity = models.PositiveSmallIntegerField(verbose_name="Количество товара", default=1)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
 
     class Meta:
         verbose_name = "Товар в корзине"
         verbose_name_plural = "Товары в корзине"
-        unique_together = ["product", "user"]
+        unique_together = [["cart", "product"], ["anonymous_cart", "product"]]
     
     def __str__(self):
         return Product.objects.get(id=self.product.id).name
-    
-    def get_product_price(self):
-        return Product.objects.get(id=self.product.id).price
 
-    get_product_price.short_description = "Цена"
-
-    def get_total_quantity(self, current_user):
-        current_user_cart_products = CartProduct.objects.filter(user=current_user.id)
-        total_quantity = 0
-        for cart_product in current_user_cart_products:
-            total_quantity += cart_product.quantity
-        return total_quantity
-
-    def get_total_price(self, current_user):
-        current_user_cart_products = CartProduct.objects.filter(user=current_user.id)
-        total_price = 0
-        for cart_product in current_user_cart_products:
-            total_price += cart_product.product.price * cart_product.quantity
-        return total_price
+    @property
+    def total_price(self):
+        return self.product.price * self.quantity

@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r"favorite-products", views.FavoriteProductViewSet, basename="favorite-product")
+router.register(r"favorites", views.FavoriteProductViewSet, basename="favorite")
+router.register(r"cart", views.CartViewSet, basename="cart")
 router.register(r"cart-products", views.CartProductViewSet, basename="cart-product")
 
 urlpatterns = [
@@ -12,7 +13,7 @@ urlpatterns = [
     path("categories/", views.CategoryList.as_view(), name="category-list"),
 
     path("products/", views.ProductList.as_view(), name="product-list"),
-    path("catalog/<int:pk>/products/", views.ProductCategoryList.as_view(), name="product-category-list"),
+    path("categories/<int:pk>/products/", views.ProductCategoryList.as_view(), name="product-category-list"),
     path("products/<int:pk>/", views.ProductRetrieveUpdateDestroy.as_view(), name="product-retrieve-change-delete"),
 
     path("products/<int:product_id>/reviews/", views.ReviewListCreate.as_view(), name="product-review-list-create"),

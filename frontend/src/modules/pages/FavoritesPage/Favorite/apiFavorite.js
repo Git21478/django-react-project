@@ -17,16 +17,16 @@ export const deleteFavorite = (favoriteId, setFavorites) => {
         });
 };
 
-export const addCartProduct = (productId, setFavorites) => {
+export const addCartProduct = (product_id, setFavorites) => {
     api
-        .post("/api/cart/", {
-            product: productId,
+        .post("/api/cart/add/", {
+            product_id: product_id,
         })
         .then((res) => {
             console.log(res);
             setFavorites(prevState => {
                 return prevState.map(favorite => {
-                    if (favorite.product.id === productId) {
+                    if (favorite.product.id === product_id) {
                         return {...favorite, product: {...favorite.product, is_cart_product: true, cart_product_id: res.data.id}};
                     } else {
                         return favorite;

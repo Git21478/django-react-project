@@ -1,38 +1,30 @@
 import api from "../../../../api";
 
-export const changeCartProductQuantity = (cartProductId, quantity, setCartProductsObject) => {
+export const changeCartProductQuantity = (product_id, quantity, setCart) => {
     api
-        .patch(`/api/cart-products/${cartProductId}/`, {
+        .patch(`/api/cart/update/${product_id}/`, {
             quantity,
         })
         .then((res) => {
             console.log(res.data);
-            setCartProductsObject(prevState => {
-                const cart_products = prevState.cart_products.map(cartProduct => {
-                    if (cartProduct.id === cartProductId) {
-                        return res.data;
-                    };
-                    return cartProduct;
-                });
-                return {cart_products: cart_products, total_quantity: res.data.total_quantity, total_price: res.data.total_price}
-            });
+            setCart(res.data);
         })
         .catch((error) => {
             console.log(error);
         });
 };
 
-export const addFavoriteProduct = (productId, setCartProductsObject) => {
+export const addFavorite = (product_id, setCart) => {
     api
-        .post("/api/favorite-products/", {
-            product: productId,
+        .post("/api/favorites/", {
+            product_id,
         })
         .then((res) => {
             console.log(res.data);
-            setCartProductsObject(prevState => {
+            setCart(prevState => {
                 const cart_products = prevState.cart_products.map(cartProduct => {
-                    if (cartProduct.product.id === productId) {
-                        return {...cartProduct, product: {...cartProduct.product, is_favorite_product: true, favorite_product_id: res.data.id}};
+                    if (cartProduct.product.id === product_id) {
+                        return {...cartProduct, product: {...cartProduct.product, is_favorite: true, favorite_id: res.data.id}};
                     } else {
                         return cartProduct;
                     };
@@ -45,15 +37,15 @@ export const addFavoriteProduct = (productId, setCartProductsObject) => {
         });
 };
 
-export const deleteFavoriteProduct = (favoriteProductId, setCartProductsObject) => {
+export const deleteFavorite = (favoriteId, setCart) => {
     api
-        .delete(`/api/favorite-products/${favoriteProductId}/`)
+        .delete(`/api/favorites/${favoriteId}/`)
         .then((res) => {
             console.log(res);
-            setCartProductsObject(prevState => {
+            setCart(prevState => {
                 const cart_products = prevState.cart_products.map(cartProduct => {
-                    if (cartProduct.product.favorite_product_id === favoriteProductId) {
-                        return {...cartProduct, product: {...cartProduct.product, is_favorite_product: false, favorite_product_id: null}};
+                    if (cartProduct.product.favorite_id === favoriteId) {
+                        return {...cartProduct, product: {...cartProduct.product, is_favorite: false, favorite_id: null}};
                     } else {
                         return cartProduct;
                     };
@@ -66,12 +58,12 @@ export const deleteFavoriteProduct = (favoriteProductId, setCartProductsObject) 
         });
 };
 
-export const deleteCartProduct = (cartProductId, getCartProducts, setCartProducts, setCartProductsTotalQuantity, setCartProductsTotalPrice) => {
+export const deleteCartProduct = (product_id, setCart) => {
     api
-        .delete(`/api/cart-products/${cartProductId}/`)
+        .delete(`/api/cart/remove/${product_id}/`)
         .then((res) => {
             console.log(res);
-            getCartProducts(setCartProducts, setCartProductsTotalQuantity, setCartProductsTotalPrice);
+            setCart(res.data)
         })
         .catch((error) => {
             console.log(error);

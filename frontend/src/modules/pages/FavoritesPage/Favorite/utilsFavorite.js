@@ -1,10 +1,10 @@
-export const handleCheckboxFavoriteProduct = (e, selectedFavoriteProductsIds, setSelectedFavoriteProductsIds) => {
+export const handleCheckboxFavorite = (e, selectedFavoritesIds, setSelectedFavoritesIds) => {
     let value = parseInt(e.target.value);
 
     if (e.target.checked) {
-        setSelectedFavoriteProductsIds([...selectedFavoriteProductsIds, value]);
+        setSelectedFavoritesIds([...selectedFavoritesIds, value]);
     } else {
-        setSelectedFavoriteProductsIds(prevState => {
+        setSelectedFavoritesIds(prevState => {
             return prevState.filter(id => {
                 return id !== value;
             });

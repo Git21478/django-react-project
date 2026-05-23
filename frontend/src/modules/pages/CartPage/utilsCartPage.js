@@ -1,10 +1,10 @@
-export const handleCheckboxAllCartProducts = (cart_products, selectedCartProductsIds, setSelectedCartProductsIds) => {
-    if (cart_products.length === selectedCartProductsIds.length) {
-        setSelectedCartProductsIds([]);
+export const handleCheckboxAllCartProducts = (cart_products, selectedCartProductIds, setSelectedCartProductIds) => {
+    if (cart_products.length === selectedCartProductIds.length) {
+        setSelectedCartProductIds([]);
     } else {
         const cartProductIds = cart_products.map(cartProduct => {
             return cartProduct.id;
         });
-        setSelectedCartProductsIds(cartProductIds);
+        setSelectedCartProductIds(cartProductIds);
     };
 };

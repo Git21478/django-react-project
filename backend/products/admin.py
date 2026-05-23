@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
-from .models import Brand, Category, Product, Review, FavoriteProduct, CartProduct
+from .models import Brand, Category, Product, Review, Favorite, AnonymousFavorite, CartProduct
 from users.admin import CustomAdminSite
 
 class BrandAdmin(admin.ModelAdmin):
@@ -39,15 +39,19 @@ class ReviewAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     # exclude = ["author", "product"]
 
-class FavoriteProductAdmin(admin.ModelAdmin):
+class FavoriteAdmin(admin.ModelAdmin):
     list_display = ["product", "user"]
 
+class AnonymousFavoriteAdmin(admin.ModelAdmin):
+    list_display = ["product", "session_key", "created_at"]
+
 class CartProductAdmin(admin.ModelAdmin):
-    list_display = ["product", "quantity", "get_product_price", "user"]
+    list_display = ["product", "quantity", "total_price", "created_at"]
 
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Review, ReviewAdmin)
-admin.site.register(FavoriteProduct, FavoriteProductAdmin)
+admin.site.register(Favorite, FavoriteAdmin)
+admin.site.register(AnonymousFavorite, AnonymousFavoriteAdmin)
 admin.site.register(CartProduct, CartProductAdmin)

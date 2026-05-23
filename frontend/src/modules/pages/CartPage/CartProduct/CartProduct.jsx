@@ -1,13 +1,13 @@
 import styles from "./CartProduct.module.css";
 import { useInput } from "../../../../hooks/useInput.js";
-import { changeCartProductQuantity, addFavoriteProduct, deleteFavoriteProduct, deleteCartProduct } from "./apiCartProduct.js";
+import { changeCartProductQuantity, addFavorite, deleteFavorite, deleteCartProduct } from "./apiCartProduct.js";
 import favorites_0_icon from "../../../../assets/icons/favorites_0.png";
 import favorites_1_icon from "../../../../assets/icons/favorites_1.png";
 import delete_icon from "../../../../assets/icons/delete.png";
 import { handleCheckboxCartProduct } from "./utilsCartProduct.js";
-import { getCartProducts } from "../apiCartPage.js";
+import { getCart } from "../apiCartPage.js";
 
-function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsIds, setSelectedCartProductsIds }) {
+function CartProduct({ cartProduct, setCart, selectedCartProductIds, setSelectedCartProductIds }) {
     const quantity = useInput(cartProduct.quantity);
 
     return (
@@ -18,8 +18,8 @@ function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsI
                     className={styles.cart_product_checkbox}
                     type="checkbox"
                     value={cartProduct.id}
-                    checked={selectedCartProductsIds.includes(cartProduct.id)}
-                    onChange={(e) => handleCheckboxCartProduct(e, selectedCartProductsIds, setSelectedCartProductsIds)}
+                    checked={selectedCartProductIds.includes(cartProduct.id)}
+                    onChange={(e) => handleCheckboxCartProduct(e, selectedCartProductIds, setSelectedCartProductIds)}
                 />
             </div>
 
@@ -35,8 +35,7 @@ function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsI
 
                         <h3>
                             <button onClick={() => {
-                                quantity.setValue(prevState => prevState - 1);
-                                changeCartProductQuantity(cartProduct.id, quantity.value - 1, setCartProductsObject);
+                                changeCartProductQuantity(cartProduct.product.id, quantity.value - 1, setCart);
                             }}>
                                 -
                             </button>
@@ -47,8 +46,7 @@ function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsI
                             />
 
                             <button onClick={() => {
-                                quantity.setValue(prevState => prevState + 1);
-                                changeCartProductQuantity(cartProduct.id, quantity.value + 1, setCartProductsObject);
+                                changeCartProductQuantity(cartProduct.product.id, quantity.value + 1, setCart);
                             }}>
                                 +
                             </button>
@@ -60,12 +58,12 @@ function CartProduct({ cartProduct, setCartProductsObject, selectedCartProductsI
                     </div>
 
                     <div>
-                        {!cartProduct.product.is_favorite_product
-                            ? <img className={styles.cart_product_icon} src={favorites_0_icon} alt="Favorites icon" onClick={() => addFavoriteProduct(cartProduct.product.id, setCartProductsObject)}/>
-                            : <img className={styles.cart_product_icon} src={favorites_1_icon} alt="Favorites icon" onClick={() => deleteFavoriteProduct(cartProduct.product.favorite_product_id, setCartProductsObject)}/>
+                        {!cartProduct.product.is_favorite
+                            ? <img className={styles.cart_product_icon} src={favorites_0_icon} alt="Favorites icon" onClick={() => addFavorite(cartProduct.product.id, setCart)}/>
+                            : <img className={styles.cart_product_icon} src={favorites_1_icon} alt="Favorites icon" onClick={() => deleteFavorite(cartProduct.product.favorite_id, setCart)}/>
                         }
 
-                        <img className={styles.cart_product_icon} src={delete_icon} alt="Delete icon" onClick={() => deleteCartProduct(cartProduct.id, getCartProducts, setCartProductsObject)}/>
+                        <img className={styles.cart_product_icon} src={delete_icon} alt="Delete icon" onClick={() => deleteCartProduct(cartProduct.product.id, setCart)}/>
                     </div>
                 </div>
             </div>

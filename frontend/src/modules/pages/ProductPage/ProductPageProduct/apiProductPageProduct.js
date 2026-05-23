@@ -1,14 +1,14 @@
 import api from "../../../../api";
 
-export const addFavoriteProduct = (productPageProductId, setProductPageProduct) => {
+export const addFavorite = (productPageProductId, setProductPageProduct) => {
     api
-        .post("/api/favorite-products/", {
+        .post("/api/favorites/", {
             product: productPageProductId,
         })
         .then((res) => {
             console.log(res.data);
             setProductPageProduct(prevState => {
-                return {...prevState, is_favorite_product: true, favorite_product_id: res.data.id};
+                return {...prevState, is_favorite: true, favorite_id: res.data.id};
             });
         })
         .catch((error) => {
@@ -16,13 +16,13 @@ export const addFavoriteProduct = (productPageProductId, setProductPageProduct) 
         });
 };
 
-export const deleteFavoriteProduct = (favoriteProductId, setProductPageProduct) => {
+export const deleteFavorite = (favoriteId, setProductPageProduct) => {
     api
-        .delete(`/api/favorite-products/${favoriteProductId}/`)
+        .delete(`/api/favorites/${favoriteId}/`)
         .then((res) => {
             console.log(res);
             setProductPageProduct(prevState => {
-                return {...prevState, is_favorite_product: false, favorite_product_id: null};
+                return {...prevState, is_favorite: false, favorite_id: null};
             });
         })
         .catch((error) => {
@@ -32,7 +32,7 @@ export const deleteFavoriteProduct = (favoriteProductId, setProductPageProduct) 
 
 export const addCartProduct = (productPageProductId, setProductPageProduct) => {
     api
-        .post(`/api/cart-products/`, {
+        .post("/api/cart/", {
             product: productPageProductId,
         })
         .then((res) => {

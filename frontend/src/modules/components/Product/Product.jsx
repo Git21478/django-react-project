@@ -3,7 +3,7 @@ import star_icon from "../../../assets/icons/star.png";
 import favorites_0_icon from "../../../assets/icons/favorites_0.png";
 import favorites_1_icon from "../../../assets/icons/favorites_1.png";
 import { pluralize } from "./utilsProduct.js";
-import { addCartProduct, addFavoriteProduct, deleteFavoriteProduct } from "./apiProduct.js";
+import { addCartProduct, addFavorite, deleteFavorite } from "./apiProduct.js";
 
 function Product({ product, setProducts }) {
     const pluralizedReviews = product && pluralize(["отзыв", "отзыва", "отзывов"], product.review_amount);
@@ -31,9 +31,9 @@ function Product({ product, setProducts }) {
                         } 
                     </h3>
                     <div>
-                        {!product.is_favorite_product
-                            ? <img className={styles.product_icon} src={favorites_0_icon} alt="Favorites" onClick={() => addFavoriteProduct(product.id, setProducts)}/>
-                            : <img className={styles.product_icon} src={favorites_1_icon} alt="Favorites" onClick={() => deleteFavoriteProduct(product.favorite_product_id, setProducts)}/>
+                        {!product.is_favorite
+                            ? <img className={styles.product_icon} src={favorites_0_icon} alt="Favorites" onClick={() => addFavorite(product.id, setProducts)}/>
+                            : <img className={styles.product_icon} src={favorites_1_icon} alt="Favorites" onClick={() => deleteFavorite(product.favorite_id, setProducts)}/>
                         }
 
                         {!product.is_cart_product

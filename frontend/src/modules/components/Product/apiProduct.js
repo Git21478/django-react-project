@@ -1,16 +1,16 @@
 import api from "../../../api";
 
-export const addFavoriteProduct = (productId, setProducts) => {
+export const addFavorite = (productId, setProducts) => {
     api
-        .post("/api/favorite-products/", {
-            product: productId,
+        .post("/api/favorites/", {
+            product_id: productId,
         })
         .then((res) => {
             console.log(res.data);
             setProducts(prevState => {
                 return prevState.map(product => {
                     if (product.id === productId) {
-                        return {...product, is_favorite_product: true, favorite_product_id: res.data.id};
+                        return {...product, is_favorite: true, favorite_id: res.data.id};
                     } else {
                         return product;
                     };
@@ -22,15 +22,15 @@ export const addFavoriteProduct = (productId, setProducts) => {
         });
 };
 
-export const deleteFavoriteProduct = (favoriteProductId, setProducts) => {
+export const deleteFavorite = (favoriteId, setProducts) => {
     api
-        .delete(`/api/favorite-products/${favoriteProductId}/`)
+        .delete(`/api/favorites/${favoriteId}/`)
         .then((res) => {
             console.log(res);
             setProducts(prevState => {
                 return prevState.map(product => {
-                    if (product.favorite_product_id === favoriteProductId) {
-                        return {...product, is_favorite_product: false, favorite_product_id: null};
+                    if (product.favorite_id === favoriteId) {
+                        return {...product, is_favorite: false, favorite_id: null};
                     } else {
                         return product;
                     };
@@ -44,8 +44,8 @@ export const deleteFavoriteProduct = (favoriteProductId, setProducts) => {
 
 export const addCartProduct = (productId, setProducts) => {
     api
-        .post(`/api/cart-products/`, {
-            product: productId,
+        .post("/api/cart/add/", {
+            product_id: productId,
         })
         .then((res) => {
             console.log(res.data);

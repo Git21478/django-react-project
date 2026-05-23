@@ -1,31 +1,31 @@
 import api from "../../../api";
 
-export const getFavoriteProducts = (setFavoriteProducts) => {
+export const getFavorites = (setFavorites) => {
     api
-        .get("api/favorite-products/")
+        .get("api/favorites/")
         .then((res) => {
             console.log("res.data (favorite products page)");
             console.log(res.data);
-            setFavoriteProducts(res.data);
+            setFavorites(res.data);
         })
         .catch((error) => {
             console.log(error);
         });
 };
 
-export const deleteMultipleFavoriteProducts = (selectedFavoriteProductsIds, setSelectedFavoriteProductsIds, setFavoriteProducts) => {
+export const deleteMultipleFavorites = (selectedFavoritesIds, setSelectedFavoritesIds, setFavorites) => {
+    const idsParam = selectedFavoritesIds.join(",");
+
     api
-        .put("api/favorite-products/delete-multiple/", {
-            favoriteProductsIds: selectedFavoriteProductsIds,
-        })
+        .delete(`api/favorites/delete-multiple/?ids=${idsParam}`)
         .then((res) => {
             console.log(res);
-            setSelectedFavoriteProductsIds(prevData => {
+            setSelectedFavoritesIds(prevData => {
                 return prevData.filter(id => {
-                    return !selectedFavoriteProductsIds.includes(id);
+                    return !selectedFavoritesIds.includes(id);
                 });
             });
-            getFavoriteProducts(setFavoriteProducts);
+            getFavorites(setFavorites);
         })
         .catch((error) => {
             console.log(error);

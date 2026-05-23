@@ -1,6 +1,6 @@
 import pytest
 from rest_framework.test import APIClient
-from products.models import Brand, Category, Product, Review, FavoriteProduct, CartProduct
+from products.models import Brand, Category, Product, Review, Favorite, CartProduct
 from users.models import User
 from django.urls import reverse
 
@@ -55,16 +55,16 @@ def review2(db, user2, product1):
 
 @pytest.fixture
 def favorite_product11(db, user1, product1):
-    return FavoriteProduct.objects.create(user=user1, product=product1)
+    return Favorite.objects.create(user=user1, product=product1)
 @pytest.fixture
 def favorite_product12(db, user1, product2):
-    return FavoriteProduct.objects.create(user=user1, product=product2)
+    return Favorite.objects.create(user=user1, product=product2)
 @pytest.fixture
 def favorite_product21(db, user2, product1):
-    return FavoriteProduct.objects.create(user=user2, product=product1)
+    return Favorite.objects.create(user=user2, product=product1)
 @pytest.fixture
 def favorite_product22(db, user2, product2):
-    return FavoriteProduct.objects.create(user=user2, product=product2)
+    return Favorite.objects.create(user=user2, product=product2)
 
 @pytest.fixture
 def cart_product11(db, user1, product1):

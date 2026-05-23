@@ -3,9 +3,8 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r"favorites", views.FavoriteProductViewSet, basename="favorite")
+router.register(r"favorites", views.FavoriteViewSet, basename="favorite")
 router.register(r"cart", views.CartViewSet, basename="cart")
-router.register(r"cart-products", views.CartProductViewSet, basename="cart-product")
 
 urlpatterns = [
     path("categories/<int:category>/brands/", views.BrandCategoryList.as_view(), name="category-brands"),

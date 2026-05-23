@@ -1,7 +1,7 @@
 import pytest
 from rest_framework import status
 from django.urls import reverse
-from products.models import Review, FavoriteProduct, CartProduct
+from products.models import Review, Favorite, CartProduct
 from products.views import ReviewPaginationPages
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
@@ -289,7 +289,7 @@ class TestReviewRetrieveUpdateDestroy:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert Review.objects.filter(pk=review1.pk).exists()
 
-class TestFavoriteProductViewSet:
+class TestFavoriteViewSet:
     #list
     def test_list_favorites_unauthenticated(self, api_client, url_favorite_product_list):
         response = api_client.get(url_favorite_product_list)
@@ -309,8 +309,8 @@ class TestFavoriteProductViewSet:
     def test_create_favorite_product_authenticated(self, api_auth_client, product1, url_favorite_product_list):
         response = api_auth_client.post(url_favorite_product_list, {"product": product1.id})
         assert response.status_code == status.HTTP_201_CREATED
-        assert FavoriteProduct.objects.count() == 1
-        assert FavoriteProduct.objects.first().user.username == "User1"
+        assert Favorite.objects.count() == 1
+        assert Favorite.objects.first().user.username == "User1"
 
     def test_create_favorite_product_duplicate(self, api_auth_client, favorite_product11, url_favorite_product_list):
         response = api_auth_client.post(url_favorite_product_list, {"product": favorite_product11.product.id})
@@ -347,14 +347,14 @@ class TestFavoriteProductViewSet:
     def test_delete_favorite_product_authenticated(self, api_auth_client, favorite_product11, url_favorite_product_detail):
         response = api_auth_client.delete(url_favorite_product_detail(favorite_product11.id))
         assert response.status_code == status.HTTP_204_NO_CONTENT
-        assert FavoriteProduct.objects.count() == 0
+        assert Favorite.objects.count() == 0
 
     def test_delete_favorite_product_different_user(self, api_auth_client, favorite_product11, user2, url_favorite_product_detail):
         favorite_product11.user = user2
         favorite_product11.save()
         response = api_auth_client.delete(url_favorite_product_detail(favorite_product11.id))
         assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert FavoriteProduct.objects.count() == 1
+        assert Favorite.objects.count() == 1
 
     #delete_multiple
     def test_delete_multiple_favorite_products_unauthenticated(self, api_client, favorite_product11, favorite_product12, url_favorite_product_delete_multiple):
@@ -362,31 +362,31 @@ class TestFavoriteProductViewSet:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_delete_multiple_favorite_products_success(self, api_auth_client, favorite_product11, favorite_product12, url_favorite_product_delete_multiple):
-        assert FavoriteProduct.objects.count() == 2
+        assert Favorite.objects.count() == 2
         response = api_auth_client.delete(url_favorite_product_delete_multiple(favorite_product11.id, favorite_product12.id))
         assert response.status_code == status.HTTP_204_NO_CONTENT
-        assert FavoriteProduct.objects.count() == 0
+        assert Favorite.objects.count() == 0
 
     def test_delete_multiple_favorite_products_empty_list(self, api_auth_client, url_favorite_product_delete_multiple):
         response = api_auth_client.delete(url_favorite_product_delete_multiple())
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert FavoriteProduct.objects.count() == 0
+        assert Favorite.objects.count() == 0
 
     def test_delete_multiple_favorite_products_nonexistent_ids(self, api_auth_client, url_favorite_product_delete_multiple):
         response = api_auth_client.delete(url_favorite_product_delete_multiple(999, 1000))
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_delete_multiple_favorite_products_single_id(self, api_auth_client, favorite_product11, favorite_product12, url_favorite_product_delete_multiple):
-        assert FavoriteProduct.objects.count() == 2
+        assert Favorite.objects.count() == 2
         response = api_auth_client.delete(url_favorite_product_delete_multiple(favorite_product11.id))
         assert response.status_code == status.HTTP_204_NO_CONTENT
-        assert FavoriteProduct.objects.count() == 1
-        assert FavoriteProduct.objects.first().id == favorite_product12.id
+        assert Favorite.objects.count() == 1
+        assert Favorite.objects.first().id == favorite_product12.id
 
     def test_delete_multiple_different_user_favorites(self, api_auth_client, favorite_product21, favorite_product22, url_favorite_product_delete_multiple):
         response = api_auth_client.delete(url_favorite_product_delete_multiple(favorite_product21.id, favorite_product22.id))
         assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert FavoriteProduct.objects.count() == 2
+        assert Favorite.objects.count() == 2
 
 class TestCartProductViewSet:
     #list

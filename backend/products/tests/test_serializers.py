@@ -1,7 +1,7 @@
 import pytest
 from products.serializers import (
     BrandSerializer, CategorySerializer, ProductSerializer,
-    ReviewSerializer, FavoriteProductSerializer, FavoriteProductCreateSerializer,
+    ReviewSerializer, FavoriteSerializer, FavoriteCreateSerializer,
     CartProductSerializer, CartProductCreateSerializer
 )
 from products.models import CartProduct
@@ -168,9 +168,9 @@ class TestReviewSerializer:
         assert not serializer.is_valid()
         assert "rating" in serializer.errors
 
-class TestFavoriteProductSerializer:
+class TestFavoriteSerializer:
     def test_favorite_product_serializer_fields(self, favorite_product11):
-        serializer = FavoriteProductSerializer(favorite_product11)
+        serializer = FavoriteSerializer(favorite_product11)
         
         assert set(serializer.data.keys()) == {"id", "user", "product"}
         assert serializer.data["id"] == favorite_product11.id
@@ -178,7 +178,7 @@ class TestFavoriteProductSerializer:
         assert "product" in serializer.data
 
     def test_favorite_product_serializer_nested_product(self, favorite_product11):
-        serializer = FavoriteProductSerializer(favorite_product11)
+        serializer = FavoriteSerializer(favorite_product11)
         
         product_data = serializer.data["product"]
         assert "id" in product_data
@@ -186,15 +186,15 @@ class TestFavoriteProductSerializer:
         assert "price" in product_data
         assert product_data["name"] == "Product1"
 
-class TestFavoriteProductCreateSerializer:
+class TestFavoriteCreateSerializer:
     def test_favorite_create_serializer_fields(self):
-        serializer = FavoriteProductCreateSerializer()
+        serializer = FavoriteCreateSerializer()
         
         assert set(serializer.fields.keys()) == {"id", "product"}
 
     def test_favorite_create_serializer_valid_data(self, product1, api_auth_client, user1):
         data = {"product": product1.id}
-        serializer = FavoriteProductCreateSerializer(
+        serializer = FavoriteCreateSerializer(
             data=data,
             context={"request": api_auth_client.request}
         )
@@ -203,7 +203,7 @@ class TestFavoriteProductCreateSerializer:
 
     def test_favorite_create_serializer_duplicate_product(self, product1, favorite_product11, api_auth_client):
         data = {"product": product1.id}
-        serializer = FavoriteProductCreateSerializer(
+        serializer = FavoriteCreateSerializer(
             data=data,
             context={"request": api_auth_client.request}
         )
@@ -214,7 +214,7 @@ class TestFavoriteProductCreateSerializer:
 
     def test_favorite_create_serializer_without_auth(self, product1, api_client):
         data = {"product": product1.id}
-        serializer = FavoriteProductCreateSerializer(
+        serializer = FavoriteCreateSerializer(
             data=data,
             context={"request": api_client.request}
         )

@@ -1,18 +1,11 @@
 import api from "../../../../api";
 
-export const handleCheckout = (cartProducts, setCartProductsObject, setSelectedCartProductsIds) => {
-    const cartProductsIds = cartProducts.map(cartProduct => {
-        return cartProduct.id;
-    });
-
+export const handleCheckout = (cartProducts, setCart) => {
     api
-        .put("api/cart-products/delete-multiple/", {
-            cartProductsIds,
-        })
+        .delete("api/cart/clear/")
         .then((res) => {
             console.log(res);
-            setSelectedCartProductsIds([]);
-            setCartProductsObject({cart_products: [], total_quantity: 0, total_price: 0});
+            setCart(res.data);
             alert("Заказ оформлен");
         })
         .catch((error) => {

@@ -19,8 +19,8 @@ function AppProvider({ children }) {
     const [productsOrdering, setProductsOrdering] = useState("price");
     const [reviewsOrdering, setReviewsOrdering] = useState("created_at");
     const [products, setProducts] = useState([]);
-    const [favoriteProducts, setFavoriteProducts] = useState([]);
-    const [cartProductsObject, setCartProductsObject] = useState({cart_products: [], total_quantity: 0, total_price: 0});
+    const [favorites, setFavorites] = useState([]);
+    const [cart, setCart] = useState({cart_products: [], total_quantity: 0, total_price: 0});
     const pageSize = 10;
     const [currentPage, setCurrentPage] = useState(1);
     const [pages, setPages] = useState([1]);
@@ -39,8 +39,8 @@ function AppProvider({ children }) {
         productsOrdering: productsOrdering,
         reviewsOrdering: reviewsOrdering,
         products: products,
-        favoriteProducts: favoriteProducts,
-        cartProductsObject: cartProductsObject,
+        favorites: favorites,
+        cart: cart,
         currentPage: currentPage,
         pageSize: pageSize,
         pages: pages,
@@ -58,8 +58,8 @@ function AppProvider({ children }) {
         setProductsOrdering: setProductsOrdering,
         setReviewsOrdering: setReviewsOrdering,
         setProducts: setProducts,
-        setFavoriteProducts: setFavoriteProducts,
-        setCartProductsObject: setCartProductsObject,
+        setFavorites: setFavorites,
+        setCart: setCart,
         setCurrentPage: setCurrentPage,
         setPages: setPages,
         setSearch: setSearch,
@@ -89,7 +89,7 @@ function AppProvider({ children }) {
             : !isGetFilteredProducts
                 ? getCategoryProducts(setProducts, setProductsAmount, currentPage, pageSize, productsOrdering, search, currentCategory.id)
                 : setIsGetFilteredProducts(false);
-    }, [isAuthenticated, currentPage, productsOrdering, productsAmount, currentCategory, cartProductsObject]);
+    }, [isAuthenticated, currentPage, productsOrdering, productsAmount, currentCategory, cart, cart.cart_products]);
     
     return (
         <>

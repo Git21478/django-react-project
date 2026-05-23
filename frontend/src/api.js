@@ -2,19 +2,15 @@ import axios from "axios";
 import { ACCESS_TOKEN, backendBaseURL } from "./constants";
 
 const api = axios.create({
-    baseURL: backendBaseURL
+    baseURL: backendBaseURL,
+    withCredentials: true,
 });
 
 api.interceptors.request.use(
     (config) => {
-        const publicPaths = ["/categories", "/products"];
-        const isPublic = publicPaths.some(path => config.url.includes(path));
-
-        if (!isPublic) {
-            const token = localStorage.getItem(ACCESS_TOKEN);
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`
-            };
+        const token = localStorage.getItem(ACCESS_TOKEN);
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
         };
         return config;
     },

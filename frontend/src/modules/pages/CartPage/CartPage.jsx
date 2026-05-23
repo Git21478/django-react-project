@@ -1,19 +1,21 @@
 import styles from "./CartPage.module.css";
 import { useContext, useEffect, useState } from "react";
-import { getCartProducts } from "./apiCartPage";
+import { getCart } from "./apiCartPage";
 import PageTemplate from "../../PageTemplate/PageTemplate";
-import CartProduct from "./CartProduct/CartProduct";
+import Cart from "./CartProduct/CartProduct";
 import { AppContext } from "../../AppProvider/AppProvider";
 import CartPageSelectAll from "./CartPageSelectAll/CartPageSelectAll";
+import CartProduct from "./CartProduct/CartProduct";
 import CartPageSummary from "./CartPageSummary/CartPageSummary";
 
 function CartPage() {
     document.title = "Корзина | Магазин";
     const appData = useContext(AppContext);
-    const [selectedCartProductsIds, setSelectedCartProductsIds] = useState([]);
+    const [selectedCartProductIds, setSelectedCartProductIds] = useState([]);
 
     useEffect(() => {
-        getCartProducts(appData.setCartProductsObject);
+        getCart(appData.setCart);
+        console.log(appData);
     }, []);
 
     return (
@@ -21,23 +23,23 @@ function CartPage() {
             <div className={styles.cart_page_wrapper}>
                 <h1 className={styles.cart_page_header}>Корзина</h1>
 
-                {appData.cartProductsObject &&
+                {appData.cart &&
                     <CartPageSelectAll
-                        cartProductsObject={appData.cartProductsObject}
-                        setCartProductsObject={appData.setCartProductsObject}
-                        selectedCartProductsIds={selectedCartProductsIds}
-                        setSelectedCartProductsIds={setSelectedCartProductsIds}
+                        cart={appData.cart}
+                        setCart={appData.setCart}
+                        selectedCartProductIds={selectedCartProductIds}
+                        setSelectedCartProductIds={setSelectedCartProductIds}
                     />
                 }
 
                 <div className={styles.cart_page_main_section}>
                     <div className={styles.cart_page_products_section}>
-                        {appData.cartProductsObject.cart_products && appData.cartProductsObject.cart_products.map(cartProduct => (
+                        {appData.cart.cart_products && appData.cart.cart_products.map(cartProduct => (
                             <CartProduct
                                 cartProduct={cartProduct}
-                                setCartProductsObject={appData.setCartProductsObject}
-                                selectedCartProductsIds={selectedCartProductsIds}
-                                setSelectedCartProductsIds={setSelectedCartProductsIds}
+                                setCart={appData.setCart}
+                                selectedCartProductIds={selectedCartProductIds}
+                                setSelectedCartProductIds={setSelectedCartProductIds}
                                 key={cartProduct.id}
                             />
                         ))}
@@ -45,9 +47,9 @@ function CartPage() {
 
                     <div className={styles.cart_page_summary_section}>
                         <CartPageSummary
-                            cartProductsObject={appData.cartProductsObject}
-                            setCartProductsObject={appData.setCartProductsObject}
-                            setSelectedCartProductsIds={setSelectedCartProductsIds}
+                            cart={appData.cart}
+                            setCart={appData.setCart}
+                            setSelectedCartProductIds={setSelectedCartProductIds}
                         />
                     </div>
                 </div>

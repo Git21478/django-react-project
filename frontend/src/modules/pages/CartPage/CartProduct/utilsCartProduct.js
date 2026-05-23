@@ -1,10 +1,10 @@
-export const handleCheckboxCartProduct = (e, selectedCartProductsIds, setSelectedCartProductsIds) => {
+export const handleCheckboxCartProduct = (e, selectedCartProductIds, setSelectedCartProductIds) => {
     let value = parseInt(e.target.value);
 
     if (e.target.checked) {
-        setSelectedCartProductsIds([...selectedCartProductsIds, value]);
+        setSelectedCartProductIds([...selectedCartProductIds, value]);
     } else {
-        setSelectedCartProductsIds(prevData => {
+        setSelectedCartProductIds(prevData => {
             return prevData.filter(id => {
                 return id !== value;
             });

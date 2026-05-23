@@ -64,18 +64,46 @@ class Product(models.Model):
     def get_review_amount(self):
         return self.reviews.count()
     
-    def get_favorite_product_id(self, current_user):
-        favorite_product = Favorites.objects.filter(user=current_user.id, product=self.id).first()
-        return favorite_product.id if favorite_product else None
+    def get_favorite_id(self, current_user):
+        if current_user.is_authenticated:
+            favorite = Favorite.objects.filter(user=current_user.id, product=self.id).first()
+            return favorite.id if favorite else None
+        else:
+            session_key = self.request.session.session_key
+            if session_key:
+                favorite = AnonymousFavorite.objects.filter(session_key=session_key, product=self.id).first()
+                return favorite.id if favorite else None
+            else:
+                return None
 
     def get_cart_product_id(self, current_user):
-        cart_product = CartProduct.objects.filter(user=current_user.id, product=self.id).first()
-        return cart_product.id if cart_product else None
+        if current_user.is_authenticated:
+            cart_product = CartProduct.objects.filter(cart__user=current_user.id, product=self.id).first()
+            return cart_product.id if cart_product else None
+        else:
+            session_key = self.request.session.session_key
+            if session_key:
+                cart_product = CartProduct.objects.filter(anonymous_cart__session_key=session_key, product=self.id).first()
+                return cart_product.id if cart_product else None
+            else:
+                return None
     
-    def get_is_favorite_product(self, current_user):
-        return Favorites.objects.filter(user=current_user.id, product=self.id).exists()
+    def get_is_favorite(self, current_user):
+        if current_user.is_authenticated:
+            return Favorite.objects.filter(user=current_user.id, product=self.id).exists()
+        else:
+            session_key = self.request.session.session_key
+            if session_key:
+                return AnonymousFavorite.objects.filter(session_key=session_key, product=self.id).exists()
     
     def get_is_cart_product(self, current_user):
+        if current_user.is_authenticated:
+            return CartProduct.objects.filter(cart__user=current_user.id, product=self.id).exists()
+        else:
+            session_key = self.request.session.session_key
+            if session_key:
+                return CartProduct.objects.filter(anonymous_cart__session_key=session_key, product=self.id).exists()
+            
         return CartProduct.objects.filter(user=current_user.id, product=self.id).exists()
 
 class Review(models.Model):
@@ -99,7 +127,6 @@ class Review(models.Model):
 
 #Favorites
 class BaseFavorite(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="favorite_products", verbose_name="Товар")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -111,13 +138,15 @@ class BaseFavorite(models.Model):
         return self.product.name    
 
 class Favorite(BaseFavorite):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorite_products", verbose_name="Пользователь")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites", verbose_name="Пользователь")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="favorites", verbose_name="Товар")
 
     class Meta:
         unique_together = ["user", "product"]
     
 class AnonymousFavorite(BaseFavorite):
-    session_key = models.CharField(max_length=40, unique=True, db_index=True)
+    session_key = models.CharField(max_length=40, db_index=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="anonymous_favorites", verbose_name="Товар")
 
     class Meta:
         unique_together = ["session_key", "product"]
@@ -155,6 +184,7 @@ class CartProduct(models.Model):
         verbose_name = "Товар в корзине"
         verbose_name_plural = "Товары в корзине"
         unique_together = [["cart", "product"], ["anonymous_cart", "product"]]
+        ordering = ["-created_at"]
     
     def __str__(self):
         return Product.objects.get(id=self.product.id).name

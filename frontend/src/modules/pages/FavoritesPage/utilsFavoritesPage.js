@@ -1,10 +1,10 @@
-export const handleCheckboxAllFavoriteProducts = (favoriteProducts, selectedFavoriteProductsIds, setSelectedFavoriteProductsIds) => {
-    if (favoriteProducts.length === selectedFavoriteProductsIds.length) {
-        setSelectedFavoriteProductsIds([]);
+export const handleCheckboxAllFavorites = (favorites, selectedFavoritesIds, setSelectedFavoritesIds) => {
+    if (favorites.length === selectedFavoritesIds.length) {
+        setSelectedFavoritesIds([]);
     } else {
-        const selectedFavoriteProductsIds = favoriteProducts.map(favoriteProduct => {
-            return favoriteProduct.id;
+        const selectedFavoritesIds = favorites.map(favorite => {
+            return favorite.id;
         });
-        setSelectedFavoriteProductsIds(selectedFavoriteProductsIds);
+        setSelectedFavoritesIds(selectedFavoritesIds);
     };
 };

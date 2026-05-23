@@ -2,7 +2,7 @@ from .models import Brand, Category, Product, Review, Favorite, AnonymousFavorit
 from .serializers import (
     BrandSerializer, CategorySerializer, ProductSerializer, ReviewSerializer,
     FavoriteSerializer, AnonymousFavoriteSerializer, FavoriteCreateSerializer,
-    CartSerializer, AnonymousCartSerializer, CartProductSerializer, CartProductCreateSerializer
+    CartSerializer, AnonymousCartSerializer, CartProductSerializer, AddToCartSerializer
 )
 from rest_framework import generics, status
 from rest_framework.viewsets import ModelViewSet
@@ -49,6 +49,11 @@ class BaseProductListView(generics.ListAPIView):
     search_fields = ["name", "description"]
     ordering_fields = ["price", "rating"]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
+
 class ProductList(BaseProductListView):
     def get_queryset(self):
         return Product.objects.annotate(rating=Avg("reviews__rating")).select_related("brand", "category").order_by("id")
@@ -73,6 +78,11 @@ class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Product.objects.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
 
 #Review
 class ReviewPaginationPages(PageNumberPagination):
@@ -104,16 +114,16 @@ class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 #Favorite
 class FavoriteViewSet(ModelViewSet):
     permission_classes = [AllowAny]
-    
+        
     def get_queryset(self):
-        request = self.request
-        if request.user.is_authenticated:
-            return Favorite.objects.filter(user=request.user)
-        else:
-            session_key = request.session.session_key
-            if session_key:
-                return AnonymousFavorite.objects.filter(session_key=session_key)
-            return AnonymousFavorite.objects.none()
+        if self.request.user.is_authenticated:
+            return Favorite.objects.filter(user=self.request.user)
+        
+        session_key = self.request.session.session_key
+        if session_key:
+            return AnonymousFavorite.objects.filter(session_key=session_key)
+        
+        return AnonymousFavorite.objects.none()
     
     def get_serializer_class(self):
         if self.action == "create":
@@ -141,16 +151,7 @@ class FavoriteViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        # Возвращаем созданный объект
-
-        # if request.user.is_authenticated:
-        #     response_serializer = FavoriteSerializer(serializer.instance)
-        # else:
-        #     response_serializer = AnonymousFavoriteSerializer(serializer.instance)
-
-        # return Response(response_serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, *args, **kwargs):
         return Response({"error": "Метод PUT не разрешён"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -170,8 +171,8 @@ class FavoriteViewSet(ModelViewSet):
         except ValueError:
             return Response({"error": "Некорректный формат ID"}, status=status.HTTP_400_BAD_REQUEST)
         
-        user_favorite_products = self.get_queryset().filter(id__in=selected_ids)
-        deleted_count, _ = user_favorite_products.delete()
+        user_favorites = self.get_queryset().filter(id__in=selected_ids)
+        deleted_count, _ = user_favorites.delete()
         
         if deleted_count == 0:
             return Response({"error": "Избранные товары не найдены"}, status=status.HTTP_404_NOT_FOUND)
@@ -218,7 +219,7 @@ class CartViewSet(ModelViewSet):
         else:
             return AnonymousCartSerializer
     
-    def get_object(self):#3
+    def get_object(self):
         if self.request.user.is_authenticated:
             cart, _ = Cart.objects.get_or_create(user=self.request.user)
             return cart
@@ -238,23 +239,20 @@ class CartViewSet(ModelViewSet):
     @action(detail=False, methods=["post"], url_path="add")
     def add_product(self, request):
         cart = self.get_object()
-        serializer = CartProductCreateSerializer(data=request.data, context={"request": request})
+        serializer = AddToCartSerializer(data=request.data, context={"request": request})
 
         if serializer.is_valid():
             product = serializer.validated_data.get("product")
             quantity = serializer.validated_data.get("quantity", 1)
 
             if request.user.is_authenticated:
-                cart_product, created = CartProduct.objects.get_or_create(cart=cart, product=product, defaults={"quantity": quantity})
-                if not created:
-                    cart_product.quantity += quantity
-                    cart_product.save()
-                
+                cart_product, created = CartProduct.objects.get_or_create(cart=cart, product=product, defaults={"quantity": quantity})   
             else:
                 cart_product, created = CartProduct.objects.get_or_create(anonymous_cart=cart, product=product, defaults={"quantity": quantity})
-                if not created:
-                    cart_product.quantity += quantity
-                    cart_product.save()
+
+            if not created:
+                cart_product.quantity += quantity
+                cart_product.save()
 
             return Response(CartProductSerializer(cart_product, context={"request": request}).data, status=status.HTTP_201_CREATED)
         
@@ -276,8 +274,8 @@ class CartViewSet(ModelViewSet):
         else:
             return Response({"quantity": "Количество товара должно быть положительным числом"}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = CartProductSerializer(cart_product, context={"request": request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cart_serializer = self.get_serializer(cart, context={"request": request})
+        return Response(cart_serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["delete"], url_path="remove/(?P<product_id>\\d+)")
     def remove_product(self, request, product_id=None):
@@ -289,7 +287,22 @@ class CartViewSet(ModelViewSet):
             cart_product = get_object_or_404(CartProduct, anonymous_cart=cart, product_id=product_id)
 
         cart_product.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = self.get_serializer(cart)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["delete"], url_path="delete-multiple")
+    def delete_multiple(self, request):
+        cart_product_ids = request.data.get("cart_product_ids", [])
+        cart = self.get_object()
+
+        if request.user.is_authenticated:
+            CartProduct.objects.filter(cart=cart, id__in = cart_product_ids).delete()
+        else:
+            CartProduct.objects.filter(anonymous_cart=cart, id__in = cart_product_ids).delete()
+        
+        serializer = self.get_serializer(cart, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     @action(detail=False, methods=["delete"], url_path="clear")
     def clear_cart(self, request):
@@ -300,99 +313,5 @@ class CartViewSet(ModelViewSet):
         else:
             CartProduct.objects.filter(anonymous_cart=cart).delete()
         
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-class CartProductViewSet(ModelViewSet):
-    serializer_class = CartProductSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return CartProduct.objects.filter(cart__user=self.request.user)
-        
-        else:
-            session_key = self.request.session.session_key
-            if session_key:
-                return CartProduct.objects.filter(anonymous_cart__session_key=session_key)
-            
-            return CartProduct.objects.none()
-    
-    def get_cart(self):
-        if self.request.user.is_authenticated:
-            cart, _ = Cart.objects.get_or_create(user=self.request.user)
-            return cart, None
-        
-        else:
-            session_key = self.request.session.session_key
-            if not session_key:
-                self.request.session.create()
-                session_key = self.request.session.session_key
-            
-            anonymous_cart, _ = AnonymousCart.objects.get_or_create(session_key=session_key)
-            return None, anonymous_cart
-
-    def create(self, request, *args, **kwargs):
-        cart, anonymous_cart = self.get_cart()
-        serializer = CartProductCreateSerializer(data=request.data, context={"request": request})
-
-        if serializer.is_valid():
-            product = serializer.validated_data["product"]
-            quantity = serializer.validated_data.get("quantity", 1)
-
-            if quantity <= 0:
-                return Response({"quantity": "Количество товаров должно быть положительным числом"}, status=status.HTTP_400_BAD_REQUEST)
-
-            if cart:
-                cart_product, created = CartProduct.objects.get_or_create(cart=cart, product=product, defaults={"quantity": quantity})
-            else:
-                cart_product, created = CartProduct.objects.get_or_create(anonymous_cart=anonymous_cart, product=product, defaults={"quantity": quantity})
-            
-            if not created:
-                cart_product.quantity += quantity
-                cart_product.save()
-
-            response_serializer = CartProductSerializer(cart_product, context={"request": request})
-            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, *args, **kwargs):
-        cart_product = self.get_object()
-        quantity = request.data.get("quantity")
-
-        if quantity is None:
-            return Response({"quantity": "Поле обязательно"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            quantity = int(quantity)
-            if quantity <= 0:
-                return Response({"quantity": "Количество должно быть положительным целым числом"}, status=status.HTTP_400_BAD_REQUEST)
-
-        except (TypeError, ValueError):
-            return Response({"quantity": "Количество должно быть положительным целым числом"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        cart_product.quantity = quantity
-        cart_product.save()
-        
-        serializer = self.get_serializer(cart_product)
-        return Response(serializer.data)
-    
-    def partial_update(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        cart_product = self.get_object()
-        cart_product.delete()
-        return Response({"message": "Товар успешно удалён из корзины"}, status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=["delete"], url_path="clear")
-    def clear_cart(self, request):
-        cart, anonymous_cart = self.get_cart()
-
-        with transaction.atomic():
-            if cart:
-                CartProduct.objects.filter(cart=cart).delete()
-            else:
-                CartProduct.objects.filter(anonymous_cart=anonymous_cart).delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = self.get_serializer(cart, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)

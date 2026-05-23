@@ -1,30 +1,32 @@
 import api from "../../../api";
 
-export const getCartProducts = (setCartProductsObject) => {
+export const getCart = (setCart) => {
     api
-        .get("api/cart-products/")
+        .get("api/cart/")
         .then((res) => {
-            // console.log(res.data);
-            setCartProductsObject(res.data);
+            console.log(res.data);
+            setCart(res.data);
         })
         .catch((error) => {
             console.log(error);
         });
 };
 
-export const deleteMultipleCartProducts = (selectedCartProductsIds, setSelectedCartProductsIds, setCartProductsObject) => {
+export const deleteMultipleCartProducts = (selectedCartProductIds, setSelectedCartProductIds, setCart) => {
     api
-        .put("api/cart-products/delete-multiple/", {
-            cartProductsIds: selectedCartProductsIds,
+        .delete("api/cart/delete-multiple/", {
+            data: {
+                cart_product_ids: selectedCartProductIds,
+            }
         })
         .then((res) => {
             console.log(res);
-            setSelectedCartProductsIds(prevData => {
-                return prevData.filter(id => {
-                    return !selectedCartProductsIds.includes(id);
-                });
-            });
-            getCartProducts(setCartProductsObject);
+            setSelectedCartProductIds([]);
+
+            if (res.data) {
+                setCart(res.data);
+            }
+            getCart(setCart);
         })
         .catch((error) => {
             console.log(error);

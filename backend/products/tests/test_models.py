@@ -1,5 +1,5 @@
 import pytest
-from products.models import Brand, Category, Product, FavoriteProduct
+from products.models import Brand, Category, Product, Favorite
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import ManyToManyField
@@ -134,7 +134,7 @@ class TestProduct:
         assert favorite_product_id is None
     
     def test_get_favorite_product_id_product_exists(self, user1, product1):
-        favorite_product1 = FavoriteProduct.objects.create(user=user1, product=product1)
+        favorite_product1 = Favorite.objects.create(user=user1, product=product1)
         favorite_product_id = product1.get_favorite_product_id(user1)
         assert favorite_product_id == favorite_product1.id
  
@@ -150,7 +150,7 @@ class TestProduct:
         assert not product1.get_is_favorite_product(user1)
 
     def test_get_is_favorite_product_true(self, user1, product2):
-        FavoriteProduct.objects.create(user=user1, product=product2)
+        Favorite.objects.create(user=user1, product=product2)
         assert product2.get_is_favorite_product(user1)
 
     def test_get_is_cart_product_false(self, user1, product1):
@@ -159,115 +159,115 @@ class TestProduct:
     def test_get_is_cart_product_true(self, user1, product2, cart_product2):
         assert product2.get_is_cart_product(user1)
 
-class TestFavoriteProductModel:
+class TestFavoriteModel:
     def test_create_favorite_with_user_and_product(self, user1, product1):
-        favorite = FavoriteProduct.objects.create(user=user1, product=product1)
+        favorite = Favorite.objects.create(user=user1, product=product1)
         assert favorite.pk is not None
         assert favorite.user == user1
         assert favorite.product == product1
     
     def test_create_favorite_without_user(self, product1):
-        favorite = FavoriteProduct.objects.create(user=None, product=product1)
+        favorite = Favorite.objects.create(user=None, product=product1)
         assert favorite.pk is not None
         assert favorite.user is None
         assert favorite.product == product1
     
     def test_create_favorite_without_product(self, user1):
         with pytest.raises(IntegrityError):
-            FavoriteProduct.objects.create(user=user1, product=None)
+            Favorite.objects.create(user=user1, product=None)
     
     def test_same_product_different_users(self, user1, user2, product1):
-        fav1 = FavoriteProduct.objects.create(user=user1, product=product1)
-        fav2 = FavoriteProduct.objects.create(user=user2, product=product1)
+        fav1 = Favorite.objects.create(user=user1, product=product1)
+        fav2 = Favorite.objects.create(user=user2, product=product1)
         
         assert fav1.pk != fav2.pk
-        assert FavoriteProduct.objects.filter(product=product1).count() == 2
+        assert Favorite.objects.filter(product=product1).count() == 2
     
     def test_same_user_different_products(self, user1, product1, product2):
-        fav1 = FavoriteProduct.objects.create(user=user1, product=product1)
-        fav2 = FavoriteProduct.objects.create(user=user1, product=product2)
+        fav1 = Favorite.objects.create(user=user1, product=product1)
+        fav2 = Favorite.objects.create(user=user1, product=product2)
         
         assert fav1.pk != fav2.pk
-        assert FavoriteProduct.objects.filter(user=user1).count() == 2
+        assert Favorite.objects.filter(user=user1).count() == 2
     
     def test_str_method(self, user1, product1):
-        favorite = FavoriteProduct.objects.create(user=user1, product=product1)
+        favorite = Favorite.objects.create(user=user1, product=product1)
         expected_str = product1.name
         assert str(favorite) == expected_str
     
     def test_str_method_without_user(self, product1):
-        favorite = FavoriteProduct.objects.create(user=None, product=product1)
+        favorite = Favorite.objects.create(user=None, product=product1)
         expected_str = product1.name
         assert str(favorite) == expected_str
     
     def test_verbose_names(self):
-        assert FavoriteProduct._meta.verbose_name == "Избранный товар"
-        assert FavoriteProduct._meta.verbose_name_plural == "Избранные товары"
+        assert Favorite._meta.verbose_name == "Избранный товар"
+        assert Favorite._meta.verbose_name_plural == "Избранные товары"
         
-        user_field = FavoriteProduct._meta.get_field('user')
+        user_field = Favorite._meta.get_field('user')
         assert user_field.verbose_name == "Пользователь"
         assert user_field.blank is True
         assert user_field.null is True
         
-        product_field = FavoriteProduct._meta.get_field('product')
+        product_field = Favorite._meta.get_field('product')
         assert product_field.verbose_name == "Товар"
         assert product_field.blank is False
         assert product_field.null is False
     
     def test_related_names(self):
-        user_field = FavoriteProduct._meta.get_field('user')
+        user_field = Favorite._meta.get_field('user')
         assert user_field.remote_field.related_name == "favorite_products"
         
-        product_field = FavoriteProduct._meta.get_field('product')
+        product_field = Favorite._meta.get_field('product')
         assert product_field.remote_field.related_name == "favorite_products"
     
     def test_cascade_delete_user(self, user1, product1):
-        favorite = FavoriteProduct.objects.create(user=user1, product=product1)
+        favorite = Favorite.objects.create(user=user1, product=product1)
         fav_id = favorite.pk
         
         user1.delete()
-        assert not FavoriteProduct.objects.filter(pk=fav_id).exists()
+        assert not Favorite.objects.filter(pk=fav_id).exists()
     
     def test_cascade_delete_product(self, user1, product1):
-        favorite = FavoriteProduct.objects.create(user=user1, product=product1)
+        favorite = Favorite.objects.create(user=user1, product=product1)
         fav_id = favorite.pk
         
         product1.delete()
-        assert not FavoriteProduct.objects.filter(pk=fav_id).exists()
+        assert not Favorite.objects.filter(pk=fav_id).exists()
     
     def test_filter_by_user(self, user1, user2, product1, product2):
-        FavoriteProduct.objects.create(user=user1, product=product1)
-        FavoriteProduct.objects.create(user=user1, product=product2)
-        FavoriteProduct.objects.create(user=user2, product=product1)
+        Favorite.objects.create(user=user1, product=product1)
+        Favorite.objects.create(user=user1, product=product2)
+        Favorite.objects.create(user=user2, product=product1)
         
-        user1_favorites = FavoriteProduct.objects.filter(user=user1)
+        user1_favorites = Favorite.objects.filter(user=user1)
         assert user1_favorites.count() == 2
         
-        user2_favorites = FavoriteProduct.objects.filter(user=user2)
+        user2_favorites = Favorite.objects.filter(user=user2)
         assert user2_favorites.count() == 1
     
     def test_filter_by_product(self, user1, user2, product1, product2):
-        FavoriteProduct.objects.create(user=user1, product=product1)
-        FavoriteProduct.objects.create(user=user1, product=product2)
-        FavoriteProduct.objects.create(user=user2, product=product1)
+        Favorite.objects.create(user=user1, product=product1)
+        Favorite.objects.create(user=user1, product=product2)
+        Favorite.objects.create(user=user2, product=product1)
         
-        product1_favorites = FavoriteProduct.objects.filter(product=product1)
+        product1_favorites = Favorite.objects.filter(product=product1)
         assert product1_favorites.count() == 2
         
-        product2_favorites = FavoriteProduct.objects.filter(product=product2)
+        product2_favorites = Favorite.objects.filter(product=product2)
         assert product2_favorites.count() == 1
     
     def test_user_favorite_products_relation(self, user1, product1, product2):
-        fav1 = FavoriteProduct.objects.create(user=user1, product=product1)
-        fav2 = FavoriteProduct.objects.create(user=user1, product=product2)
+        fav1 = Favorite.objects.create(user=user1, product=product1)
+        fav2 = Favorite.objects.create(user=user1, product=product2)
         
         assert user1.favorite_products.count() == 2
         assert fav1 in user1.favorite_products.all()
         assert fav2 in user1.favorite_products.all()
     
     def test_product_favorite_products_relation(self, user1, user2, product1):
-        fav1 = FavoriteProduct.objects.create(user=user1, product=product1)
-        fav2 = FavoriteProduct.objects.create(user=user2, product=product1)
+        fav1 = Favorite.objects.create(user=user1, product=product1)
+        fav2 = Favorite.objects.create(user=user2, product=product1)
         
         assert product1.favorite_products.count() == 2
         assert fav1 in product1.favorite_products.all()

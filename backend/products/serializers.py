@@ -17,9 +17,9 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
     review_amount = serializers.SerializerMethodField()
-    favorite_product_id = serializers.SerializerMethodField()
+    favorite_id = serializers.SerializerMethodField()
     cart_product_id = serializers.SerializerMethodField()
-    is_favorite_product = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
     is_cart_product = serializers.SerializerMethodField()
 
     class Meta:
@@ -27,7 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             "id", "image", "name", "description", "price",
             "category", "brand", "slug", "rating", "review_amount",
-            "favorite_product_id", "cart_product_id", "is_favorite_product", "is_cart_product"
+            "favorite_id", "cart_product_id", "is_favorite", "is_cart_product"
         ]
     
     def get_rating(self, obj):
@@ -36,18 +36,18 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_review_amount(self, obj):
         return obj.get_review_amount()
     
-    def get_favorite_product_id(self, obj):
+    def get_favorite_id(self, obj):
         request = self.context.get("request")
         if request and request.user.is_authenticated:
-            return obj.get_favorite_product_id(request.user)
+            return obj.get_favorite_id(request.user)
 
         session_key = request.session.session_key if request else None
         if session_key:
-            favorite_product = AnonymousFavorite.objects.filter(
+            favorite = AnonymousFavorite.objects.filter(
                 session_key = session_key,
                 product = obj
             ).first()
-            return favorite_product.id if favorite_product else None
+            return favorite.id if favorite else None
         return None
     
     def get_cart_product_id(self, obj):
@@ -64,10 +64,12 @@ class ProductSerializer(serializers.ModelSerializer):
             return cart_product.id if cart_product else None
         return None
     
-    def get_is_favorite_product(self, obj):
+    def get_is_favorite(self, obj):
         request = self.context.get("request")
+
         if request and request.user.is_authenticated:
-            return obj.get_is_favorite_product(request.user)
+            exists = obj.get_is_favorite(request.user)
+            return exists
 
         session_key = request.session.session_key if request else None
         if session_key:
@@ -106,15 +108,15 @@ class ReviewSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Rating can't be lower than 1")
         return data
 
-#Favorites
-class FavoriteSerializer(serializers.ModelSerializer): #? user
+#Favorite
+class FavoriteSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     
     class Meta:
-        model = Favorites
+        model = Favorite
         fields = ["id", "product", "created_at"]
 
-class AnonymousFavoriteSerializer(serializers.ModelSerializer): #? session
+class AnonymousFavoriteSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     
     class Meta:
@@ -122,9 +124,15 @@ class AnonymousFavoriteSerializer(serializers.ModelSerializer): #? session
         fields = ["id", "product", "created_at"]
 
 class FavoriteCreateSerializer(serializers.ModelSerializer):
+    product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), source="product", write_only=True)
+
     class Meta:
         model = Favorite
-        fields = ["id", "product"]
+        fields = ["id", "product", "product_id"]
+        read_only_fields = ["product"]
+
+    def to_representation(self, instance):
+        return FavoriteSerializer(instance, context=self.context).data
     
     def validate(self, data):
         request = self.context.get("request")
@@ -137,11 +145,9 @@ class FavoriteCreateSerializer(serializers.ModelSerializer):
             if Favorite.objects.filter(product=product, user=request.user).exists():
                 raise serializers.ValidationError({"product": "Этот товар уже добавлен в избранное"})
         else:
-            if not request.session.session_key:
-                request.session.save()
-
-            if AnonymousFavorite.objects.filter(product=product, session_key=request.session.session_key).exists():
-                raise serializers.ValidationError({"product": "Этот товар уже добавлен в избранное"})
+            if request.session.session_key:
+                if AnonymousFavorite.objects.filter(product=product, session_key=request.session.session_key).exists():
+                    raise serializers.ValidationError({"product": "Этот товар уже добавлен в избранное"})
 
         return data
     
@@ -150,25 +156,62 @@ class FavoriteCreateSerializer(serializers.ModelSerializer):
         product = validated_data.get("product")
 
         if request.user.is_authenticated:
-            return Favorite.objects.create(user=request.user, product=product)
+            favorite, created = Favorite.objects.get_or_create(user=request.user, product=product)
+            return favorite
         
         else:
             if not request.session.session_key:
-                request.session.save()
+                self.request.session.create()
 
-            return Favorite.objects.create(session_key=request.session.session_key, product=product)  
+            favorite, created = AnonymousFavorite.objects.get_or_create(session_key=request.session.session_key, product=product)
+            return favorite
 
 #Cart 
+class CartProductSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    total_price = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CartProduct
+        fields = ["id", "product", "quantity", "total_price"]
+    
+    def get_total_price(self, obj):
+        return obj.total_price
+
+class AddToCartSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField(write_only=True, min_value=1)
+    quantity = serializers.IntegerField(write_only=True, min_value=1, default=1)
+    
+    def validate_product_id(self, value):
+        try:
+            return value
+        except Product.DoesNotExist:
+            raise serializers.ValidationError("Товар не найден")
+
+    def validate(self, data):
+        request = self.context.get("request")
+        product = Product.objects.get(id=data.get("product_id")) 
+        
+        if not request or not product:
+            return data
+
+        if request.user.is_authenticated:
+            if CartProduct.objects.filter(product=product, cart__user=request.user).exists():
+                raise serializers.ValidationError({"product_id": "Этот товар уже есть в корзине"})
+        
+        data["product"] = product
+        return data
+        
 class BaseCartSerializer(serializers.ModelSerializer):
-    products = serializers.SerializerMethodField()
+    cart_products = serializers.SerializerMethodField()
     total_quantity = serializers.IntegerField(read_only=True)
     total_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         abstract = True
-        fields = ["id", "products", "total_quantity", "total_price", "created_at", "updated_at"]
+        fields = ["id", "cart_products", "total_quantity", "total_price", "created_at", "updated_at"]
     
-    def get_products(self, obj):
+    def get_cart_products(self, obj):
         from .serializers import CartProductSerializer
         products = obj.products.all()
         return CartProductSerializer(products, many=True, context=self.context).data
@@ -176,31 +219,9 @@ class BaseCartSerializer(serializers.ModelSerializer):
 class CartSerializer(BaseCartSerializer):
     class Meta:
         model = Cart
+        fields = BaseCartSerializer.Meta.fields
 
 class AnonymousCartSerializer(BaseCartSerializer):
     class Meta:
         model = AnonymousCart
-
-class CartProductSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
-    product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), source="product", write_only=True)
-
-    class Meta:
-        model = CartProduct
-        fields = ["id", "product", "product_id", "quantity", "total_price", "created_at"]
-
-class CartProductCreateSerializer(serializers.ModelSerializer):
-    product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), source="product", write_only=True)
-
-    class Meta:
-        model = CartProduct
-        fields = ["id", "product_id", "quantity"]
-
-    def validate(self, data):
-        request = self.context.get("request")
-        product = data.get("product")
-
-        if request and request.user.is_authenticated:
-            if CartProduct.objects.filter(product=product, cart__user=request.user).exists():
-                raise serializers.ValidationError({"product_id": "Этот товар уже добавлен в корзину"})
-        return data
+        fields = BaseCartSerializer.Meta.fields

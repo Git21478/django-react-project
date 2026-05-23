@@ -1,7 +1,5 @@
 # djangostore.ru
-Интернет-магазин на Django (DRF) + React
-
-## Preview
+#### Интернет-магазин на Django (DRF) + React
 
 ## Stack
 - Python, Django, Django REST Framework, Pytest

@@ -8,3 +8,5 @@
 - HTML, CSS, JavaScript, React
 
 ### Сайт проекта:   https://djangostore.ru
+
+![Превью сайта](website-preview.png)

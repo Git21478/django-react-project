@@ -2,10 +2,9 @@ from .models import User, Profile
 from .serializers import UserSerializer, PasswordChangeSerializer, ProfileSerializer
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.pagination import PageNumberPagination, CursorPagination
-from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
-from django.shortcuts import render
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 #User
 class CreateUserView(generics.CreateAPIView):
@@ -51,6 +50,14 @@ class PasswordChangeView(generics.UpdateAPIView):
             }
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 #Profile
 class ProfileList(generics.ListCreateAPIView):

@@ -41,7 +41,7 @@ class ProductSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.get_favorite_id(request.user)
 
-        session_key = request.session.session_key if request else None
+        session_key = request.headers.get("X-Session-Key") if request else None
         if session_key:
             favorite = AnonymousFavorite.objects.filter(
                 session_key = session_key,
@@ -55,7 +55,7 @@ class ProductSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.get_cart_product_id(request.user)
         
-        session_key = request.session.session_key if request else None
+        session_key = request.headers.get("X-Session-Key") if request else None
         if session_key:
             cart_product = CartProduct.objects.filter(
                 anonymous_cart__session_key = session_key,
@@ -71,7 +71,7 @@ class ProductSerializer(serializers.ModelSerializer):
             exists = obj.get_is_favorite(request.user)
             return exists
 
-        session_key = request.session.session_key if request else None
+        session_key = request.headers.get("X-Session-Key") if request else None
         if session_key:
             return AnonymousFavorite.objects.filter(
                 session_key = session_key,
@@ -84,7 +84,7 @@ class ProductSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.get_is_cart_product(request.user)
         
-        session_key = request.session.session_key if request else None
+        session_key = request.headers.get("X-Session-Key") if request else None
         if session_key:
             return CartProduct.objects.filter(
                 anonymous_cart__session_key = session_key,
@@ -145,8 +145,8 @@ class FavoriteCreateSerializer(serializers.ModelSerializer):
             if Favorite.objects.filter(product=product, user=request.user).exists():
                 raise serializers.ValidationError({"product": "Этот товар уже добавлен в избранное"})
         else:
-            if request.session.session_key:
-                if AnonymousFavorite.objects.filter(product=product, session_key=request.session.session_key).exists():
+            if request.headers.get("X-Session-Key"):
+                if AnonymousFavorite.objects.filter(product=product, session_key=request.headers.get("X-Session-Key")).exists():
                     raise serializers.ValidationError({"product": "Этот товар уже добавлен в избранное"})
 
         return data
@@ -160,10 +160,10 @@ class FavoriteCreateSerializer(serializers.ModelSerializer):
             return favorite
         
         else:
-            if not request.session.session_key:
+            if not request.headers.get("X-Session-Key"):
                 self.request.session.create()
 
-            favorite, created = AnonymousFavorite.objects.get_or_create(session_key=request.session.session_key, product=product)
+            favorite, created = AnonymousFavorite.objects.get_or_create(session_key=request.headers.get("X-Session-Key"), product=product)
             return favorite
 
 #Cart 

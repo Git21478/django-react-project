@@ -1,8 +1,8 @@
 import pytest
 from products.serializers import (
-    BrandSerializer, CategorySerializer, ProductSerializer,
-    ReviewSerializer, FavoriteSerializer, FavoriteCreateSerializer,
-    CartProductSerializer, CartProductCreateSerializer
+    BrandSerializer, CategorySerializer, ProductSerializer, ReviewSerializer,
+    FavoriteSerializer, FavoriteCreateSerializer,
+    CartSerializer, AddToCartSerializer, CartProductSerializer
 )
 from products.models import CartProduct
 

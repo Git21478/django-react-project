@@ -16,6 +16,7 @@ from django.db.models import Avg
 from .permissions import IsAuthorOrReadOnly
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+import uuid
 
 #Brand
 class BrandCategoryList(generics.ListAPIView):
@@ -119,7 +120,7 @@ class FavoriteViewSet(ModelViewSet):
         if self.request.user.is_authenticated:
             return Favorite.objects.filter(user=self.request.user)
         
-        session_key = self.request.session.session_key
+        session_key = self.request.headers.get("X-Session-Key")
         if session_key:
             return AnonymousFavorite.objects.filter(session_key=session_key)
         
@@ -142,9 +143,9 @@ class FavoriteViewSet(ModelViewSet):
         if request.user.is_authenticated:
             serializer.save(user=request.user)
         else:
-            if not request.session.session_key:
+            if not request.headers.get("X-Session-Key"):
                 request.session.save()
-            serializer.save(session_key=request.session.session_key)
+            serializer.save(session_key=request.headers.get("X-Session-Key"))
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -184,7 +185,7 @@ class FavoriteViewSet(ModelViewSet):
         if not request.user.is_authenticated:
             return Response({"error": "Необходима аутентификация"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        session_key = request.session.session_key
+        session_key = request.headers.get("X-Session-Key")
         if not session_key:
             return Response({"message": "Нет анонимного пользователя для переноса"}, status=status.HTTP_200_OK)
 
@@ -207,7 +208,7 @@ class CartViewSet(ModelViewSet):
         if self.request.user.is_authenticated:
             return Cart.objects.filter(user=self.request.user)
         
-        session_key = self.request.session.session_key
+        session_key = self.request.headers.get("X-Session-Key")
         if session_key:
             return AnonymousCart.objects.filter(session_key=session_key)
         else:
@@ -223,13 +224,14 @@ class CartViewSet(ModelViewSet):
         if self.request.user.is_authenticated:
             cart, _ = Cart.objects.get_or_create(user=self.request.user)
             return cart
-        else:
-            session_key = self.request.session.session_key
-            if not session_key:
-                self.request.session.create()
-                session_key = self.request.session.session_key
-            cart, _ = AnonymousCart.objects.get_or_create(session_key=session_key)
-            return cart
+        
+        session_key = self.request.headers.get("X-Session-Key")
+
+        if not session_key:
+            session_key = str(uuid.uuid4( ))
+            
+        cart, created = AnonymousCart.objects.get_or_create(session_key=session_key)
+        return cart
         
     def list(self, request, *args, **kwargs):
         cart = self.get_object()

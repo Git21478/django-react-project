@@ -1,5 +1,3 @@
-from collections.abc import Iterable
-
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone

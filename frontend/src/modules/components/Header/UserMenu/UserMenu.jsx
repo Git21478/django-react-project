@@ -23,7 +23,7 @@ function UserMenu() {
                             </li>
                             <li className={styles.user_menu_section}>
                                 <img className={styles.user_menu_section_icon} src={admin_panel_icon} alt="user menu section icon" />
-                                <a href="/admin" target="_blank">Админ панель</a>
+                                <a href={`${backendBaseURL}/admin`} target="_blank">Админ панель</a>
                             </li>
                             <li className={styles.user_menu_section}>
                                 <img className={styles.user_menu_section_icon} src={logout_icon} alt="user menu section icon" />

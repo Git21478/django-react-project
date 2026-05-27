@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Profile
+from products.models import Cart, AnonymousCart
 
 class CustomAdminSite(AdminSite):
     site_header = "Админ панель"
@@ -14,18 +15,22 @@ class CustomAdminSite(AdminSite):
             "Отзывы": 2,
             "Категории": 3,
             "Бренды": 4,
-
-            "Пользователи": 5,
-            "Профили": 6,
             
-            "Избранные товары": 7,
-            "Товары в корзине": 8,
+            "Избранные товары": 5,
+            "Избранные товары (неавторизованные пользователи)": 6,
+
+            "Корзины": 7,
+            "Корзины (неавторизованные пользователи)": 8,
+            "Товары в корзине": 9,
+
+            "Пользователи": 10,
+            "Профили": 11,
         }
         app_dict = self._build_app_dict(request)
         app_list = sorted(app_dict.values(), key=lambda x: x['name'].lower())
 
         for app in app_list:
-            app['models'].sort(key=lambda x: ordering[x['name']])
+            app['models'].sort(key=lambda x: ordering.get(x['name'], 999))
 
         return app_list
 
@@ -44,6 +49,8 @@ class ProfileAdmin(admin.ModelAdmin):
     actions = None
 
     # empty_value_display = ""
+
+
 
 admin.site = CustomAdminSite(name="custom_admin")
 admin.site.register(User, UserAdmin)

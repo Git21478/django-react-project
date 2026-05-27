@@ -142,6 +142,8 @@ class Favorite(BaseFavorite):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="favorites", verbose_name="Товар")
 
     class Meta:
+        verbose_name = "Избранный товар"
+        verbose_name_plural = "Избранные товары"
         unique_together = ["user", "product"]
     
 class AnonymousFavorite(BaseFavorite):
@@ -149,6 +151,8 @@ class AnonymousFavorite(BaseFavorite):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="anonymous_favorites", verbose_name="Товар")
 
     class Meta:
+        verbose_name = "Избранный товар (неавторизованные пользователи)"
+        verbose_name_plural = "Избранные товары (неавторизованные пользователи)"
         unique_together = ["session_key", "product"]
 
 #Cart
@@ -156,7 +160,7 @@ class BaseCart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta:  
         abstract = True
 
     @property
@@ -166,12 +170,21 @@ class BaseCart(models.Model):
     @property
     def total_quantity(self):
         return sum(product.quantity for product in self.products.all())
-
+    
 class Cart(BaseCart):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
 
+    class Meta:
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзины"
+
 class AnonymousCart(BaseCart):
     session_key = models.CharField(max_length=40, unique=True, db_index=True)
+
+    class Meta:
+        verbose_name = "Корзина (неавторизованный пользователь)"
+        verbose_name_plural = "Корзины (неавторизованные пользователи)"
+        
 
 class CartProduct(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True, related_name="products")

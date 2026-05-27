@@ -1,15 +1,16 @@
 import styles from "./Review.module.css";
 import { useEffect, useState } from "react";
-import { deleteReview, reviewIsAllowedCheck } from "../../../pages/ProductPage/Review/apiReview";
+import { deleteReview } from "../../../pages/ProductPage/Review/apiReview";
 import { showRatingStars } from "./utilsReview.jsx";
+import delete_icon from "../../../../assets/icons/delete.png";
 
-function Review({ review, reviewsOrdering, setReviews }) {
+function Review({ review, userId, reviewsOrdering, setReviews }) {
     const [isAllowed, setIsAllowed] = useState(false);
     const formattedDate = new Date(review.created_at).toLocaleDateString("en-US");
     
     useEffect(() => {
-        reviewIsAllowedCheck(review, setIsAllowed);
-    }, []);
+        setIsAllowed(review.author_id === userId);
+    }, [userId]);
 
     return (
         <div className={styles.review}>
@@ -23,11 +24,12 @@ function Review({ review, reviewsOrdering, setReviews }) {
             <div className={styles.review_bottom}>
                 <div className={styles.rating_stars}>
                     {showRatingStars(review.rating)}
+                    <h3 className={styles.date}>{formattedDate}</h3>
                 </div>
 
                 <div className={styles.review_bottom_right}>
-                    {isAllowed && <button className={styles.delete_button} onClick={() => deleteReview(review, reviewsOrdering, setReviews)}>Удалить</button>}
-                    <h4>{formattedDate}</h4>
+                    {isAllowed && <img className={styles.delete_icon} src={delete_icon} alt="Delete icon" onClick={() => deleteReview(review, reviewsOrdering, setReviews)}/>}
+                    {/* <img className={styles.delete_icon} src={delete_icon} alt="Delete icon" onClick={() => deleteReview(review, reviewsOrdering, setReviews)}/> */}
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ import { getAvatar } from "../components/Header/HeaderRight/apiHeaderRight";
 export const AppContext = React.createContext();
 
 function AppProvider({ children }) {
+    const [userId, setUserId] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(null);
     const [isGetFilteredProducts, setIsGetFilteredProducts] = useState(false);
     const [categories, setCategories] = useState("");
@@ -28,6 +29,7 @@ function AppProvider({ children }) {
     const [avatar, setAvatar] = useState("");
 
     const contextObject = {
+        userId: userId,
         isAuthenticated: isAuthenticated,
         isGetFilteredProducts: isGetFilteredProducts,
         categories: categories,
@@ -47,6 +49,7 @@ function AppProvider({ children }) {
         search: search,
         avatar: avatar,
 
+        setUserId: setUserId,
         setIsAuthenticated: setIsAuthenticated,
         setIsGetFilteredProducts: setIsGetFilteredProducts,
         setCategories: setCategories,

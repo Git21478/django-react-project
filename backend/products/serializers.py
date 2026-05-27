@@ -93,20 +93,20 @@ class ProductSerializer(serializers.ModelSerializer):
         return False
 
 class ReviewSerializer(serializers.ModelSerializer):
+    author_id = serializers.IntegerField(source="author.id", read_only=True)
     author = serializers.CharField(source="author.username", read_only=True)
 
     class Meta:
         model = Review
-        fields = ["id", "title", "content", "rating", "created_at", "author", "product"]
+        fields = ["id", "title", "content", "rating", "created_at", "author_id", "author", "product_id"]
     
-    def validate_rating(self, data):
-        rating = data.get("rating")
+    def validate_rating(self, rating):
         if rating is not None:
             if rating > 5:
                 raise serializers.ValidationError("Rating can't be higher than 5")
             if rating < 1:
                 raise serializers.ValidationError("Rating can't be lower than 1")
-        return data
+        return rating
 
 #Favorite
 class FavoriteSerializer(serializers.ModelSerializer):

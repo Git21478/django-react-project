@@ -1,7 +1,7 @@
 import styles from "./ProductPage.module.css";
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { getProductPageProduct, getReviews } from "./apiProductPage";
+import { getUserId, getProductPageProduct, getReviews } from "./apiProductPage";
 import ReviewCreation from "./ReviewCreation/ReviewCreation";
 import Review from "./Review/Review";
 import { AppContext } from "../../AppProvider/AppProvider";
@@ -19,6 +19,7 @@ function ProductPage() {
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
+        getUserId(appData.setUserId);
         getProductPageProduct(productPageProductId, setProductPageProduct);
     }, []);
 
@@ -58,7 +59,7 @@ function ProductPage() {
 
                             <div>
                                 {reviews && reviews.map(review => (
-                                    <Review review={review} reviewsOrdering={appData.reviewsOrdering} setReviews={setReviews} key={review.id}/>
+                                    <Review review={review} userId={appData.userId} reviewsOrdering={appData.reviewsOrdering} setReviews={setReviews} userId={appData.userId} key={review.id}/>
                                 ))}
                             </div>
                         </div>

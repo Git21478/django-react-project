@@ -1,18 +1,6 @@
 import api from "../../../../api";
 import { getReviews } from "../apiProductPage";
 
-export const reviewIsAllowedCheck = (review, setIsAllowed) => {
-    api
-        .get("/api/user/")
-        .then((res) => {
-            const userId = res.data[0].id;
-            if (userId === review.author) {
-                setIsAllowed(true);
-            };
-        })
-        .catch((err) => console.log(err));
-};
-
 export const createReview = (e, product_id, reviewsOrdering, setReviews, title, content, rating) => {
     e.preventDefault();
     api
@@ -20,7 +8,6 @@ export const createReview = (e, product_id, reviewsOrdering, setReviews, title, 
             title: title.value,
             content: content.value,
             rating: rating.value,
-            product: product_id,
         })
         .then((res) => {
             if (res.status === 201) console.log("Review created.");

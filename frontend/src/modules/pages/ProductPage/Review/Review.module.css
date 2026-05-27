@@ -46,6 +46,11 @@
     padding-right: 3px;
 }
 
+.date {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
 .review_bottom_right {
     display: flex;
     align-items: center;
@@ -56,14 +61,7 @@
     align-items: center;
 }
 
-.delete_button {
-    background-color:  #AC1A1A;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    padding: 4px 8px;
-    height: 24px;
-    margin-right: 16px;
+.delete_icon {
+    width: 30px;
+    height: 30px;
 }

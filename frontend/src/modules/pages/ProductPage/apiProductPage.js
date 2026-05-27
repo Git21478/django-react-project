@@ -2,7 +2,7 @@ import api from "../../../api";
 
 export const getUserId = (setUserId) => {
     api
-        .get("/api/users/")
+        .get("/api/user/")
         .then((res) => {
             setUserId(res.data[0].id);
         })

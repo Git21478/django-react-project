@@ -102,10 +102,10 @@ class ReviewListCreate(generics.ListCreateAPIView):
     ordering = ["-created_at", "id"]
 
     def get_queryset(self):
-        return Review.objects.select_related("author").filter(product=self.kwargs["product_id"])
+        return Review.objects.select_related("author").filter(product=self.kwargs.get("product_id"))
     
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user, product_id=self.kwargs.get("product_id"))
 
 class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()

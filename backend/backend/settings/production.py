@@ -15,6 +15,9 @@ ALLOWED_HOSTS = [
     'backend-container',
     '::1',
 ]
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = ['https://djangostore.ru', 'https://www.djangostore.ru']
 # CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 

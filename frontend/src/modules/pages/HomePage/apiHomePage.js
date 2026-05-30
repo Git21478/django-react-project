@@ -1,22 +1,22 @@
 import api from "../../../api";
 
-export const getProducts = (setProducts, setProductsAmount, currentPage, pageSize, ordering, search="") => {
+export const getProducts = (setProducts, setProductCount, currentPage, pageSize, ordering, search="") => {
     api
         .get(`/api/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${ordering}&search=${search}`)
         .then((res) => {
             setProducts(res.data.results);
-            setProductsAmount(res.data.count);
+            setProductCount(res.data.count);
             console.log(res.data.results);
         })
         .catch((err) => console.log(err));
 };
 
-export const getCategoryProducts = (setProducts, setProductsAmount, currentPage, pageSize, ordering, search="", categoryId="") => {
+export const getCategoryProducts = (setProducts, setProductCount, currentPage, pageSize, ordering, search="", categoryId="") => {
     api
         .get(`/api/catalog/${categoryId}/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${ordering}&search=${search}`)
         .then((res) => {
             setProducts(res.data.results);
-            setProductsAmount(res.data.count);
+            setProductCount(res.data.count);
             console.log(res.data.results);
         })
         .catch((err) => console.log(err));
@@ -42,7 +42,7 @@ export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
             console.log(res.data.results);
             appData.setIsGetFilteredProducts(true);
             appData.setProducts(res.data.results);
-            appData.setProductsAmount(res.data.count);
+            appData.setProductCount(res.data.count);
             console.log(res.data.results);
         })
         .catch((err) => console.log(err));

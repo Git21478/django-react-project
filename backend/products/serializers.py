@@ -15,8 +15,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ["id", "name", "slug", "brands"]
 
 class ProductSerializer(serializers.ModelSerializer):
-    rating = serializers.SerializerMethodField()
-    review_amount = serializers.SerializerMethodField()
     favorite_id = serializers.SerializerMethodField()
     cart_product_id = serializers.SerializerMethodField()
     is_favorite = serializers.SerializerMethodField()
@@ -26,15 +24,9 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             "id", "image", "name", "description", "price",
-            "category", "brand", "slug", "rating", "review_amount",
+            "category", "brand", "slug", "rating", "review_count",
             "favorite_id", "cart_product_id", "is_favorite", "is_cart_product"
         ]
-    
-    def get_rating(self, obj):
-        return obj.get_rating()
-    
-    def get_review_amount(self, obj):
-        return obj.get_review_amount()
     
     def get_favorite_id(self, obj):
         request = self.context.get("request")

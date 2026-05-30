@@ -16,7 +16,7 @@ function AppProvider({ children }) {
     const [currentCategory, setCurrentCategory] = useState("");
     const [openCatalog, setOpenCatalog] = useState(false);
     const [openUserMenu, setOpenUserMenu] = useState(false);
-    const [productsAmount, setProductsAmount] = useState(0);
+    const [productsCount, setProductsCount] = useState(0);
     const [productsOrdering, setProductsOrdering] = useState("price");
     const [reviewsOrdering, setReviewsOrdering] = useState("created_at");
     const [products, setProducts] = useState([]);
@@ -37,7 +37,7 @@ function AppProvider({ children }) {
         currentCategory: currentCategory,
         openCatalog: openCatalog,
         openUserMenu: openUserMenu,
-        productsAmount: productsAmount,
+        productsCount: productsCount,
         productsOrdering: productsOrdering,
         reviewsOrdering: reviewsOrdering,
         products: products,
@@ -57,7 +57,7 @@ function AppProvider({ children }) {
         setCurrentCategory: setCurrentCategory,
         setOpenCatalog: setOpenCatalog,
         setOpenUserMenu: setOpenUserMenu,
-        setProductsAmount: setProductsAmount,
+        setProductsCount: setProductsCount,
         setProductsOrdering: setProductsOrdering,
         setReviewsOrdering: setReviewsOrdering,
         setProducts: setProducts,
@@ -79,8 +79,8 @@ function AppProvider({ children }) {
     }, [isAuthenticated]);
 
     useEffect(() => {
-        createPages(productsAmount, pageSize, setPages);
-    }, [productsAmount]);
+        createPages(productsCount, pageSize, setPages);
+    }, [productsCount]);
     
     useEffect(() => {
         categories !== "" && setCurrentCategory(categories.find(category => category.slug === currentCategorySlug));
@@ -88,11 +88,11 @@ function AppProvider({ children }) {
 
     useEffect(() => {
         !currentCategory
-            ? getProducts(setProducts, setProductsAmount, currentPage, pageSize, productsOrdering, search)
+            ? getProducts(setProducts, setProductsCount, currentPage, pageSize, productsOrdering, search)
             : !isGetFilteredProducts
-                ? getCategoryProducts(setProducts, setProductsAmount, currentPage, pageSize, productsOrdering, search, currentCategory.id)
+                ? getCategoryProducts(setProducts, setProductsCount, currentPage, pageSize, productsOrdering, search, currentCategory.id)
                 : setIsGetFilteredProducts(false);
-    }, [isAuthenticated, currentPage, productsOrdering, productsAmount, currentCategory, cart, cart.cart_products]);
+    }, [isAuthenticated, currentPage, productsOrdering, productsCount, currentCategory, cart, cart.cart_products]);
     
     return (
         <>

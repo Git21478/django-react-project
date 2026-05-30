@@ -57,7 +57,7 @@ class BaseProductListView(generics.ListAPIView):
 
 class ProductList(BaseProductListView):
     def get_queryset(self):
-        return Product.objects.annotate(rating=Avg("reviews__rating")).select_related("brand", "category").order_by("id")
+        return Product.objects.select_related("brand", "category").order_by("id")
 
 class ProductCategoryList(BaseProductListView):
     def get_queryset(self):
@@ -107,10 +107,31 @@ class ReviewListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, product_id=self.kwargs.get("product_id"))
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        product_id = self.kwargs.get("product_id")
+        reviews = Review.objects.filter(product_id=product_id)
+        response_serializer = self.get_serializer(reviews, many=True)
+
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
 class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthorOrReadOnly]
+
+    def delete(self, request, *args, **kwargs):
+        review = get_object_or_404(Review, pk=self.kwargs.get("pk"))
+        product_id = review.product.id
+        review.delete()
+        
+        reviews = Review.objects.filter(product_id=product_id)
+        response_serializer = self.get_serializer(reviews, many=True)
+
+        return Response(response_serializer.data, status=status.HTTP_200_OK)    
 
 #Favorite
 class FavoriteViewSet(ModelViewSet):

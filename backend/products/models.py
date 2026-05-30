@@ -33,6 +33,8 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, related_name="products", verbose_name="Категория")
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, blank=True, null=True, related_name="products", verbose_name="Производитель")
     slug = models.SlugField(max_length=100, unique=True)
+    rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True, default=None, verbose_name="Рейтинг")
+    review_count = models.IntegerField(default=0, verbose_name="Количество отзывов")
 
     class Meta:
         verbose_name = "Товар"
@@ -51,18 +53,6 @@ class Product(models.Model):
     def clean(self):
         if self.price <= 0:
             raise ValidationError("Price should be a positive number")
-    
-    def get_rating(self):
-        reviews = Review.objects.filter(product=self)
-        review_amount = reviews.count()
-        if review_amount != 0:
-            rating = sum(review.rating for review in reviews) / review_amount
-            rating = f"{rating:.1f}"
-            return rating
-        return None
-    
-    def get_review_amount(self):
-        return self.reviews.count()
     
     def get_favorite_id(self, current_user):
         if current_user.is_authenticated:

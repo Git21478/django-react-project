@@ -121,13 +121,13 @@ class TestProduct:
         rating = product1.get_rating()
         assert rating == "4.5"
   
-    def test_get_review_amount_no_reviews(self, product1):
-        review_amount = product1.get_review_amount()
-        assert review_amount == 0
+    def test_get_review_count_no_reviews(self, product1):
+        review_count = product1.get_review_count()
+        assert review_count == 0
     
-    def test_get_review_amount_one_review(self, user1, product1, review1):
-        review_amount = product1.get_review_amount()
-        assert review_amount == 1
+    def test_get_review_count_one_review(self, user1, product1, review1):
+        review_count = product1.get_review_count()
+        assert review_count == 1
  
     def test_get_favorite_product_id_no_product(self, user1, product1):
         favorite_product_id = product1.get_favorite_product_id(user1)

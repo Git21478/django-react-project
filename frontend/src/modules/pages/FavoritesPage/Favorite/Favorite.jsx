@@ -5,7 +5,7 @@ import { handleCheckboxFavorite, pluralize } from "./utilsFavorite.js";
 import { addCartProduct, deleteFavorite } from "./apiFavorite.js";
 
 function Favorite({ favorite, setFavorites, selectedFavoritesIds, setSelectedFavoritesIds }) {
-    const pluralizedReviews = favorite && pluralize(["отзыв", "отзыва", "отзывов"], favorite.product.review_amount);
+    const pluralizedReviews = favorite && pluralize(["отзыв", "отзыва", "отзывов"], favorite.product.review_count);
 
     return (
         <div className={styles.favorite_container}>
@@ -30,7 +30,7 @@ function Favorite({ favorite, setFavorites, selectedFavoritesIds, setSelectedFav
                 </div>
 
                 <div className={styles.favorite_bottom}>
-                    <h3><img className={styles.star_icon} src={star_icon} alt="Star icon"/> {favorite.product.rating} | {favorite.product.review_amount} {pluralizedReviews}</h3>
+                    <h3><img className={styles.star_icon} src={star_icon} alt="Star icon"/> {favorite.product.rating} | {favorite.product.review_count} {pluralizedReviews}</h3>
                     <div>
                         <img className={styles.favorite_icon} src={favorites_1_icon} alt="Favorites" onClick={() => deleteFavorite(favorite.id, setFavorites)}/>
 

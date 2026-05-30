@@ -29,7 +29,6 @@ function Review({ review, userId, reviewsOrdering, setReviews }) {
 
                 <div className={styles.review_bottom_right}>
                     {isAllowed && <img className={styles.delete_icon} src={delete_icon} alt="Delete icon" onClick={() => deleteReview(review, reviewsOrdering, setReviews)}/>}
-                    {/* <img className={styles.delete_icon} src={delete_icon} alt="Delete icon" onClick={() => deleteReview(review, reviewsOrdering, setReviews)}/> */}
                 </div>
             </div>
         </div>

@@ -35,7 +35,7 @@ function SearchBar() {
                 src={search_icon}
                 alt="Search"
                 onClick={() => {
-                    getProducts(appData.setProducts, appData.setProductsAmount, appData.currentPage, appData.pageSize, appData.ordering, appData.search)
+                    getProducts(appData.setProducts, appData.setProductsCount, appData.currentPage, appData.pageSize, appData.ordering, appData.search)
                     navigate("/");
                 }}
                 ref={searchButtonRef}

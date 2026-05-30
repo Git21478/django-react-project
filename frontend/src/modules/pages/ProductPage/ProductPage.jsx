@@ -21,7 +21,7 @@ function ProductPage() {
     useEffect(() => {
         getUserId(appData.setUserId);
         getProductPageProduct(productPageProductId, setProductPageProduct);
-    }, []);
+    }, [reviews]);
 
     useEffect(() => {
         getReviews(productPageProductId, appData.reviewsOrdering, setReviews);

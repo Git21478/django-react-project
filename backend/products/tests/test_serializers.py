@@ -67,7 +67,7 @@ class TestProductSerializer:
         
         expected_fields = {
             "id", "image", "name", "description", "price", 
-            "category", "brand", "slug", "rating", "review_amount",
+            "category", "brand", "slug", "rating", "review_count",
             "favorite_product_id", "cart_product_id", 
             "is_favorite_product", "is_cart_product"
         }
@@ -77,7 +77,7 @@ class TestProductSerializer:
         assert serializer.data["name"] == "Product1"
         assert float(serializer.data["price"]) == 1000.00
         assert serializer.data["rating"] is None
-        assert serializer.data["review_amount"] == 0
+        assert serializer.data["review_count"] == 0
         assert serializer.data["favorite_product_id"] is None
         assert serializer.data["cart_product_id"] is None
         assert serializer.data["is_favorite_product"] is False
@@ -90,7 +90,7 @@ class TestProductSerializer:
         )
         
         assert float(serializer.data["rating"]) == 4.5
-        assert serializer.data["review_amount"] == 2
+        assert serializer.data["review_count"] == 2
 
     def test_product_serializer_with_favorite(self, product1, favorite_product11, api_auth_client, user1):
         serializer = ProductSerializer(
@@ -117,7 +117,7 @@ class TestProductSerializer:
         )
         
         assert serializer.data["rating"] == serializer.get_rating(product1)
-        assert serializer.data["review_amount"] == serializer.get_review_amount(product1)
+        assert serializer.data["review_count"] == serializer.get_review_count(product1)
 
 class TestReviewSerializer:
     def test_review_serializer_fields(self, review1, user1):

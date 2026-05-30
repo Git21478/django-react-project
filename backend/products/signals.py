@@ -1,6 +1,7 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-from .models import Product, Cart, AnonymousCart
+from django.db.models import Avg, Count
+from .models import Product, Review, Cart, AnonymousCart
 from users.models import User
 from django.contrib.sessions.models import Session
 
@@ -29,3 +30,16 @@ def delete_category_brand(sender, instance, **kwargs):
             category = instance.category
             category.brands.remove(instance.brand)
             category.save()
+
+@receiver([post_save, post_delete], sender=Review)
+def update_product_rating_and_count(sender, instance, **kwargs):
+    product = instance.product
+    stats = product.reviews.aggregate(avg_rating=Avg("rating"), review_count=Count("id"))
+    updated_data = {"review_count": stats["review_count"]}
+
+    if stats["avg_rating"] is not None:
+        updated_data["rating"] = round(stats["avg_rating"], 1)
+    else:
+        updated_data["rating"] = None
+    
+    Product.objects.filter(id=product.id).update(**updated_data)

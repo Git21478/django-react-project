@@ -6,7 +6,7 @@ import { pluralize } from "./utilsProductPageProduct.js";
 import { addCartProduct, addFavorite, deleteFavorite } from "./apiProductPageProduct.js";
 
 function ProductPageProduct({ productPageProduct, setProductPageProduct }) {
-    const pluralizedReviews = productPageProduct && pluralize(["отзыв", "отзыва", "отзывов"], productPageProduct.review_amount);
+    const pluralizedReviews = productPageProduct && pluralize(["отзыв", "отзыва", "отзывов"], productPageProduct.review_count);
 
     return (
         <div className={styles.product_container}>
@@ -28,8 +28,8 @@ function ProductPageProduct({ productPageProduct, setProductPageProduct }) {
 
             <div className={styles.product_bottom}>
                 <h3 className={styles.product_bottom_left_section}>
-                    {productPageProduct.review_amount != 0
-                        ? <span><img className={styles.star_icon} src={star_icon} alt="Star icon"/> {productPageProduct.rating} | {productPageProduct.review_amount} {pluralizedReviews}</span>
+                    {productPageProduct.review_count != 0
+                        ? <span><img className={styles.star_icon} src={star_icon} alt="Star icon"/> {productPageProduct.rating} | {productPageProduct.review_count} {pluralizedReviews}</span>
                         : <span>Нет отзывов</span>
                     } 
                 </h3>

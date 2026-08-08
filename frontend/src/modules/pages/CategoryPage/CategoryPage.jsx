@@ -9,47 +9,45 @@ import { AppContext } from "../../AppProvider/AppProvider";
 import PageTemplate from "../../PageTemplate/PageTemplate";
 
 function CategoryPage() {
-    const appData = useContext(AppContext);
-    const categorySlug = useParams().category_slug;
-    document.title = `${appData.currentCategory.name} | Магазин`;
+  const appData = useContext(AppContext);
+  const categorySlug = useParams().category_slug;
+  document.title = `${appData.currentCategory.name} | Магазин`;
 
-    useEffect(() => {
-        appData.setCurrentCategorySlug(categorySlug);
-    }, []);
+  useEffect(() => {
+    appData.setCurrentCategorySlug(categorySlug);
+  }, []);
 
-    return (
-        <PageTemplate>
-            <div className={styles.category_page_wrapper}>
-                <div className={styles.sort_bar_left}>
-                    <SortBarLeft/>
-                </div>
+  return (
+    <PageTemplate>
+      <div className={styles.category_page_wrapper}>
+        <div className={styles.sort_bar_left}>
+          <SortBarLeft />
+        </div>
 
-                <div className={styles.products_and_pagination}>
-                    <div>
-                        <SortBarCenter
-                            setProductsOrdering={appData.setProductsOrdering}
-                        />
-                    </div>
+        <div className={styles.products_and_pagination}>
+          <div>
+            <SortBarCenter setProductsOrdering={appData.setProductsOrdering} />
+          </div>
 
-                    <div>
-                        {appData.products.map(product => (
-                            <Product
-                                product={product}
-                                setProducts={appData.setProducts}
-                                key={product.id}
-                            />
-                        ))}
+          <div>
+            {appData.products.map((product) => (
+              <Product
+                product={product}
+                setProducts={appData.setProducts}
+                key={product.id}
+              />
+            ))}
 
-                        <Pagination
-                            currentPage={appData.currentPage}
-                            setCurrentPage={appData.setCurrentPage}
-                            pages={appData.pages}
-                        />
-                    </div>
-                </div>
-            </div>
-        </PageTemplate>
-    );
-};
+            <Pagination
+              currentPage={appData.currentPage}
+              setCurrentPage={appData.setCurrentPage}
+              pages={appData.pages}
+            />
+          </div>
+        </div>
+      </div>
+    </PageTemplate>
+  );
+}
 
 export default CategoryPage;

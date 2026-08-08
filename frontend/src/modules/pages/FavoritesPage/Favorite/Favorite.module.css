@@ -1,102 +1,102 @@
 .favorite_container {
-    display: flex;
-    background-color: #767165;
-    color: white;
-    border: 2px solid #AC1A1A;
-    height: 160px;
-    margin: 20px 0;
-    padding: 20px;
+  display: flex;
+  background-color: #767165;
+  color: white;
+  border: 2px solid #ac1a1a;
+  height: 160px;
+  margin: 20px 0;
+  padding: 20px;
 }
 
 .favorite_image img {
-    border: 2px solid black;
-    width: 160px;
-    height: 160px;
+  border: 2px solid black;
+  width: 160px;
+  height: 160px;
 }
 
 .favorite_checkbox {
-    position: relative;
-    top: -20px;
-    right: -2px;
+  position: relative;
+  top: -20px;
+  right: -2px;
 }
 
 .favorite_container h2 {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .favorite_info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-left: 20px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 20px;
+  width: 100%;
 }
 
 .content {
-    width: 100%;
-    height: 60px;
-    font-size: 1rem;
+  width: 100%;
+  height: 60px;
+  font-size: 1rem;
 }
 
 .favorite_title_date {
-    display: flex;
-    justify-content: space-between;
-    align-content: baseline;
+  display: flex;
+  justify-content: space-between;
+  align-content: baseline;
 }
 
 .favorite_title a {
-    font-size: 1.6rem;
-    text-decoration: none;
-    color: white;
+  font-size: 1.6rem;
+  text-decoration: none;
+  color: white;
 }
 .favorite_title a:hover {
-    color: #ac1a1a;
+  color: #ac1a1a;
 }
 
 .favorite_description {
-    color: #ccc;
-    height: 72px;
-    max-height: 72px;
-    overflow: hidden;
+  color: #ccc;
+  height: 72px;
+  max-height: 72px;
+  overflow: hidden;
 }
 
 .favorite_bottom {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .favorite_icon {
-    width: 30px;
-    height: 30px;
-    position: relative;
-    top: 8px;
-    right: 10px;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  top: 8px;
+  right: 10px;
 }
 
 .star_icon {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    top: 4px;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  top: 4px;
 }
 
 .favorite_add_to_cart_button {
-    width: 120px;
-    height: 45px;
-    font-size: 20px;
-    border-radius: 5px;
-    border: 2px solid black;
-    background-color: #ccc;
-    color: black;
+  width: 120px;
+  height: 45px;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 2px solid black;
+  background-color: #ccc;
+  color: black;
 }
 
 .favorite_cart_page_link_button {
-    width: 120px;
-    height: 45px;
-    font-size: 20px;
-    border-radius: 5px;
-    border: 2px solid black;
-    background-color: #ac1a1a;;
-    color: white;
+  width: 120px;
+  height: 45px;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 2px solid black;
+  background-color: #ac1a1a;
+  color: white;
 }

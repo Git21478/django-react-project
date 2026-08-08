@@ -7,6 +7,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 
+
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
     """
     An abstract base class implementing a fully featured User model with
@@ -31,9 +32,9 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    email = models.EmailField(_("email address"), blank=True) 
+    email = models.EmailField(_("email address"), blank=True)
     is_staff = models.BooleanField(
-        "Администратор", # _("staff status"),
+        "Администратор",  # _("staff status"),
         default=False,
         help_text=_("Designates whether the user can log into this admin site."),
     )

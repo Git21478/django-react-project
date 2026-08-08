@@ -1,30 +1,30 @@
 .favorites_page_wrapper {
-    color: white;
-    margin: 20px 120px;
+  color: white;
+  margin: 20px 120px;
 }
 
 .favorites_page_header {
-    text-align: center;
-    margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .favorites_page_select_section {
-    display: flex;
-    justify-content: space-between;
-    background-color: #767165;
-    color: white;
-    border: 2px solid #AC1A1A;
-    font-weight: bold;
-    height: 24px;
-    padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #767165;
+  color: white;
+  border: 2px solid #ac1a1a;
+  font-weight: bold;
+  height: 24px;
+  padding: 24px;
 }
 
 .favorites_page_select_all {
-    display: flex;
+  display: flex;
 }
 
 .favorites_icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }

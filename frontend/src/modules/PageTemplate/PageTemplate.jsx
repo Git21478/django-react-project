@@ -5,18 +5,18 @@ import Catalog from "../components/Header/Catalog/Catalog";
 import UserMenu from "../components/Header/UserMenu/UserMenu";
 
 function PageTemplate({ children }) {
-    return (
-        <div className={styles.page_wrapper}>
-            <Header/>
+  return (
+    <div className={styles.page_wrapper}>
+      <Header />
 
-            <Catalog/>
-            <UserMenu/>
+      <Catalog />
+      <UserMenu />
 
-            {children}
+      {children}
 
-            <Footer/>
-        </div>
-    );
-};
+      <Footer />
+    </div>
+  );
+}
 
 export default PageTemplate;

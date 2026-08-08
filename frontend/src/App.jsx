@@ -14,81 +14,113 @@ import AppProvider from "./modules/AppProvider/AppProvider";
 import FavoritesPage from "./modules/pages/FavoritesPage/FavoritesPage";
 
 function Logout() {
-    localStorage.clear();
-    return <Navigate to="/login"/>;
-};
+  localStorage.clear();
+  return <Navigate to="/login" />;
+}
 
 function RegisterAndLogout() {
-    localStorage.clear();
-    return <RegistrationPage/>;
-};
+  localStorage.clear();
+  return <RegistrationPage />;
+}
 
 function App() {
-    return (
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <Routes>
-                <Route path="/" element={
-                    <AppProvider>
-                        <HomePage/>
-                    </AppProvider>
-                }/>
-                <Route path="/catalog/:category_slug" element={
-                    <AppProvider>
-                        <CategoryPage/>
-                    </AppProvider>
-                }/>
-                <Route path="/products/:product_id" element={
-                    <AppProvider>
-                        <ProductPage/>
-                    </AppProvider>
-                }/>
-                <Route path="/favorites" element={
-                    <AppProvider>
-                        <FavoritesPage/>
-                    </AppProvider>
-                }/>
-                <Route path="/cart" element={
-                    <AppProvider>
-                        <CartPage/>
-                    </AppProvider>
-                }/>
-                <Route path="/profile" element={
-                    <AppProvider>
-                        <ProtectedRoute>
-                            <ProfilePage/>
-                        </ProtectedRoute>
-                    </AppProvider>
-                }/>
-                <Route path="/login" element={
-                    <AppProvider>
-                        <LoginPage/>
-                    </AppProvider>
-                }/>
-                <Route path="/logout" element={<Logout/>}/>
-                <Route path="/registration" element={
-                    <AppProvider>
-                        <RegisterAndLogout/>
-                    </AppProvider>
-                }/>
+  return (
+    <BrowserRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <AppProvider>
+              <HomePage />
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/catalog/:category_slug"
+          element={
+            <AppProvider>
+              <CategoryPage />
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/products/:product_id"
+          element={
+            <AppProvider>
+              <ProductPage />
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            <AppProvider>
+              <FavoritesPage />
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <AppProvider>
+              <CartPage />
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <AppProvider>
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <AppProvider>
+              <LoginPage />
+            </AppProvider>
+          }
+        />
+        <Route path="/logout" element={<Logout />} />
+        <Route
+          path="/registration"
+          element={
+            <AppProvider>
+              <RegisterAndLogout />
+            </AppProvider>
+          }
+        />
 
-                <Route path="/password-reset" element={
-                    <AppProvider>
-                        <PasswordResetPage/>
-                    </AppProvider>
-                }/>
+        <Route
+          path="/password-reset"
+          element={
+            <AppProvider>
+              <PasswordResetPage />
+            </AppProvider>
+          }
+        />
 
-                <Route path="/password-reset/confirm" element={
-                    <AppProvider>
-                        <PasswordResetConfirm/>
-                    </AppProvider>
-                }/>
+        <Route
+          path="/password-reset/confirm"
+          element={
+            <AppProvider>
+              <PasswordResetConfirm />
+            </AppProvider>
+          }
+        />
 
-                {/* <Route path="/password-reset-confirm/:uidb64/:token" element={<PasswordResetConfirm/>}/> */}
-                
-                <Route path="*" element={<NotFoundPage/>}/>
-            </Routes>
-        </BrowserRouter>
-    );
-};
+        {/* <Route path="/password-reset-confirm/:uidb64/:token" element={<PasswordResetConfirm/>}/> */}
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
 export default App;

@@ -4,15 +4,15 @@ import HeaderRight from "./HeaderRight/HeaderRight.jsx";
 import HeaderLeft from "./HeaderLeft/HeaderLeft.jsx";
 
 function Header() {
-    return (
-        <header className={styles.header_wrapper}>
-            <HeaderLeft/>
+  return (
+    <header className={styles.header_wrapper}>
+      <HeaderLeft />
 
-            <SearchBar/>
+      <SearchBar />
 
-            <HeaderRight/>
-        </header>
-    );
-};
+      <HeaderRight />
+    </header>
+  );
+}
 
 export default Header;

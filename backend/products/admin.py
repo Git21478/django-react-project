@@ -1,23 +1,48 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
-from .models import Brand, Category, Product, Review, Favorite, AnonymousFavorite, CartProduct, Cart, AnonymousCart
+from .models import (
+    Brand,
+    Category,
+    Product,
+    Review,
+    Favorite,
+    AnonymousFavorite,
+    CartProduct,
+    Cart,
+    AnonymousCart,
+)
 from users.admin import CustomAdminSite
+
 
 class BrandAdmin(admin.ModelAdmin):
     pass
 
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ["name", "slug"]
-    filter_horizontal = ["brands"] # filter_vertical
+    filter_horizontal = ["brands"]  # filter_vertical
+
 
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("Фото", {
-            "fields": ["image"],
-        }),
-        ("Информация о товаре", {
-            "fields": ["name", "description", "price", ("category", "brand"), "slug"],
-        }),
+        (
+            "Фото",
+            {
+                "fields": ["image"],
+            },
+        ),
+        (
+            "Информация о товаре",
+            {
+                "fields": [
+                    "name",
+                    "description",
+                    "price",
+                    ("category", "brand"),
+                    "slug",
+                ],
+            },
+        ),
     ]
     list_display = ["name", "price", "category", "brand", "slug"]
     list_filter = ["price", "category", "brand"]
@@ -25,11 +50,12 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ["name", "price", "category__name", "brand__name"]
     # search_help_text = "hahaha"
     show_full_result_count = False
-    show_facets = admin.ShowFacets.ALWAYS # Always / Allow (default) / Never
+    show_facets = admin.ShowFacets.ALWAYS  # Always / Allow (default) / Never
     radio_fields = {"category": admin.VERTICAL, "brand": admin.VERTICAL}
     save_as = True
     # save_as_continue = False
     # save_on_top = True
+
 
 class ReviewAdmin(admin.ModelAdmin):
     readonly_fields = ["title", "content", "rating", "product", "author", "created_at"]
@@ -39,20 +65,26 @@ class ReviewAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     # exclude = ["author", "product"]
 
+
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ["product", "user"]
+
 
 class AnonymousFavoriteAdmin(admin.ModelAdmin):
     list_display = ["product", "session_key", "created_at"]
 
+
 class CartProductAdmin(admin.ModelAdmin):
     list_display = ["product", "quantity", "total_price", "created_at"]
+
 
 class CartAdmin(admin.ModelAdmin):
     pass
 
+
 class AnonymousCartAdmin(admin.ModelAdmin):
     pass
+
 
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(Category, CategoryAdmin)

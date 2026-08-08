@@ -7,51 +7,80 @@ import profile_icon from "../../../../assets/icons/profile.png";
 import login_icon from "../../../../assets/icons/login.png";
 import logout_icon from "../../../../assets/icons/logout.png";
 import registration_icon from "../../../../assets/icons/registration.png";
+import { Link } from "react-router-dom";
 
 function UserMenu() {
-    const appData = useContext(AppContext);
-    
-    return (
-        <div className={styles.user_menu_wrapper}>
-            {appData.openUserMenu && (
-                <>
-                    {appData.isAuthenticated && (
-                        <ul>
-                            <li className={styles.user_menu_section}>
-                                <img className={styles.user_menu_section_icon} src={profile_icon} alt="user menu section icon" />
-                                <a href="/profile">Профиль</a>
-                            </li>
-                            <li className={styles.user_menu_section}>
-                                <img className={styles.user_menu_section_icon} src={admin_panel_icon} alt="user menu section icon" />
-                                <a href={`${backendBaseURL}/admin`} target="_blank">Админ панель</a>
-                            </li>
-                            <li className={styles.user_menu_section}>
-                                <img className={styles.user_menu_section_icon} src={logout_icon} alt="user menu section icon" />
-                                <a href="/logout">Выйти</a>
-                            </li>
-                        </ul>
-                    )}
+  const appData = useContext(AppContext);
 
-                    {!appData.isAuthenticated && (
-                        <ul>
-                            <li className={styles.user_menu_section}>
-                                <img className={styles.user_menu_section_icon} src={login_icon} alt="user menu section icon" />
-                                <a href="/login">Вход</a>
-                            </li>
-                            <li className={styles.user_menu_section}>
-                                <img className={styles.user_menu_section_icon} src={admin_panel_icon} alt="user menu section icon" />
-                                <a href="/admin" target="_blank">Админ панель</a>
-                            </li>
-                            <li className={styles.user_menu_section}>
-                                <img className={styles.user_menu_section_icon} src={registration_icon} alt="user menu section icon" />
-                                <a href="/registration">Регистрация</a>
-                            </li>
-                        </ul>
-                    )}
-                </>
-            )}
-        </div>
-    );
-};
+  return (
+    <div className={styles.user_menu_wrapper}>
+      {appData.openUserMenu && (
+        <>
+          {appData.isAuthenticated && (
+            <ul>
+              <li className={styles.user_menu_section}>
+                <img
+                  className={styles.user_menu_section_icon}
+                  src={profile_icon}
+                  alt="user menu section icon"
+                />
+                <Link to="/profile">Профиль</Link>
+              </li>
+              <li className={styles.user_menu_section}>
+                <img
+                  className={styles.user_menu_section_icon}
+                  src={admin_panel_icon}
+                  alt="user menu section icon"
+                />
+                <Link to={`${backendBaseURL}/admin`} target="_blank">
+                  Админ панель
+                </Link>
+              </li>
+              <li className={styles.user_menu_section}>
+                <img
+                  className={styles.user_menu_section_icon}
+                  src={logout_icon}
+                  alt="user menu section icon"
+                />
+                <Link to="/logout">Выйти</Link>
+              </li>
+            </ul>
+          )}
+
+          {!appData.isAuthenticated && (
+            <ul>
+              <li className={styles.user_menu_section}>
+                <img
+                  className={styles.user_menu_section_icon}
+                  src={login_icon}
+                  alt="user menu section icon"
+                />
+                <Link to="/login">Вход</Link>
+              </li>
+              <li className={styles.user_menu_section}>
+                <img
+                  className={styles.user_menu_section_icon}
+                  src={admin_panel_icon}
+                  alt="user menu section icon"
+                />
+                <Link to="/admin" target="_blank">
+                  Админ панель
+                </Link>
+              </li>
+              <li className={styles.user_menu_section}>
+                <img
+                  className={styles.user_menu_section_icon}
+                  src={registration_icon}
+                  alt="user menu section icon"
+                />
+                <Link to="/registration">Регистрация</Link>
+              </li>
+            </ul>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 export default UserMenu;

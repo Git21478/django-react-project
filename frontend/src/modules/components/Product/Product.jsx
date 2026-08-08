@@ -4,47 +4,80 @@ import favorites_0_icon from "../../../assets/icons/favorites_0.png";
 import favorites_1_icon from "../../../assets/icons/favorites_1.png";
 import { pluralize } from "./utilsProduct.js";
 import { addCartProduct, addFavorite, deleteFavorite } from "./apiProduct.js";
+import { Link } from "react-router-dom";
 
 function Product({ product, setProducts }) {
-    const pluralizedReviews = product && pluralize(["отзыв", "отзыва", "отзывов"], product.review_count);
+  const pluralizedReviews =
+    product && pluralize(["отзыв", "отзыва", "отзывов"], product.review_count);
 
-    return (
-        <div className={styles.product_container}>
-            <div className={styles.product_image}>
-                <img src={product.image} alt="Product image"/>
-            </div>
+  return (
+    <div className={styles.product_container}>
+      <div className={styles.product_image}>
+        <img src={product.image} alt="Product image" />
+      </div>
 
-            <div className={styles.product_info}>
-                <div className={styles.product_top}>
-                    <div className={styles.product_title}>
-                        <h2 className={styles.product_title_name}><a href={`/products/${product.id}`}>{product.name}</a></h2>
-                        <h2 className={styles.product_title_price}>{product.price} &#8381;</h2>
-                    </div>
-                    <p className={styles.product_description}>{product.description}</p>
-                </div>
-
-                <div className={styles.product_bottom}>
-                    <h3 className={styles.product_bottom_left_section}>
-                        {product.review_count != 0
-                            ? <span><img className={styles.star_icon} src={star_icon} alt="Star icon"/> {product.rating} | {product.review_count} {pluralizedReviews}</span>
-                            : <span>Нет отзывов</span>
-                        } 
-                    </h3>
-                    <div>
-                        {!product.is_favorite
-                            ? <img className={styles.product_icon} src={favorites_0_icon} alt="Favorites" onClick={() => addFavorite(product.id, setProducts)}/>
-                            : <img className={styles.product_icon} src={favorites_1_icon} alt="Favorites" onClick={() => deleteFavorite(product.favorite_id, setProducts)}/>
-                        }
-
-                        {!product.is_cart_product
-                            ? <button className={styles.product_add_to_cart_button} onClick={() => addCartProduct(product.id, setProducts)}>Купить</button>
-                            : <button className={styles.product_cart_page_link_button}><a href="/cart">В корзине</a></button>
-                        }
-                    </div>
-                </div>
-            </div>
+      <div className={styles.product_info}>
+        <div className={styles.product_top}>
+          <div className={styles.product_title}>
+            <h2 className={styles.product_title_name}>
+              <Link to={`/products/${product.id}`}>{product.name}</Link>
+            </h2>
+            <h2 className={styles.product_title_price}>
+              {product.price} &#8381;
+            </h2>
+          </div>
+          <p className={styles.product_description}>{product.description}</p>
         </div>
-    );
-};
+
+        <div className={styles.product_bottom}>
+          <h3 className={styles.product_bottom_left_section}>
+            {product.review_count != 0 ? (
+              <span>
+                <img
+                  className={styles.star_icon}
+                  src={star_icon}
+                  alt="Star icon"
+                />
+                {product.rating} | {product.review_count} {pluralizedReviews}
+              </span>
+            ) : (
+              <span>Нет отзывов</span>
+            )}
+          </h3>
+          <div>
+            {!product.is_favorite ? (
+              <img
+                className={styles.product_icon}
+                src={favorites_0_icon}
+                alt="Favorites"
+                onClick={() => addFavorite(product.id, setProducts)}
+              />
+            ) : (
+              <img
+                className={styles.product_icon}
+                src={favorites_1_icon}
+                alt="Favorites"
+                onClick={() => deleteFavorite(product.favorite_id, setProducts)}
+              />
+            )}
+
+            {!product.is_cart_product ? (
+              <button
+                className={styles.product_add_to_cart_button}
+                onClick={() => addCartProduct(product.id, setProducts)}
+              >
+                Купить
+              </button>
+            ) : (
+              <button className={styles.product_cart_page_link_button}>
+                <Link to="/cart">В корзине</Link>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default Product;

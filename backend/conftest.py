@@ -78,8 +78,12 @@ def cart_product21(db, user2, product1):
 @pytest.fixture
 def cart_product22(db, user2, product2):
     return CartProduct.objects.create(user=user2, product=product2)
-
-
+@pytest.fixture
+def anonymous_cart_product22(db, user2, product2):
+    return CartProduct.objects.create(user=user2, product=product2)
+@pytest.fixture
+def anonymous_cart_product22(db, user2, product2):
+    return CartProduct.objects.create(user=user2, product=product2)
 
 @pytest.fixture
 def url_category1(db, category1):

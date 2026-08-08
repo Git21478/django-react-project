@@ -1,67 +1,67 @@
 .review {
-    position: relative;
-    background-color: #767165;
-    color: #ccc;
-    border: 2px solid #AC1A1A;
-    padding: 10px;
-    margin: 20px 0;
-    height: 112px;
+  position: relative;
+  background-color: #767165;
+  color: #ccc;
+  border: 2px solid #ac1a1a;
+  padding: 10px;
+  margin: 20px 0;
+  height: 112px;
 }
 
 .review_title_date {
-    display: flex;
-    justify-content: space-between;
-    align-content: baseline;
+  display: flex;
+  justify-content: space-between;
+  align-content: baseline;
 }
 
 .rate_author {
-    display: flex;
+  display: flex;
 }
 
 .review_title {
-    color: white;
+  color: white;
 }
 
 /* Bottom */
 .review_bottom {
-    display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 40px;
-    padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 40px;
+  padding: 10px;
 }
 
 .rating_stars {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .star_icon {
-    width: 20px;
-    height: 20px;
-    padding-right: 3px;
+  width: 20px;
+  height: 20px;
+  padding-right: 3px;
 }
 
 .date {
-    margin-top: 5px;
-    margin-left: 5px;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 
 .review_bottom_right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .author_username {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .delete_icon {
-    width: 30px;
-    height: 30px;
+  width: 30px;
+  height: 30px;
 }

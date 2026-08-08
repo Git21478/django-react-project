@@ -7,16 +7,32 @@ router.register(r"favorites", views.FavoriteViewSet, basename="favorite")
 router.register(r"cart", views.CartViewSet, basename="cart")
 
 urlpatterns = [
-    path("categories/<int:category>/brands/", views.BrandCategoryList.as_view(), name="category-brands"),
-
+    path(
+        "categories/<int:category>/brands/",
+        views.BrandCategoryList.as_view(),
+        name="category-brands",
+    ),
     path("categories/", views.CategoryList.as_view(), name="category-list"),
-
     path("products/", views.ProductList.as_view(), name="product-list"),
-    path("categories/<int:pk>/products/", views.ProductCategoryList.as_view(), name="product-category-list"),
-    path("products/<int:pk>/", views.ProductRetrieveUpdateDestroy.as_view(), name="product-retrieve-change-delete"),
-
-    path("products/<int:product_id>/reviews/", views.ReviewListCreate.as_view(), name="product-review-list-create"),
-    path("products/reviews/<int:pk>/", views.ReviewRetrieveUpdateDestroy.as_view(), name="product-review"),
-
+    path(
+        "categories/<int:pk>/products/",
+        views.ProductCategoryList.as_view(),
+        name="product-category-list",
+    ),
+    path(
+        "products/<int:pk>/",
+        views.ProductRetrieveUpdateDestroy.as_view(),
+        name="product-retrieve-change-delete",
+    ),
+    path(
+        "products/<int:product_id>/reviews/",
+        views.ReviewListCreate.as_view(),
+        name="product-review-list-create",
+    ),
+    path(
+        "products/reviews/<int:pk>/",
+        views.ReviewRetrieveUpdateDestroy.as_view(),
+        name="product-review",
+    ),
     path("", include(router.urls)),
 ]

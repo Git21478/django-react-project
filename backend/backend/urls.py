@@ -2,13 +2,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
+from health_check.views import HealthCheckView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("users.urls")),
     path("api/", include("products.urls")),
-    path("health/", include("health_check.urls")),
+    path("health/", HealthCheckView.as_view(), name="health_check"),
 ]
 
 if settings.DEBUG:

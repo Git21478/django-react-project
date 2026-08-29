@@ -37,10 +37,6 @@ INSTALLED_APPS = [
     "django_cleanup",
     "django_rest_passwordreset",
     "health_check",
-    "health_check.db",
-    "health_check.cache",
-    "health_check.storage",
-    "health_check.contrib.migrations",
 ]
 
 MIDDLEWARE = [

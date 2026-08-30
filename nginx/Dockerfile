@@ -10,5 +10,6 @@ RUN mkdir -p /app/staticfiles /app/media && \
     chmod -R 755 /app
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]

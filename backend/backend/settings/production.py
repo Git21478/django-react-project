@@ -46,3 +46,41 @@ STATIC_ROOT = "/app/staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/app/media"
+
+CASHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("REDIS_LOCATION", None),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": os.getenv("REDIS_PASSWORD", None),
+            "SOCKET_CONNECTION_TIMEOUT": 5,
+            "SOCKET_TIMEOUT": 5,
+            "RETRY_ON_TIMEOUT": True,
+            "MAX_CONNECTIONS": 1000,
+            "CONNECTION_POOL_CLASS": "redis.BlockingConnectionPool",
+            "CONNECTION_POOL_CLASS_KWARGS": {
+                "max_connections": os.getenv("REDIS_MAX_CONNECTIONS", 100),
+                "timeout": os.getenv("REDIS_SOCKET_TIMEOUT", 10),
+            }
+        }
+    },
+
+    "sessions": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("REDIS_LOCATION", None),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": os.getenv("REDIS_PASSWORD", None),
+            "SOCKET_CONNECTION_TIMEOUT": 5,
+            "SOCKET_TIMEOUT": 5,
+            "RETRY_ON_TIMEOUT": True,
+            "MAX_CONNECTIONS": 1000,
+            "CONNECTION_POOL_CLASS": "redis.BlockingConnectionPool",
+            "CONNECTION_POOL_CLASS_KWARGS": {
+                "max_connections": os.getenv("REDIS_MAX_CONNECTIONS", 100),
+                "timeout": os.getenv("REDIS_SOCKET_TIMEOUT", 10),
+            }
+        }
+    }
+}

@@ -47,7 +47,7 @@ class BrandCategoryList(generics.ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        return Brand.objects.filter(categories__id=self.kwargs["category"])
+        return Brand.objects.filter(categories__id=self.kwargs["category"]).prefetch_related("categories")
 
 
 # Category
@@ -92,20 +92,21 @@ class ProductCategoryList(BaseProductListView):
         price_min = self.request.query_params.get("price_min", 0)
         price_max = self.request.query_params.get("price_max", 1000000000)
         selected_brands_ids = self.request.query_params.get("selected_brands_ids")
-
-        if selected_brands_ids:
-            try:
-                selected_brands_ids = [int(i) for i in selected_brands_ids.split(",")]
-                return Product.objects.filter(
-                    category=self.kwargs["pk"],
-                    price__range=(price_min, price_max),
-                    brand__in=selected_brands_ids,
-                ).order_by("id")
-            except (ValueError, AttributeError):
-                raise DRFValidationError("Некорректные данные")
-        return Product.objects.filter(
-            category=self.kwargs["pk"], price__range=(price_min, price_max)
-        ).order_by("id")
+        
+        try:
+            selected_brands_ids = [int(i) for i in selected_brands_ids.split(",")]
+            queryset = Product.objects.select_related(
+                "brand", "category"
+            ).prefetch_related(
+                "reviews"
+            ).filter(
+                category=self.kwargs["pk"],
+                price__range=(price_min, price_max),
+            ).order_by("id")
+            if selected_brands_ids:
+                return queryset.filter(brand__in=selected_brands_ids)
+        except (ValueError, AttributeError):
+            raise DRFValidationError("Некорректные данные")
 
 
 class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):

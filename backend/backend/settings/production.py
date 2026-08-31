@@ -47,7 +47,7 @@ STATIC_ROOT = "/app/staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/app/media"
 
-CASHES = {
+CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": os.getenv("REDIS_LOCATION", None),

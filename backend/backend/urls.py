@@ -9,7 +9,13 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("users.urls")),
     path("api/", include("products.urls")),
-    path("health/", HealthCheckView.as_view(), name="health_check"),
+    path("health/", HealthCheckView.as_view(
+        checks = [
+            "health_check.Database",
+            "health_check.Cache",
+            "health_check.Storage",
+        ]
+    ), name="health_check"),
 ]
 
 if settings.DEBUG:

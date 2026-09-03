@@ -3,3 +3,5 @@ postgres_password.txt
 compose.development.yaml
 Dockerfile.development
 reverse-proxy.development.conf
+
+!.env.example

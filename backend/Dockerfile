@@ -1,6 +1,6 @@
 FROM python:3.13-alpine3.22
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl postgresql-client
 
 ENV DJANGO_ENV=development
 
@@ -15,6 +15,9 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn -c gunicorn.py --bind 0.0.0.0:8000 backend.wsgi:application"]
+ENTRYPOINT ["/entrypoint.sh"]

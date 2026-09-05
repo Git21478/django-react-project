@@ -3,7 +3,8 @@ services:
     container_name: frontend-container
     build:
       context: ./frontend
-    env_file: ./frontend/.env.production
+    environment:
+      - VITE_BACKEND_BASE_URL=${VITE_BACKEND_BASE_URL}
     depends_on:
       backend:
         condition: service_healthy
@@ -15,15 +16,21 @@ services:
   backend:
     container_name: backend-container
     build: ./backend
-    env_file: ./backend/.env.production
+    env_file: .env
+    environment:
+      - POSTGRES_HOST=database
     depends_on:
       database:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - app-network
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
+      - ./backend/db_dumps:/app/db_dumps:ro
+      - ./backend/media_dumps:/app/media_dumps:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
       interval: 30s
@@ -37,37 +44,54 @@ services:
     container_name: database-container
     image: postgres:17.5-alpine3.22
     restart: always
-    secrets:
-      - postgres_password
-    env_file: .env.postgres
     environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - app-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     expose:
       - 5432
     
+  redis:
+    container_name: redis-container
+    image: redis:8.10-alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - app-network
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    
   nginx:
     container_name: nginx-container
-    build: ./nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.development
     ports:
       - "80:80"
-      - "443:443"
     networks:
       - app-network
     volumes:
       - static_volume:/app/staticfiles:ro
       - media_volume:/app/media:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /var/www/certbot:/var/www/certbot
     depends_on:
       frontend:
         condition: service_started
@@ -79,11 +103,9 @@ networks:
   app-network:
     driver: bridge
 
-secrets:
-  postgres_password:
-    file: postgres_password.txt
-
 volumes:
-  postgres_data:
   static_volume:
   media_volume:
+  postgres_data:
+  redis_data:
+  

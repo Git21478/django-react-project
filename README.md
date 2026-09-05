@@ -2,8 +2,6 @@
 
 ![Превью сайта](website-preview.png)
 
-## Сайт проекта:   https://djangostore.ru
-
 ## Stack
 - Python, Django, Django REST Framework, Pytest
 - PostgreSQL, Docker, Nginx
@@ -16,3 +14,5 @@ cd django-react-project
 cp .env.example .env
 docker compose up --build
 ```
+
+## Сайт проекта:   https://djangostore.ru

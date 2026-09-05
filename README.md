@@ -1,12 +1,12 @@
-# djangostore.ru
+# Интернет-магазин на Django (DRF) + React
 
 ![Превью сайта](website-preview.png)
 
-#### Интернет-магазин на Django (DRF) + React
+## Сайт проекта:   https://djangostore.ru
 
 ## Stack
 - Python, Django, Django REST Framework, Pytest
-- PostgreSQL, Docker, Nginx, Git
+- PostgreSQL, Docker, Nginx
 - HTML, CSS, JavaScript, React
 
 ## Quickstart
@@ -16,5 +16,3 @@ cd django-react-project
 cp .env.example .env
 docker compose up --build
 ```
-
-### Сайт проекта:   https://djangostore.ru

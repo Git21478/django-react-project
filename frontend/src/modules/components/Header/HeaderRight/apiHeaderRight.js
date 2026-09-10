@@ -5,9 +5,7 @@ export const getAvatar = (setAvatar) => {
     .get("/api/profile/")
     .then((res) => {
       console.log(res.data);
-      const profile = res.data[0];
-      setAvatar(profile.avatar);
-      console.log(profile);
+      setAvatar(res.data[0].avatar);
     })
     .catch((err) => console.log(err));
 };

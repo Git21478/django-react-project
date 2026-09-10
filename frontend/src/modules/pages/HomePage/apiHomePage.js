@@ -13,6 +13,7 @@ export const getProducts = (
       `/api/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${ordering}&search=${search}`,
     )
     .then((res) => {
+      console.log(res.data);
       setProducts(res.data.results);
       setProductCount(res.data.count);
       console.log(res.data.results);

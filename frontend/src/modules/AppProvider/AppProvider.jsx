@@ -13,6 +13,7 @@ export const AppContext = React.createContext();
 function AppProvider({ children }) {
   const [userId, setUserId] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(null);
   const [isGetFilteredProducts, setIsGetFilteredProducts] = useState(false);
   const [categories, setCategories] = useState("");
   const [currentCategorySlug, setCurrentCategorySlug] = useState("");
@@ -38,6 +39,7 @@ function AppProvider({ children }) {
   const contextObject = {
     userId: userId,
     isAuthenticated: isAuthenticated,
+    isAdmin: isAdmin,
     isGetFilteredProducts: isGetFilteredProducts,
     categories: categories,
     currentCategorySlug: currentCategorySlug,
@@ -58,6 +60,7 @@ function AppProvider({ children }) {
 
     setUserId: setUserId,
     setIsAuthenticated: setIsAuthenticated,
+    setIsAdmin: setIsAdmin,
     setIsGetFilteredProducts: setIsGetFilteredProducts,
     setCategories: setCategories,
     setCurrentCategorySlug: setCurrentCategorySlug,

@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv(".env.development")
+load_dotenv()
 
 from .base import *
 

@@ -5,14 +5,19 @@ from .utils import merge_favorites, merge_carts
 
 
 class UserSerializer(serializers.ModelSerializer):
+    is_admin = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ["id", "email", "username", "password"]
+        fields = ["id", "email", "username", "password", "is_admin"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+    def get_is_admin(self, obj):
+        return obj.is_staff or obj.is_superuser
 
     # def validate(self, data):
     #     if data["password"] == "asd":

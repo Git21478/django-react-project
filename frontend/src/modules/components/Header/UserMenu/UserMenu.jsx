@@ -1,6 +1,5 @@
 import styles from "./UserMenu.module.css";
 import { useContext } from "react";
-import { backendBaseURL } from "../../../../constants";
 import { AppContext } from "../../../AppProvider/AppProvider";
 import admin_panel_icon from "../../../../assets/icons/admin_panel.png";
 import profile_icon from "../../../../assets/icons/profile.png";
@@ -8,9 +7,15 @@ import login_icon from "../../../../assets/icons/login.png";
 import logout_icon from "../../../../assets/icons/logout.png";
 import registration_icon from "../../../../assets/icons/registration.png";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { getIsAdmin } from "./apiUserMenu";
 
 function UserMenu() {
   const appData = useContext(AppContext);
+
+  useEffect(() => {
+    getIsAdmin(appData.setIsAdmin);
+  }, []);
 
   return (
     <div className={styles.user_menu_wrapper}>
@@ -26,16 +31,18 @@ function UserMenu() {
                 />
                 <Link to="/profile">Профиль</Link>
               </li>
-              <li className={styles.user_menu_section}>
-                <img
-                  className={styles.user_menu_section_icon}
-                  src={admin_panel_icon}
-                  alt="user menu section icon"
-                />
-                <Link to={`${backendBaseURL}/admin`} target="_blank">
-                  Админ панель
-                </Link>
-              </li>
+              {appData.isAdmin && (
+                <li className={styles.user_menu_section}>
+                  <img
+                    className={styles.user_menu_section_icon}
+                    src={admin_panel_icon}
+                    alt="user menu section icon"
+                  />
+                  <Link to="/admin" target="_blank">
+                    Админ панель
+                  </Link>
+                </li>
+              )}
               <li className={styles.user_menu_section}>
                 <img
                   className={styles.user_menu_section_icon}

@@ -15,4 +15,11 @@ cp .env.example .env
 docker compose up --build
 ```
 
+## Данные Quickstart-аккаунтов
+
+| Роль | Логин (Email) | Пароль |
+| :--- | :--- | :--- |
+| **Администратор** | `test_admin@mail.ru` | `test_admin_password` |
+| **Пользователь** | `test_user@mail.ru` | `test_user_password` |
+
 ## Сайт проекта:   https://djangostore.ru

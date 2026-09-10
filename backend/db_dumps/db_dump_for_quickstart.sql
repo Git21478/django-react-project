@@ -17,6 +17,131 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_permissions_user_id_20aca447_fk_users_user_id;
+ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_perm_permission_id_0b93982e_fk_auth_perm;
+ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_user_id_5f6f5a90_fk_users_user_id;
+ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_group_id_9afc8d0e_fk_auth_group_id;
+ALTER TABLE IF EXISTS ONLY public.users_profile DROP CONSTRAINT IF EXISTS users_profile_user_id_2112e78d_fk_users_user_id;
+ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_product_id_d933ffa7_fk_products_product_id;
+ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_author_id_cca533e8_fk_users_user_id;
+ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_category_id_9b594869_fk_products_category_id;
+ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_brand_id_3e2e8fd1_fk_products_brand_id;
+ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_user_id_cd8466da_fk_users_user_id;
+ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_product_id_f8265054_fk_products_product_id;
+ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_brands_brand_id_fc34923b_fk_products_brand_id;
+ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_br_category_id_f3697e5d_fk_products_;
+ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_product_id_215977e5_fk_products_product_id;
+ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_cart_id_74762181_fk_products_cart_id;
+ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_anonymous_cart_id_bb328bc7_fk_products_;
+ALTER TABLE IF EXISTS ONLY public.products_cart DROP CONSTRAINT IF EXISTS products_cart_user_id_d53bf7cf_fk_users_user_id;
+ALTER TABLE IF EXISTS ONLY public.products_anonymousfavorite DROP CONSTRAINT IF EXISTS products_anonymousfa_product_id_c52b0f7c_fk_products_;
+ALTER TABLE IF EXISTS ONLY public.django_rest_passwordreset_resetpasswordtoken DROP CONSTRAINT IF EXISTS django_rest_password_user_id_e8015b11_fk_users_use;
+ALTER TABLE IF EXISTS ONLY public.django_admin_log DROP CONSTRAINT IF EXISTS django_admin_log_user_id_c564eba6_fk_users_user_id;
+ALTER TABLE IF EXISTS ONLY public.django_admin_log DROP CONSTRAINT IF EXISTS django_admin_log_content_type_id_c4bce8eb_fk_django_co;
+ALTER TABLE IF EXISTS ONLY public.auth_permission DROP CONSTRAINT IF EXISTS auth_permission_content_type_id_2f476e4b_fk_django_co;
+ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissions_group_id_b120cbf9_fk_auth_group_id;
+ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissio_permission_id_84c5c92e_fk_auth_perm;
+DROP INDEX IF EXISTS public.users_user_username_06e46fe6_like;
+DROP INDEX IF EXISTS public.users_user_user_permissions_user_id_20aca447;
+DROP INDEX IF EXISTS public.users_user_user_permissions_permission_id_0b93982e;
+DROP INDEX IF EXISTS public.users_user_groups_user_id_5f6f5a90;
+DROP INDEX IF EXISTS public.users_user_groups_group_id_9afc8d0e;
+DROP INDEX IF EXISTS public.users_user_email_243f6e77_like;
+DROP INDEX IF EXISTS public.users_profile_phone_0ff15728_like;
+DROP INDEX IF EXISTS public.products_review_product_id_d933ffa7;
+DROP INDEX IF EXISTS public.products_review_author_id_cca533e8;
+DROP INDEX IF EXISTS public.products_product_slug_70d3148d_like;
+DROP INDEX IF EXISTS public.products_product_category_id_9b594869;
+DROP INDEX IF EXISTS public.products_product_brand_id_3e2e8fd1;
+DROP INDEX IF EXISTS public.products_favorite_user_id_cd8466da;
+DROP INDEX IF EXISTS public.products_favorite_product_id_f8265054;
+DROP INDEX IF EXISTS public.products_category_slug_c558efae_like;
+DROP INDEX IF EXISTS public.products_category_brands_category_id_f3697e5d;
+DROP INDEX IF EXISTS public.products_category_brands_brand_id_fc34923b;
+DROP INDEX IF EXISTS public.products_cartproduct_product_id_215977e5;
+DROP INDEX IF EXISTS public.products_cartproduct_cart_id_74762181;
+DROP INDEX IF EXISTS public.products_cartproduct_anonymous_cart_id_bb328bc7;
+DROP INDEX IF EXISTS public.products_anonymousfavorite_session_key_3720dbc2_like;
+DROP INDEX IF EXISTS public.products_anonymousfavorite_session_key_3720dbc2;
+DROP INDEX IF EXISTS public.products_anonymousfavorite_product_id_c52b0f7c;
+DROP INDEX IF EXISTS public.products_anonymouscart_session_key_0bb7c619_like;
+DROP INDEX IF EXISTS public.drpr_token_created_at_idx;
+DROP INDEX IF EXISTS public.django_session_session_key_c0390e0f_like;
+DROP INDEX IF EXISTS public.django_session_expire_date_a5c62663;
+DROP INDEX IF EXISTS public.django_rest_passwordreset_resetpasswordtoken_user_id_e8015b11;
+DROP INDEX IF EXISTS public.django_rest_passwordreset_resetpasswordtoken_key_f1b65873_like;
+DROP INDEX IF EXISTS public.django_admin_log_user_id_c564eba6;
+DROP INDEX IF EXISTS public.django_admin_log_content_type_id_c4bce8eb;
+DROP INDEX IF EXISTS public.auth_permission_content_type_id_2f476e4b;
+DROP INDEX IF EXISTS public.auth_group_permissions_permission_id_84c5c92e;
+DROP INDEX IF EXISTS public.auth_group_permissions_group_id_b120cbf9;
+DROP INDEX IF EXISTS public.auth_group_name_a6ea08ec_like;
+ALTER TABLE IF EXISTS ONLY public.users_user DROP CONSTRAINT IF EXISTS users_user_username_key;
+ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_permissions_user_id_permission_id_43338c45_uniq;
+ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_permissions_pkey;
+ALTER TABLE IF EXISTS ONLY public.users_user DROP CONSTRAINT IF EXISTS users_user_pkey;
+ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_user_id_group_id_b88eab82_uniq;
+ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_pkey;
+ALTER TABLE IF EXISTS ONLY public.users_user DROP CONSTRAINT IF EXISTS users_user_email_key;
+ALTER TABLE IF EXISTS ONLY public.users_profile DROP CONSTRAINT IF EXISTS users_profile_pkey;
+ALTER TABLE IF EXISTS ONLY public.users_profile DROP CONSTRAINT IF EXISTS users_profile_phone_key;
+ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_product_id_author_id_a42e638b_uniq;
+ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_slug_key;
+ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_user_id_product_id_daf9efdd_uniq;
+ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_category DROP CONSTRAINT IF EXISTS products_category_slug_c558efae_uniq;
+ALTER TABLE IF EXISTS ONLY public.products_category DROP CONSTRAINT IF EXISTS products_category_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_brands_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_brands_category_id_brand_id_cb11283c_uniq;
+ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_cart_id_product_id_413a637d_uniq;
+ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_anonymous_cart_id_product_id_c29582ef_uniq;
+ALTER TABLE IF EXISTS ONLY public.products_cart DROP CONSTRAINT IF EXISTS products_cart_user_id_key;
+ALTER TABLE IF EXISTS ONLY public.products_cart DROP CONSTRAINT IF EXISTS products_cart_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_brand DROP CONSTRAINT IF EXISTS products_brand_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_anonymousfavorite DROP CONSTRAINT IF EXISTS products_anonymousfavorite_session_key_product_id_9a58c8c8_uniq;
+ALTER TABLE IF EXISTS ONLY public.products_anonymousfavorite DROP CONSTRAINT IF EXISTS products_anonymousfavorite_pkey;
+ALTER TABLE IF EXISTS ONLY public.products_anonymouscart DROP CONSTRAINT IF EXISTS products_anonymouscart_session_key_key;
+ALTER TABLE IF EXISTS ONLY public.products_anonymouscart DROP CONSTRAINT IF EXISTS products_anonymouscart_pkey;
+ALTER TABLE IF EXISTS ONLY public.health_check_db_testmodel DROP CONSTRAINT IF EXISTS health_check_db_testmodel_pkey;
+ALTER TABLE IF EXISTS ONLY public.django_session DROP CONSTRAINT IF EXISTS django_session_pkey;
+ALTER TABLE IF EXISTS ONLY public.django_rest_passwordreset_resetpasswordtoken DROP CONSTRAINT IF EXISTS django_rest_passwordreset_resetpasswordtoken_pkey;
+ALTER TABLE IF EXISTS ONLY public.django_rest_passwordreset_resetpasswordtoken DROP CONSTRAINT IF EXISTS django_rest_passwordreset_resetpasswordtoken_key_f1b65873_uniq;
+ALTER TABLE IF EXISTS ONLY public.django_migrations DROP CONSTRAINT IF EXISTS django_migrations_pkey;
+ALTER TABLE IF EXISTS ONLY public.django_content_type DROP CONSTRAINT IF EXISTS django_content_type_pkey;
+ALTER TABLE IF EXISTS ONLY public.django_content_type DROP CONSTRAINT IF EXISTS django_content_type_app_label_model_76bd3d3b_uniq;
+ALTER TABLE IF EXISTS ONLY public.django_admin_log DROP CONSTRAINT IF EXISTS django_admin_log_pkey;
+ALTER TABLE IF EXISTS ONLY public.auth_permission DROP CONSTRAINT IF EXISTS auth_permission_pkey;
+ALTER TABLE IF EXISTS ONLY public.auth_permission DROP CONSTRAINT IF EXISTS auth_permission_content_type_id_codename_01ab375a_uniq;
+ALTER TABLE IF EXISTS ONLY public.auth_group DROP CONSTRAINT IF EXISTS auth_group_pkey;
+ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissions_pkey;
+ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissions_group_id_permission_id_0cd325b0_uniq;
+ALTER TABLE IF EXISTS ONLY public.auth_group DROP CONSTRAINT IF EXISTS auth_group_name_key;
+DROP TABLE IF EXISTS public.users_user_user_permissions;
+DROP TABLE IF EXISTS public.users_user_groups;
+DROP TABLE IF EXISTS public.users_user;
+DROP TABLE IF EXISTS public.users_profile;
+DROP TABLE IF EXISTS public.products_review;
+DROP TABLE IF EXISTS public.products_product;
+DROP TABLE IF EXISTS public.products_favorite;
+DROP TABLE IF EXISTS public.products_category_brands;
+DROP TABLE IF EXISTS public.products_category;
+DROP TABLE IF EXISTS public.products_cartproduct;
+DROP TABLE IF EXISTS public.products_cart;
+DROP TABLE IF EXISTS public.products_brand;
+DROP TABLE IF EXISTS public.products_anonymousfavorite;
+DROP TABLE IF EXISTS public.products_anonymouscart;
+DROP TABLE IF EXISTS public.health_check_db_testmodel;
+DROP TABLE IF EXISTS public.django_session;
+DROP TABLE IF EXISTS public.django_rest_passwordreset_resetpasswordtoken;
+DROP TABLE IF EXISTS public.django_migrations;
+DROP TABLE IF EXISTS public.django_content_type;
+DROP TABLE IF EXISTS public.django_admin_log;
+DROP TABLE IF EXISTS public.auth_permission;
+DROP TABLE IF EXISTS public.auth_group_permissions;
+DROP TABLE IF EXISTS public.auth_group;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -869,6 +994,11 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 155	2025-12-06 08:24:02.807686+00	57	27" Монитор Titan Army P27H2G черный	1	[{"added": {}}]	10	2
 156	2025-12-06 08:24:05.38276+00	57	27" Монитор Titan Army P27H2G черный	2	[{"changed": {"fields": ["\\u041f\\u0440\\u043e\\u0438\\u0437\\u0432\\u043e\\u0434\\u0438\\u0442\\u0435\\u043b\\u044c"]}}]	10	2
 157	2025-12-08 16:02:27.377722+00	2	1	3		11	2
+158	2026-09-05 07:49:27.340323+00	1	asd	2	[{"changed": {"fields": ["password"]}}]	6	2
+159	2026-09-05 07:52:14.382203+00	1	test_user	2	[{"changed": {"fields": ["Username", "Email"]}}]	6	2
+160	2026-09-05 07:53:10.311392+00	1	test_user	2	[{"changed": {"fields": ["password"]}}]	6	2
+161	2026-09-05 07:54:13.741076+00	1	test_user	2	[{"changed": {"fields": ["password"]}}]	6	2
+162	2026-09-05 07:55:57.901237+00	2	admin	2	[{"changed": {"fields": ["password"]}}]	6	2
 \.
 
 
@@ -1215,8 +1345,8 @@ COPY public.products_review (id, title, content, rating, created_at, author_id, 
 --
 
 COPY public.users_profile (user_id, avatar, phone, city) FROM stdin;
-2	profile_avatars/default_avatar.png	\N	
-1	profile_avatars/uploaded/marrakesh-amanjena-hotel-picture-24_2URHVI2.jpg	\N	
+2	profile_avatars/uploaded/marrakesh-amanjena-hotel-picture-24_ADwSKkN.jpg	\N	
+1	profile_avatars/uploaded/20200205115553_Priroda_10-236.jpg	\N	
 \.
 
 
@@ -1225,8 +1355,8 @@ COPY public.users_profile (user_id, avatar, phone, city) FROM stdin;
 --
 
 COPY public.users_user (id, password, last_login, is_superuser, username, first_name, last_name, is_staff, is_active, date_joined, email) FROM stdin;
-1	pbkdf2_sha256$870000$Qer5HZgmdOPDefIAEnMVSa$hBLoI9ynHX08iQMeolOVx9Mr1jgMwI2MqOXrZYs2hjw=	\N	f	asd			f	t	2025-11-24 15:47:03.033385+00	asd@mail.ru
-2	pbkdf2_sha256$870000$nRr2w9EacUvDpCMcHSmjgB$jJUlQJdTEVXyyksSZeLSYnXAhEDLQM4IFXM/oyH4lUU=	2026-05-27 06:48:51.312565+00	t	admin			t	t	2025-11-24 15:58:13.459262+00	admin@mail.ru
+1	pbkdf2_sha256$1500000$xPTrhfVKcl79JLRX9jejc9$+WkVznOJ0UMkdorNP2wg0GmASNheoNyAFAI7fuT23rs=	\N	f	test_user			f	t	2025-11-24 15:47:03+00	test_user@mail.ru
+2	pbkdf2_sha256$1500000$GgfTxpmG1k9nGabeP2ldWl$zvlbOtkAgx26wX8gumgUd5piCv8IZHcOLsfvNl9u2oY=	2026-09-05 08:02:32.848722+00	t	test_admin			t	t	2025-11-24 15:58:13+00	test_admin@mail.ru
 \.
 
 
@@ -1271,7 +1401,7 @@ SELECT pg_catalog.setval('public.auth_permission_id_seq', 76, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 157, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 165, true);
 
 
 --
@@ -1327,7 +1457,7 @@ SELECT pg_catalog.setval('public.products_brand_id_seq', 31, true);
 -- Name: products_cart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.products_cart_id_seq', 8, true);
+SELECT pg_catalog.setval('public.products_cart_id_seq', 9, true);
 
 
 --
@@ -1383,7 +1513,7 @@ SELECT pg_catalog.setval('public.users_user_groups_id_seq', 1, false);
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 3, true);
 
 
 --

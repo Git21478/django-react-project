@@ -2,20 +2,20 @@ import api from "../../../api";
 
 export const getProducts = (
   setProducts,
-  setProductCount,
+  setProductsCount,
   currentPage,
   pageSize,
-  ordering,
+  productsOrdering,
   search = "",
 ) => {
   api
     .get(
-      `/api/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${ordering}&search=${search}`,
+      `/api/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${productsOrdering}&search=${search}`,
     )
     .then((res) => {
       console.log(res.data);
       setProducts(res.data.results);
-      setProductCount(res.data.count);
+      setProductsCount(res.data.count);
       console.log(res.data.results);
     })
     .catch((err) => console.log(err));
@@ -23,20 +23,20 @@ export const getProducts = (
 
 export const getCategoryProducts = (
   setProducts,
-  setProductCount,
+  setProductsCount,
   currentPage,
   pageSize,
-  ordering,
+  productsOrdering,
   search = "",
   categoryId = "",
 ) => {
   api
     .get(
-      `/api/catalog/${categoryId}/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${ordering}&search=${search}`,
+      `/api/catalog/${categoryId}/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${productsOrdering}&search=${search}`,
     )
     .then((res) => {
       setProducts(res.data.results);
-      setProductCount(res.data.count);
+      setProductsCount(res.data.count);
       console.log(res.data.results);
     })
     .catch((err) => console.log(err));
@@ -48,11 +48,12 @@ export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
     .map((brand) => brand.id);
 
   console.log(appData);
-  let url = `/api/catalog/${appData.currentCategory.id}/products/?pageSize=${appData.pageSize}&page=${appData.currentPage}&ordering=${appData.ordering}&search=${appData.search}`;
+  let url = `/api/catalog/${appData.currentCategory.id}/products/?pageSize=${appData.pageSize}&page=${appData.currentPage}&ordering=${appData.productsOrdering}&search=${appData.search}`;
   if (priceMin !== "") url += `&price_min=${priceMin}`;
   if (priceMax !== "") url += `&price_max=${priceMax}`;
-  if (selectedBrandsIds !== "")
+  if (selectedBrandsIds.length > 0) {
     url += `&selected_brands_ids=${selectedBrandsIds}`;
+  }
 
   console.log(priceMin, priceMax);
   console.log(selectedBrandsIds);
@@ -63,7 +64,7 @@ export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
       console.log(res.data.results);
       appData.setIsGetFilteredProducts(true);
       appData.setProducts(res.data.results);
-      appData.setProductCount(res.data.count);
+      appData.setProductsCount(res.data.count);
       console.log(res.data.results);
     })
     .catch((err) => console.log(err));

@@ -15,9 +15,9 @@ function AppProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isAdmin, setIsAdmin] = useState(null);
   const [isGetFilteredProducts, setIsGetFilteredProducts] = useState(false);
-  const [categories, setCategories] = useState("");
+  const [categories, setCategories] = useState([]);
   const [currentCategorySlug, setCurrentCategorySlug] = useState("");
-  const [currentCategory, setCurrentCategory] = useState("");
+  const [currentCategory, setCurrentCategory] = useState(null);
   const [openCatalog, setOpenCatalog] = useState(false);
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [productsCount, setProductsCount] = useState(0);
@@ -93,11 +93,10 @@ function AppProvider({ children }) {
   }, [productsCount]);
 
   useEffect(() => {
-    categories !== "" &&
-      setCurrentCategory(
-        categories.find((category) => category.slug === currentCategorySlug),
-      );
-  }, [categories]);
+    setCurrentCategory(
+      categories.find((category) => category.slug === currentCategorySlug),
+    );
+  }, [categories, currentCategorySlug]);
 
   useEffect(() => {
     !currentCategory
@@ -124,10 +123,7 @@ function AppProvider({ children }) {
     isAuthenticated,
     currentPage,
     productsOrdering,
-    productsCount,
-    currentCategory,
-    cart,
-    cart.cart_products,
+    currentCategory?.id,
   ]);
 
   return (

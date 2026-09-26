@@ -2,7 +2,8 @@ from . import views
 from django.urls import path, include
 from users.views import CreateUserView, PasswordChangeView
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import CustomTokenObtainPairView
+from .views import CustomTokenObtainPairView, S3FileView
+from django.conf import settings
 
 urlpatterns = [
     path("user/", views.UserList.as_view(), name="user"),
@@ -17,4 +18,5 @@ urlpatterns = [
         "password-reset/",
         include("django_rest_passwordreset.urls", namespace="password-reset"),
     ),
+    path("files/<path:file_path>", S3FileView.as_view(), name="s3-file"),
 ]

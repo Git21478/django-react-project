@@ -21,10 +21,7 @@ class Profile(models.Model):
         related_name="profile",
         verbose_name="Пользователь",
     )
-    avatar = models.ImageField(
-        default="profile_avatars/default_avatar.png",
-        upload_to="profile_avatars/uploaded",
-    )
+    avatar = models.ImageField(upload_to="profile_avatars/")
     phone = models.CharField(
         verbose_name="Номер телефона",
         unique=True,

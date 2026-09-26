@@ -8,7 +8,12 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.views import APIView
 from .serializers import CustomTokenObtainPairSerializer
+from storages.backends.s3boto3 import S3Boto3Storage
+from urllib.parse import urlparse
+from django.http import HttpResponse, HttpResponseForbidden
+from django.conf import settings
 
 
 # User
@@ -90,3 +95,26 @@ class ProfileUpdate(generics.UpdateAPIView):
 
     def get_queryset(self):
         return Profile.objects.all()
+
+
+class S3FileView(APIView):
+    def get(self, request, file_path):
+        if not (file_path.startswith("product_images/") or file_path.startswith("profile_avatars/")):
+            return HttpResponseForbidden()
+
+        client = S3Boto3Storage().connection.meta.client
+        url = client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+                "Key": file_path,
+            },
+            ExpiresIn=settings.AWS_S3_URL_EXPIRATION,
+        )
+
+        parsed = urlparse(url)
+        internal_path = parsed.path + "?" + parsed.query
+
+        response = HttpResponse()
+        response["X-Accel-Redirect"] = f"/internal-s3{internal_path}"
+        return response

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AppContext } from "../../../AppProvider/AppProvider.jsx";
 import favorites_1_icon from "../../../../assets/icons/favorites_1.png";
 import cart_icon from "../../../../assets/icons/cart.png";
-import default_avatar from "../../../../assets/icons/default_avatar.png";
+import default_avatar from "../../../../assets/fallbacks/default_avatar.png";
 import { Link } from "react-router-dom";
 
 function HeaderRight() {

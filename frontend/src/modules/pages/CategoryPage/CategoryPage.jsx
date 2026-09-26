@@ -11,11 +11,16 @@ import PageTemplate from "../../PageTemplate/PageTemplate";
 function CategoryPage() {
   const appData = useContext(AppContext);
   const categorySlug = useParams().category_slug;
-  document.title = `${appData.currentCategory.name} | Магазин`;
 
   useEffect(() => {
     appData.setCurrentCategorySlug(categorySlug);
-  }, []);
+  }, [categorySlug]);
+
+  useEffect(() => {
+    if (appData.currentCategory) {
+      document.title = `${appData.currentCategory.name} | Магазин`;
+    }
+  }, [appData.currentCategory]);
 
   return (
     <PageTemplate>

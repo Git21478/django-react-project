@@ -2,6 +2,7 @@ import styles from "../ProfilePage.module.css";
 import { useState, useEffect } from "react";
 import { getUser, getProfile, updateProfile } from "../apiProfilePage.js";
 import InfoField from "../InfoField/InfoField.jsx";
+import default_avatar from "../../../../assets/fallbacks/default_avatar.png";
 
 function ProfileInfo() {
   const [user, setUser] = useState("");
@@ -37,7 +38,7 @@ function ProfileInfo() {
         <div>
           <img
             className={styles.profile_avatar_image}
-            src={avatar}
+            src={avatar ? avatar : default_avatar}
             alt="Avatar placeholder"
             width="200px"
             height="200px"

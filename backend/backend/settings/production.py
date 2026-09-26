@@ -6,7 +6,6 @@ load_dotenv(".env.production")
 from .base import *
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = False
 ALLOWED_HOSTS = [
     "djangostore.ru",
     "www.djangostore.ru",
@@ -21,17 +20,6 @@ CSRF_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = ["https://djangostore.ru", "https://www.djangostore.ru"]
 # CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_NAME"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST"),
-        "PORT": os.getenv("POSTGRES_PORT"),
-    }
-}
-
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
@@ -39,14 +27,26 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
 STATIC_URL = "/static/"
 STATIC_ROOT = "/app/staticfiles"
+
+# S3
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/app/media"
 
+# Redis
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",

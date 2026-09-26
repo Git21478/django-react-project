@@ -10,19 +10,27 @@ function SortBarLeft() {
   const appData = useContext(AppContext);
   const priceMin = useInput("");
   const priceMax = useInput("");
-  const [brands, setBrands] = useState();
+  const [brands, setBrands] = useState([]);
 
   const handleCheckboxChange = (id) => {
-    setBrands(
-      brands.map((brand) => {
-        return brand.id === id ? { ...brand, checked: !brand.checked } : brand;
-      }),
+    setBrands((prev) =>
+      prev.map((brand) =>
+        brand.id === id ? { ...brand, checked: !brand.checked } : brand,
+      ),
     );
   };
 
   useEffect(() => {
-    getCurrentCategoryBrands(appData.currentCategory, setBrands);
-  }, [appData.currentCategory.brands]);
+    if (appData.currentCategory) {
+      getCurrentCategoryBrands(appData.currentCategory, setBrands);
+    } else {
+      setBrands([]);
+    }
+  }, [appData.currentCategory?.id]);
+
+  if (!appData.currentCategory) {
+    return null;
+  }
 
   return (
     <div className={styles.sort_bar_left_wrapper}>
@@ -40,22 +48,20 @@ function SortBarLeft() {
         <div className={styles.filter_element}>
           <h2>Производитель</h2>
           <div>
-            {brands &&
-              brands !== "" &&
-              brands.map((brand) => {
-                return (
-                  <div key={brand.id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={brand.checked}
-                        onChange={() => handleCheckboxChange(brand.id)}
-                      />
-                      {brand.name}
-                    </label>
-                  </div>
-                );
-              })}
+            {brands.map((brand) => {
+              return (
+                <div key={brand.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={brand.checked}
+                      onChange={() => handleCheckboxChange(brand.id)}
+                    />
+                    {brand.name}
+                  </label>
+                </div>
+              );
+            })}
           </div>
         </div>
 

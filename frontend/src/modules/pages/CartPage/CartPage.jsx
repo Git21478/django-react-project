@@ -10,11 +10,11 @@ import CartPageSummary from "./CartPageSummary/CartPageSummary";
 
 function CartPage() {
   document.title = "Корзина | Магазин";
-  const appData = useContext(AppContext);
+  const { cart, setCart } = useContext(AppContext);
   const [selectedCartProductIds, setSelectedCartProductIds] = useState([]);
 
   useEffect(() => {
-    getCart(appData.setCart);
+    getCart(setCart);
     console.log(appData);
   }, []);
 
@@ -23,10 +23,10 @@ function CartPage() {
       <div className={styles.cart_page_wrapper}>
         <h1 className={styles.cart_page_header}>Корзина</h1>
 
-        {appData.cart && (
+        {cart && (
           <CartPageSelectAll
-            cart={appData.cart}
-            setCart={appData.setCart}
+            cart={cart}
+            setCart={setCart}
             selectedCartProductIds={selectedCartProductIds}
             setSelectedCartProductIds={setSelectedCartProductIds}
           />
@@ -34,11 +34,11 @@ function CartPage() {
 
         <div className={styles.cart_page_main_section}>
           <div className={styles.cart_page_products_section}>
-            {appData.cart.cart_products &&
-              appData.cart.cart_products.map((cartProduct) => (
+            {cart.cart_products &&
+              cart.cart_products.map((cartProduct) => (
                 <CartProduct
                   cartProduct={cartProduct}
-                  setCart={appData.setCart}
+                  setCart={setCart}
                   selectedCartProductIds={selectedCartProductIds}
                   setSelectedCartProductIds={setSelectedCartProductIds}
                   key={cartProduct.id}
@@ -48,8 +48,8 @@ function CartPage() {
 
           <div className={styles.cart_page_summary_section}>
             <CartPageSummary
-              cart={appData.cart}
-              setCart={appData.setCart}
+              cart={cart}
+              setCart={setCart}
               setSelectedCartProductIds={setSelectedCartProductIds}
             />
           </div>

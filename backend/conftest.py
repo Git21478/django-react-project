@@ -1,8 +1,10 @@
 import pytest
-from rest_framework.test import APIClient
-from products.models import Brand, Category, Product, Review, Favorite, CartProduct
-from users.models import User
 from django.urls import reverse
+from rest_framework.test import APIClient
+
+from products.models import Brand, CartProduct, Category, Favorite, Product, Review
+from users.models import User
+
 
 @pytest.fixture
 def user1(db):

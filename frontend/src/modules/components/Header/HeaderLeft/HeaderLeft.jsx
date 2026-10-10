@@ -4,7 +4,7 @@ import { AppContext } from "../../../AppProvider/AppProvider";
 import { Link } from "react-router-dom";
 
 function HeaderLeft() {
-  const appData = useContext(AppContext);
+  const { openCatalog, setOpenCatalog } = useContext(AppContext);
 
   return (
     <div className={`${styles.header_left} ${styles.header_element}`}>
@@ -16,7 +16,7 @@ function HeaderLeft() {
       <h2
         className={styles.catalog_h2}
         onClick={() =>
-          appData.setOpenCatalog(!appData.openCatalog ? true : false)
+          setOpenCatalog(!openCatalog ? true : false)
         }
       >
         Каталог

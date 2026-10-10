@@ -4,13 +4,13 @@ import { AppContext } from "../../../AppProvider/AppProvider";
 import { Link } from "react-router-dom";
 
 function Catalog() {
-  const appData = useContext(AppContext);
+  const { openCatalog, categories } = useContext(AppContext);
 
   return (
     <div className={styles.catalog_wrapper}>
-      {appData.openCatalog && (
+      {openCatalog && (
         <ul>
-          {appData.categories
+          {categories
             .sort((a, b) => a.id - b.id)
             .map((category) => {
               return (

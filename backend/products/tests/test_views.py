@@ -1,10 +1,11 @@
 import pytest
-from rest_framework import status
-from django.urls import reverse
-from products.models import Review, Favorite, CartProduct
-from products.views import ReviewPaginationPages
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.urls import reverse
+from rest_framework import status
+
+from products.models import CartProduct, Favorite, Review
+from products.views import ReviewPaginationPages
 
 pytestmark = pytest.mark.django_db
 

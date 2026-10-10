@@ -1,5 +1,7 @@
 from django.test import TestCase
-from users.models import User, Profile
+
+from users.models import Profile, User
+
 
 class UserCreationSignalsTest(TestCase):
     @classmethod

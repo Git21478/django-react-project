@@ -1,10 +1,15 @@
 import pytest
-from products.serializers import (
-    BrandSerializer, CategorySerializer, ProductSerializer, ReviewSerializer,
-    FavoriteSerializer, FavoriteCreateSerializer,
-    CartSerializer, AddToCartSerializer, CartProductSerializer
-)
+
 from products.models import CartProduct
+from products.serializers import (
+    BrandSerializer,
+    CartProductSerializer,
+    CategorySerializer,
+    FavoriteCreateSerializer,
+    FavoriteSerializer,
+    ProductSerializer,
+    ReviewSerializer,
+)
 
 pytestmark = pytest.mark.django_db
 

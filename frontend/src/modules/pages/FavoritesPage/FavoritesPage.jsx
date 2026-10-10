@@ -8,11 +8,11 @@ import { handleCheckboxAllFavorites } from "./utilsFavoritesPage";
 
 function FavoritesPage() {
   document.title = "Избранное | Магазин";
-  const appData = useContext(AppContext);
+  const { favorites, setFavorites } = useContext(AppContext);
   const [selectedFavoritesIds, setSelectedFavoritesIds] = useState([]);
 
   useEffect(() => {
-    getFavorites(appData.setFavorites);
+    getFavorites(setFavorites);
   }, []);
 
   useEffect(() => {
@@ -30,12 +30,12 @@ function FavoritesPage() {
               type="checkbox"
               id="checkboxAll"
               checked={
-                selectedFavoritesIds.length === appData.favorites.length &&
+                selectedFavoritesIds.length === favorites.length &&
                 selectedFavoritesIds.length !== 0
               }
               onChange={() =>
                 handleCheckboxAllFavorites(
-                  appData.favorites,
+                  favorites,
                   selectedFavoritesIds,
                   setSelectedFavoritesIds,
                 )
@@ -52,7 +52,7 @@ function FavoritesPage() {
                 deleteMultipleFavorites(
                   selectedFavoritesIds,
                   setSelectedFavoritesIds,
-                  appData.setFavorites,
+                  setFavorites,
                 )
               }
             >
@@ -62,10 +62,10 @@ function FavoritesPage() {
         </div>
 
         <div>
-          {appData.favorites.map((favorite) => (
+          {favorites.map((favorite) => (
             <Favorite
               favorite={favorite}
-              setFavorites={appData.setFavorites}
+              setFavorites={setFavorites}
               selectedFavoritesIds={selectedFavoritesIds}
               setSelectedFavoritesIds={setSelectedFavoritesIds}
               key={favorite.id}

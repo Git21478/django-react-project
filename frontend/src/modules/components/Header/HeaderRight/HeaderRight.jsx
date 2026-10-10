@@ -7,7 +7,7 @@ import default_avatar from "../../../../assets/fallbacks/default_avatar.png";
 import { Link } from "react-router-dom";
 
 function HeaderRight() {
-  const appData = useContext(AppContext);
+  const { avatar, openUserMenu, setOpenUserMenu} = useContext(AppContext);
 
   return (
     <div className={`${styles.header_right} ${styles.header_element}`}>
@@ -23,10 +23,10 @@ function HeaderRight() {
       </Link>
       <img
         className={`${styles.header_icon} ${styles.header_avatar_icon}`}
-        src={appData.avatar ? appData.avatar : default_avatar}
+        src={avatar ? avatar : default_avatar}
         alt="Avatar"
         onClick={() =>
-          appData.setOpenUserMenu(!appData.openUserMenu ? true : false)
+          setOpenUserMenu(!openUserMenu ? true : false)
         }
       />
     </div>

@@ -1,8 +1,9 @@
 import pytest
-from products.models import Brand, Category, Product, Favorite
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import ManyToManyField
+
+from products.models import Brand, Category, Favorite, Product
 
 pytestmark = pytest.mark.django_db
 

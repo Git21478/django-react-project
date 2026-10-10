@@ -1,14 +1,15 @@
 from rest_framework import serializers
+
 from .models import (
+    AnonymousCart,
+    AnonymousFavorite,
     Brand,
+    Cart,
+    CartProduct,
     Category,
+    Favorite,
     Product,
     Review,
-    Favorite,
-    AnonymousFavorite,
-    Cart,
-    AnonymousCart,
-    CartProduct,
 )
 
 

@@ -1,8 +1,10 @@
 import unittest
-from django.test import TestCase
-from users.models import User, Profile
-from django.core.exceptions import ValidationError
+
 from django.db import IntegrityError
+from django.test import TestCase
+
+from users.models import Profile, User
+
 
 class UserModelTest(TestCase):
     @unittest.skip("")

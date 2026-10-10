@@ -1,9 +1,11 @@
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
-from django.db.models import Avg, Count
-from .models import Product, Review, Cart, AnonymousCart
-from users.models import User
 from django.contrib.sessions.models import Session
+from django.db.models import Avg, Count
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+
+from users.models import User
+
+from .models import AnonymousCart, Cart, Product, Review
 
 
 @receiver(post_save, sender=User)

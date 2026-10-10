@@ -7,15 +7,9 @@ import login_icon from "../../../../assets/icons/login.png";
 import logout_icon from "../../../../assets/icons/logout.png";
 import registration_icon from "../../../../assets/icons/registration.png";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
-import { getIsAdmin } from "./apiUserMenu";
 
 function UserMenu() {
   const appData = useContext(AppContext);
-
-  useEffect(() => {
-    getIsAdmin(appData.setIsAdmin);
-  }, []);
 
   return (
     <div className={styles.user_menu_wrapper}>
@@ -31,7 +25,7 @@ function UserMenu() {
                 />
                 <Link to="/profile">Профиль</Link>
               </li>
-              {appData.isAdmin && (
+              {appData.user.is_admin && (
                 <li className={styles.user_menu_section}>
                   <img
                     className={styles.user_menu_section_icon}

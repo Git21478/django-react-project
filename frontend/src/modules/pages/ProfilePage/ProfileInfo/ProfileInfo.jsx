@@ -1,35 +1,19 @@
 import styles from "../ProfilePage.module.css";
-import { useState, useEffect } from "react";
-import { getUser, getProfile, updateProfile } from "../apiProfilePage.js";
+import { useState, useContext } from "react";
+import { updateProfile } from "../apiProfilePage.js";
 import InfoField from "../InfoField/InfoField.jsx";
 import default_avatar from "../../../../assets/fallbacks/default_avatar.png";
+import { AppContext } from "../../../AppProvider/AppProvider.jsx";
 
 function ProfileInfo() {
-  const [user, setUser] = useState("");
-  const [profile, setProfile] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const { user, profile, setUser, setProfile } = useContext(AppContext);
+  const [email, setEmail] = useState(user?.email ?? "");
+  const [username, setUsername] = useState(user?.username ?? "");
+  const [phone, setPhone] = useState(profile?.phone ?? "");
+  const [city, setCity] = useState(profile?.city ?? "");
+  const [avatar, setAvatar] = useState(profile?.avatar ?? "");
   const [avatarFile, setAvatarFile] = useState("");
-  const [phone, setPhone] = useState("");
-  const [city, setCity] = useState("");
   const [editing, setEditing] = useState(false);
-
-  useEffect(() => {
-    getUser(setUser);
-    getProfile(setProfile);
-  }, []);
-
-  useEffect(() => {
-    setUsername(user.username);
-    setEmail(user.email);
-  }, [user]);
-
-  useEffect(() => {
-    setAvatar(profile.avatar);
-    setPhone(profile.phone);
-    setCity(profile.city);
-  }, [profile]);
 
   return (
     <div className={styles.profile_page_section}>
@@ -109,9 +93,6 @@ function ProfileInfo() {
                 </button>
                 <button
                   onClick={() => {
-                    {
-                      /*updateUser(user, username, email, setUser, setProfile, setEditing); */
-                    }
                     updateProfile(
                       phone,
                       city,

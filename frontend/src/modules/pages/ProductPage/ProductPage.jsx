@@ -1,7 +1,7 @@
 import styles from "./ProductPage.module.css";
 import { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getUserId, getProductPageProduct, getReviews } from "./apiProductPage";
+import { getProductPageProduct, getReviews } from "./apiProductPage";
 import ReviewCreation from "./ReviewCreation/ReviewCreation";
 import Review from "./Review/Review";
 import { AppContext } from "../../AppProvider/AppProvider";
@@ -19,7 +19,6 @@ function ProductPage() {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    getUserId(appData.setUserId);
     getProductPageProduct(productPageProductId, setProductPageProduct);
   }, [reviews]);
 

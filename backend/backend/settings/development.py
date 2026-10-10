@@ -1,20 +1,20 @@
 import os
+
 from dotenv import load_dotenv
-import socket
 
 load_dotenv()
 
 from .base import *
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
 
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# Sessions
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_HTTPONLY = False
 
 # S3
 STORAGES = {
@@ -45,9 +45,8 @@ CACHES = {
             "SOCKET_TIMEOUT": 5,
             "RETRY_ON_TIMEOUT": True,
             "MAX_CONNECTIONS": 1000,
-        }
+        },
     },
-
     "sessions": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": os.getenv("REDIS_LOCATION_SESSIONS", None),
@@ -58,8 +57,8 @@ CACHES = {
             "SOCKET_TIMEOUT": 5,
             "RETRY_ON_TIMEOUT": True,
             "MAX_CONNECTIONS": 1000,
-        }
-    }
+        },
+    },
 }
 
 DEBUG_TOOLBAR_PANELS = [
@@ -81,6 +80,7 @@ DEBUG_TOOLBAR_PANELS = [
 INTERNAL_IPS = ["127.0.0.1"]
 
 if DEBUG:
+
     def custom_show_toolbar(request):
         return True
 

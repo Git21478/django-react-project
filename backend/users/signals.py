@@ -1,12 +1,10 @@
-from django.dispatch import receiver
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.db.models.signals import post_save
-from django.core.mail import send_mail, EmailMultiAlternatives
-from .models import User, Profile
-
+from django.dispatch import receiver
 from django.template.loader import render_to_string
-from django.urls import reverse
-
 from django_rest_passwordreset.signals import reset_password_token_created
+
+from .models import Profile, User
 
 
 @receiver(post_save, sender=User)
@@ -40,7 +38,7 @@ def password_reset_token_created(
         "username": reset_password_token.user.username,
         "email": reset_password_token.user.email,
         "reset_password_url": "{}?token={}".format(
-            "{}/password-reset/confirm/".format(instance.request.get_host()),
+            f"{instance.request.get_host()}/password-reset/confirm/",
             reset_password_token.key,
         ),
     }

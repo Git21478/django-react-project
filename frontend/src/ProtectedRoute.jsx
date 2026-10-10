@@ -3,13 +3,13 @@ import { Navigate } from "react-router-dom";
 import { AppContext } from "./modules/AppProvider/AppProvider";
 
 function ProtectedRoute({ children }) {
-  const appData = useContext(AppContext);
+  const { isAuthenticated } = useContext(AppContext);
 
-  if (appData.isAuthenticated === null) {
+  if (isAuthenticated === null) {
     return <div>Загрузка...</div>;
   }
 
-  if (appData.isAuthenticated === false) {
+  if (isAuthenticated === false) {
     return <Navigate to="/login" />;
   }
 

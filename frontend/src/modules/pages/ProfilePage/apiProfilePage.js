@@ -1,18 +1,6 @@
 import api from "../../../api";
 
 // User
-export const getUser = (setUser) => {
-  api
-    .get("/api/user/")
-    .then((res) => {
-      setUser({
-        ...res.data[0],
-      });
-      console.log(res.data);
-    })
-    .catch((err) => console.log(err));
-};
-
 export const updateUser = (
   username,
   email,

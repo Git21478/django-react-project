@@ -1,6 +1,9 @@
 import unittest
+
 from django.test import TestCase
+
 from users.models import User
+
 
 class HomePageTest(TestCase):
     @unittest.skip("")

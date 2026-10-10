@@ -1,11 +1,11 @@
 import api from "../../../../api";
 
-export const getAvatar = (setAvatar) => {
+export const getProfile = (setProfile) => {
   api
     .get("/api/profile/")
     .then((res) => {
       console.log(res.data);
-      setAvatar(res.data[0].avatar);
+      setProfile(res.data[0]);
     })
     .catch((err) => console.log(err));
 };

@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv(".env.production")
@@ -20,15 +21,12 @@ CSRF_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = ["https://djangostore.ru", "https://www.djangostore.ru"]
 # CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
-CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = ["https://djangostore.ru", "https://www.djangostore.ru"]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
-
-STATIC_URL = "/static/"
-STATIC_ROOT = "/app/staticfiles"
 
 # S3
 STORAGES = {

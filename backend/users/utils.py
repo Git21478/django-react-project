@@ -1,9 +1,9 @@
 from products.models import (
-    Favorite,
+    AnonymousCart,
     AnonymousFavorite,
     Cart,
-    AnonymousCart,
     CartProduct,
+    Favorite,
 )
 
 

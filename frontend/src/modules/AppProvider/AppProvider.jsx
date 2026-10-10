@@ -5,15 +5,15 @@ import {
 } from "../pages/HomePage/apiHomePage";
 import { getCategories } from "../components/Sidebar/apiSidebar";
 import { createPages } from "./utilsAppProvider";
-import { auth } from "./apiAppProvider";
-import { getAvatar } from "../components/Header/HeaderRight/apiHeaderRight";
+import { getUser } from "./apiAppProvider";
+import { getProfile } from "../components/Header/HeaderRight/apiHeaderRight";
 
 export const AppContext = React.createContext();
 
 function AppProvider({ children }) {
-  const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(null);
+  const [profile, setProfile] = useState("");
   const [isGetFilteredProducts, setIsGetFilteredProducts] = useState(false);
   const [categories, setCategories] = useState([]);
   const [currentCategorySlug, setCurrentCategorySlug] = useState("");
@@ -34,58 +34,55 @@ function AppProvider({ children }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([1]);
   const [search, setSearch] = useState("");
-  const [avatar, setAvatar] = useState("");
 
   const contextObject = {
-    userId: userId,
-    isAuthenticated: isAuthenticated,
-    isAdmin: isAdmin,
-    isGetFilteredProducts: isGetFilteredProducts,
-    categories: categories,
-    currentCategorySlug: currentCategorySlug,
-    currentCategory: currentCategory,
-    openCatalog: openCatalog,
-    openUserMenu: openUserMenu,
-    productsCount: productsCount,
-    productsOrdering: productsOrdering,
-    reviewsOrdering: reviewsOrdering,
-    products: products,
-    favorites: favorites,
-    cart: cart,
-    currentPage: currentPage,
-    pageSize: pageSize,
-    pages: pages,
-    search: search,
-    avatar: avatar,
+    user,
+    isAuthenticated,
+    profile,
+    isGetFilteredProducts,
+    categories,
+    currentCategorySlug,
+    currentCategory,
+    openCatalog,
+    openUserMenu,
+    productsCount,
+    productsOrdering,
+    reviewsOrdering,
+    products,
+    favorites,
+    cart,
+    currentPage,
+    pageSize,
+    pages,
+    search,
 
-    setUserId: setUserId,
-    setIsAuthenticated: setIsAuthenticated,
-    setIsAdmin: setIsAdmin,
-    setIsGetFilteredProducts: setIsGetFilteredProducts,
-    setCategories: setCategories,
-    setCurrentCategorySlug: setCurrentCategorySlug,
-    setCurrentCategory: setCurrentCategory,
-    setOpenCatalog: setOpenCatalog,
-    setOpenUserMenu: setOpenUserMenu,
-    setProductsCount: setProductsCount,
-    setProductsOrdering: setProductsOrdering,
-    setReviewsOrdering: setReviewsOrdering,
-    setProducts: setProducts,
-    setFavorites: setFavorites,
-    setCart: setCart,
-    setCurrentPage: setCurrentPage,
-    setPages: setPages,
-    setSearch: setSearch,
-    setAvatar: setAvatar,
+    setUser,
+    setIsAuthenticated,
+    setProfile,
+    setIsGetFilteredProducts,
+    setCategories,
+    setCurrentCategorySlug,
+    setCurrentCategory,
+    setOpenCatalog,
+    setOpenUserMenu,
+    setProductsCount,
+    setProductsOrdering,
+    setReviewsOrdering,
+    setProducts,
+    setFavorites,
+    setCart,
+    setCurrentPage,
+    setPages,
+    setSearch,
   };
 
   useEffect(() => {
-    auth(setIsAuthenticated);
+    getUser(setUser, setIsAuthenticated);
     getCategories(setCategories);
   }, []);
 
   useEffect(() => {
-    isAuthenticated && getAvatar(setAvatar);
+    isAuthenticated && getProfile(setProfile);
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -120,7 +117,6 @@ function AppProvider({ children }) {
           )
         : setIsGetFilteredProducts(false);
   }, [
-    isAuthenticated,
     currentPage,
     productsOrdering,
     currentCategory?.id,

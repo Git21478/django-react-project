@@ -1,7 +1,8 @@
-from django.urls import path, include
 from django.conf import settings
-from django.contrib import admin
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from health_check.views import HealthCheckView
 
 urlpatterns = [
@@ -9,17 +10,29 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("users.urls")),
     path("api/", include("products.urls")),
-    path("health/", HealthCheckView.as_view(
-        checks = [
-            "health_check.Database",
-            "health_check.Cache",
-            "health_check.Storage",
-        ]
-    ), name="health_check"),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "health/",
+        HealthCheckView.as_view(
+            checks=[
+                "health_check.Database",
+                "health_check.Cache",
+                "health_check.Storage",
+            ]
+        ),
+        name="health_check",
+    ),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
     urlpatterns = [
         path("__debug__/", include("debug_toolbar.urls")),
     ] + urlpatterns

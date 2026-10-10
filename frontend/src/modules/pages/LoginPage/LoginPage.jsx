@@ -2,24 +2,17 @@ import styles from "../AuthPage.module.css";
 import { useInput } from "../../../hooks/useInput.js";
 import { login } from "./apiLoginPage.js";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-import { useValidation } from "../../../hooks/useValidation.js";
+import { useContext, useState } from "react";
 import PageTemplate from "../../PageTemplate/PageTemplate.jsx";
 import { AppContext } from "../../AppProvider/AppProvider.jsx";
 
 function LoginPage() {
   document.title = "Вход в аккаунт | Магазин";
-  const appData = useContext(AppContext);
+  const { setIsAuthenticated } = useContext(AppContext);
   const navigate = useNavigate();
   const email = useInput("");
   const password = useInput("");
   const [isFormValid, setIsFormValid] = useState(true);
-
-  // useValidation(email.value, [
-  //     {name: "isEmpty", value: false, errorMessage: "Поле не должно быть пустым"},
-  //     {name: "minLength", value: 3, errorMessage: "Длина email не должна быть меньше 3"},
-  //     {name: "maxLength", value: 8, errorMessage: "Длина email не должна быть больше 8"},
-  // ]);
 
   return (
     <PageTemplate>
@@ -27,12 +20,11 @@ function LoginPage() {
         <form
           className={styles.auth_form}
           onSubmit={(e) => {
-            login(e, email, password, appData.setIsAuthenticated, navigate);
+            login(e, email, password, setIsAuthenticated, navigate);
           }}
         >
           <h2 className={styles.auth_header}>Вход в аккаунт</h2>
 
-          {/* {!emailValidation.isValid && <div style={{ color: "red" }}>Некорректная почта</div>} */}
           {!isFormValid && (
             <div style={{ color: "red" }}>Некорректная почта</div>
           )}

@@ -1,47 +1,49 @@
-from .models import (
-    Brand,
-    Category,
-    Product,
-    Review,
-    Favorite,
-    AnonymousFavorite,
-    Cart,
-    AnonymousCart,
-    CartProduct,
-)
-from .serializers import (
-    BrandSerializer,
-    CategorySerializer,
-    ProductSerializer,
-    ReviewSerializer,
-    FavoriteSerializer,
-    AnonymousFavoriteSerializer,
-    FavoriteCreateSerializer,
-    CartSerializer,
-    AnonymousCartSerializer,
-    CartProductSerializer,
-    AddToCartSerializer,
-)
-from rest_framework import generics, status
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
-from rest_framework.permissions import (
-    AllowAny,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError as DRFValidationError
-from django.db.models import Avg
-from .permissions import IsAuthorOrReadOnly
+import uuid
+
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-import uuid
+from drf_spectacular.utils import extend_schema
+from rest_framework import generics, status
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError as DRFValidationError
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticatedOrReadOnly,
+)
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+
+from .models import (
+    AnonymousCart,
+    AnonymousFavorite,
+    Brand,
+    Cart,
+    CartProduct,
+    Category,
+    Favorite,
+    Product,
+    Review,
+)
+from .permissions import IsAuthorOrReadOnly
+from .serializers import (
+    AddToCartSerializer,
+    AnonymousCartSerializer,
+    AnonymousFavoriteSerializer,
+    BrandSerializer,
+    CartProductSerializer,
+    CartSerializer,
+    CategorySerializer,
+    FavoriteCreateSerializer,
+    FavoriteSerializer,
+    ProductSerializer,
+    ReviewSerializer,
+)
 
 
 # Brand
+@extend_schema(tags=["Бренды"])
 class BrandCategoryList(generics.ListAPIView):
     serializer_class = BrandSerializer
     permission_classes = [AllowAny]
@@ -51,6 +53,7 @@ class BrandCategoryList(generics.ListAPIView):
 
 
 # Category
+@extend_schema(tags=["Категории"])
 class CategoryList(generics.ListAPIView):
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -82,11 +85,13 @@ class BaseProductListView(generics.ListAPIView):
         return context
 
 
+@extend_schema(tags=["Товары"])
 class ProductList(BaseProductListView):
     def get_queryset(self):
         return Product.objects.select_related("brand", "category").order_by("id")
 
 
+@extend_schema(tags=["Товары"])
 class ProductCategoryList(BaseProductListView):
     def get_queryset(self):
         price_min = self.request.query_params.get("price_min", 0)
@@ -109,6 +114,7 @@ class ProductCategoryList(BaseProductListView):
             raise DRFValidationError("Некорректные данные")
 
 
+@extend_schema(tags=["Товары"])
 class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -130,6 +136,7 @@ class ReviewPaginationPages(PageNumberPagination):
     max_page_size = 100
 
 
+@extend_schema(tags=["Отзывы"])
 class ReviewListCreate(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -162,6 +169,7 @@ class ReviewListCreate(generics.ListCreateAPIView):
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 
+@extend_schema(tags=["Отзывы"])
 class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -179,6 +187,7 @@ class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 
 # Favorite
+@extend_schema(tags=["Избранные товары"])
 class FavoriteViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
@@ -300,6 +309,7 @@ class FavoriteViewSet(ModelViewSet):
 
 
 # Cart
+@extend_schema(tags=["Корзины"])
 class CartViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 

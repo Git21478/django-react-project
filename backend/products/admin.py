@@ -1,17 +1,16 @@
 from django.contrib import admin
-from django.contrib.admin.sites import AdminSite
+
 from .models import (
+    AnonymousCart,
+    AnonymousFavorite,
     Brand,
+    Cart,
+    CartProduct,
     Category,
+    Favorite,
     Product,
     Review,
-    Favorite,
-    AnonymousFavorite,
-    CartProduct,
-    Cart,
-    AnonymousCart,
 )
-from users.admin import CustomAdminSite
 
 
 class BrandAdmin(admin.ModelAdmin):

@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductPage from "./modules/pages/ProductPage/ProductPage";
 import LoginPage from "./modules/pages/LoginPage/LoginPage";
-import RegistrationPage from "./modules/pages/RegistrationPage/RegistrationPage";
+import LogoutPage from "./modules/pages/LogoutPage/LogoutPage";
 import NotFoundPage from "./modules/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "./modules/pages/ProfilePage/ProfilePage";
+import RegistrationRoute from "./modules/pages/RegistrationPage/RegistrationRoute";
 import PasswordResetPage from "./modules/pages/PasswordResetPages/PasswordResetPage/PasswordResetPage";
 import PasswordResetConfirm from "./modules/pages/PasswordResetPages/PasswordResetConfirmPage/PasswordResetConfirmPage";
 import CartPage from "./modules/pages/CartPage/CartPage";
@@ -13,112 +14,37 @@ import ProtectedRoute from "./ProtectedRoute";
 import AppProvider from "./modules/AppProvider/AppProvider";
 import FavoritesPage from "./modules/pages/FavoritesPage/FavoritesPage";
 
-function Logout() {
-  localStorage.clear();
-  return <Navigate to="/login" />;
-}
-
-function RegisterAndLogout() {
-  localStorage.clear();
-  return <RegistrationPage />;
-}
-
 function App() {
   return (
     <BrowserRouter
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <AppProvider>
-              <HomePage />
-            </AppProvider>
-          }
-        />
-        <Route
-          path="/catalog/:category_slug"
-          element={
-            <AppProvider>
-              <CategoryPage />
-            </AppProvider>
-          }
-        />
-        <Route
-          path="/products/:product_id"
-          element={
-            <AppProvider>
-              <ProductPage />
-            </AppProvider>
-          }
-        />
-        <Route
-          path="/favorites"
-          element={
-            <AppProvider>
-              <FavoritesPage />
-            </AppProvider>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <AppProvider>
-              <CartPage />
-            </AppProvider>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <AppProvider>
+      <AppProvider>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/catalog/:category_slug" element={<CategoryPage />} />
+          <Route path="/products/:product_id" element={<ProductPage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route
+            path="/profile"
+            element={
               <ProtectedRoute>
                 <ProfilePage />
               </ProtectedRoute>
-            </AppProvider>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <AppProvider>
-              <LoginPage />
-            </AppProvider>
-          }
-        />
-        <Route path="/logout" element={<Logout />} />
-        <Route
-          path="/registration"
-          element={
-            <AppProvider>
-              <RegisterAndLogout />
-            </AppProvider>
-          }
-        />
-
-        <Route
-          path="/password-reset"
-          element={
-            <AppProvider>
-              <PasswordResetPage />
-            </AppProvider>
-          }
-        />
-
-        <Route
-          path="/password-reset/confirm"
-          element={
-            <AppProvider>
-              <PasswordResetConfirm />
-            </AppProvider>
-          }
-        />
-
-        {/* <Route path="/password-reset-confirm/:uidb64/:token" element={<PasswordResetConfirm/>}/> */}
-
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+            }
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
+          <Route path="/registration" element={<RegistrationRoute />} />
+          <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route
+            path="/password-reset/confirm"
+            element={<PasswordResetConfirm />}
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </AppProvider>
     </BrowserRouter>
   );
 }

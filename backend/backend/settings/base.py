@@ -1,29 +1,51 @@
 import os
 from pathlib import Path
-from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-DEBUG = os.getenv("DEBUG")
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+SESSION_CACHE_ALIAS = "sessions"
 SESSION_COOKIE_AGE = 30 * 24 * 60 * 60  # 30 дней
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "djangostore.ru",
+    "DESCRIPTION": "# Интернет-магазин электроники",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_FAVICON_HREF": "/static/favicon.png",
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    "SERVE_AUTHENTICATION": ["rest_framework.authentication.SessionAuthentication"],
+    "SORT_OPERATION_PARAMETERS": False,
+    "TAGS": [
+        {"name": "Пользователи"},
+        {"name": "Профили пользователей"},
+        {"name": "Аутентификация"},
+
+        {"name": "Товары"},
+        {"name": "Отзывы"},
+        {"name": "Категории"},
+        {"name": "Бренды"},
+        {"name": "Избранные товары"},
+        {"name": "Корзины"},
+    ],
 }
 
 INSTALLED_APPS = [
@@ -42,6 +64,7 @@ INSTALLED_APPS = [
     "health_check",
     "storages",
     "debug_toolbar",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -66,7 +89,6 @@ CORS_ALLOW_HEADERS = [
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
-    "x-session-key",
 ]
 
 DATABASES = {

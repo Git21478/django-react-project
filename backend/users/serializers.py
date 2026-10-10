@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from .models import User, Profile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .utils import merge_favorites, merge_carts
+
+from .models import Profile, User
+from .utils import merge_carts, merge_favorites
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,11 +26,22 @@ class UserSerializer(serializers.ModelSerializer):
     #     return data
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["user", "avatar", "phone", "city"]
+
+
 class PasswordChangeSerializer(serializers.Serializer):
     model = User
 
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True, style={"input_type": "password"})
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -49,9 +61,3 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 data["favorites_merged"] = True
 
         return data
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ["user", "avatar", "phone", "city"]

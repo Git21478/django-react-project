@@ -7,10 +7,9 @@ export const getProductPageProduct = (
   api
     .get(`/api/products/${productPageProductId}/`)
     .then((res) => {
-      console.log(res.data);
       setProductPageProduct(res.data);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.error(error));
 };
 
 export const getReviews = (
@@ -23,9 +22,7 @@ export const getReviews = (
       `/api/products/${productPageProductId}/reviews/?ordering=${reviewsOrdering}`,
     )
     .then((res) => {
-      console.log(res);
-      console.log(res.data.results);
       setReviews(res.data.results);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.error(error));
 };

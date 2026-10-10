@@ -4,7 +4,6 @@ export const deleteFavorite = (favoriteId, setFavorites) => {
   api
     .delete(`/api/favorites/${favoriteId}/`)
     .then((res) => {
-      console.log(res);
       setFavorites((prevState) => {
         const favorites = prevState.filter((favorite) => {
           return favorite.id !== favoriteId;
@@ -13,7 +12,7 @@ export const deleteFavorite = (favoriteId, setFavorites) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -23,7 +22,6 @@ export const addCartProduct = (product_id, setFavorites) => {
       product_id: product_id,
     })
     .then((res) => {
-      console.log(res);
       setFavorites((prevState) => {
         return prevState.map((favorite) => {
           if (favorite.product.id === product_id) {
@@ -42,6 +40,6 @@ export const addCartProduct = (product_id, setFavorites) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };

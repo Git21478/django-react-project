@@ -5,9 +5,8 @@ export const getCategories = (setCategories) => {
     .get("/api/categories/")
     .then((res) => {
       setCategories(res.data);
-      console.log("CATEGORIES", res.data);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.error(error));
 };
 
 export const getCategoryName = (categorySlug, setCategoryName) => {
@@ -15,11 +14,10 @@ export const getCategoryName = (categorySlug, setCategoryName) => {
     .get("/api/categories/")
     .then((res) => {
       const categories = res.data;
-      console.log(categories);
       const categoryName = categories.find(
         (category) => category.slug === categorySlug,
       ).name;
       setCategoryName(categoryName);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.error(error));
 };

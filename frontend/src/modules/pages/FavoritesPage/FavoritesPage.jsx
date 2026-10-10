@@ -15,10 +15,6 @@ function FavoritesPage() {
     getFavorites(setFavorites);
   }, []);
 
-  useEffect(() => {
-    console.log(selectedFavoritesIds);
-  }, [selectedFavoritesIds]);
-
   return (
     <PageTemplate>
       <div className={styles.favorites_page_wrapper}>

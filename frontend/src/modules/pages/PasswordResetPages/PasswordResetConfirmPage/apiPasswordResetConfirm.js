@@ -8,7 +8,6 @@ export const resetPasswordConfirm = (
   navigate,
 ) => {
   e.preventDefault();
-  console.log("confirmPassword");
 
   if (newPassword1 !== newPassword2) {
     alert(
@@ -20,12 +19,11 @@ export const resetPasswordConfirm = (
         password: newPassword1,
         token: token,
       })
-      .then((res) => {
-        console.log(res.data);
+      .then((_) => {
         navigate("/login");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.error(error);
         alert("Ошибка");
       });
   }

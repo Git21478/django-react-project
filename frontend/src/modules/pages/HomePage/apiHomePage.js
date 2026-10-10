@@ -13,12 +13,10 @@ export const getProducts = (
       `/api/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${productsOrdering}&search=${search}`,
     )
     .then((res) => {
-      console.log(res.data);
       setProducts(res.data.results);
       setProductsCount(res.data.count);
-      console.log(res.data.results);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.error(error));
 };
 
 export const getCategoryProducts = (
@@ -37,9 +35,8 @@ export const getCategoryProducts = (
     .then((res) => {
       setProducts(res.data.results);
       setProductsCount(res.data.count);
-      console.log(res.data.results);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.error(error));
 };
 
 export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
@@ -47,7 +44,6 @@ export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
     .filter((brand) => brand.checked === true)
     .map((brand) => brand.id);
 
-  console.log(appData);
   let url = `/api/catalog/${appData.currentCategory.id}/products/?pageSize=${appData.pageSize}&page=${appData.currentPage}&ordering=${appData.productsOrdering}&search=${appData.search}`;
   if (priceMin !== "") url += `&price_min=${priceMin}`;
   if (priceMax !== "") url += `&price_max=${priceMax}`;
@@ -55,17 +51,12 @@ export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
     url += `&selected_brands_ids=${selectedBrandsIds}`;
   }
 
-  console.log(priceMin, priceMax);
-  console.log(selectedBrandsIds);
-
   api
     .get(url)
     .then((res) => {
-      console.log(res.data.results);
       appData.setIsGetFilteredProducts(true);
       appData.setProducts(res.data.results);
       appData.setProductsCount(res.data.count);
-      console.log(res.data.results);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.error(error));
 };

@@ -17,12 +17,10 @@ export const createReview = (
       rating: rating.value,
     })
     .then((res) => {
-      if (res.status === 201) console.log("Review created.");
-      else console.log("Failed to make review.");
       setReviews(res.data);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       alert("Вы уже оставляли отзыв на данный товар");
     })
     .finally(() => {
@@ -36,10 +34,7 @@ export const deleteReview = (review, reviewsOrdering, setReviews) => {
   api
     .delete(`/api/products/reviews/${review.id}/`)
     .then((res) => {
-      console.log(res);
-      if (res.status === 200) console.log("Review deleted.");
-      else console.log("Failed to delete review.");
       setReviews(res.data);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };

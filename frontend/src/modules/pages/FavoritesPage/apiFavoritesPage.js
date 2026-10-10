@@ -4,12 +4,10 @@ export const getFavorites = (setFavorites) => {
   api
     .get("api/favorites/")
     .then((res) => {
-      console.log("res.data (favorite products page)");
-      console.log(res.data);
       setFavorites(res.data);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -23,7 +21,6 @@ export const deleteMultipleFavorites = (
   api
     .delete(`api/favorites/delete-multiple/?ids=${idsParam}`)
     .then((res) => {
-      console.log(res);
       setSelectedFavoritesIds((prevData) => {
         return prevData.filter((id) => {
           return !selectedFavoritesIds.includes(id);
@@ -32,6 +29,6 @@ export const deleteMultipleFavorites = (
       getFavorites(setFavorites);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };

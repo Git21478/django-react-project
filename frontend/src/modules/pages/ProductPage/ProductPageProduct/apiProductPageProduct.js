@@ -6,13 +6,12 @@ export const addFavorite = (productPageProductId, setProductPageProduct) => {
       product: productPageProductId,
     })
     .then((res) => {
-      console.log(res.data);
       setProductPageProduct((prevState) => {
         return { ...prevState, is_favorite: true, favorite_id: res.data.id };
       });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -20,13 +19,12 @@ export const deleteFavorite = (favoriteId, setProductPageProduct) => {
   api
     .delete(`/api/favorites/${favoriteId}/`)
     .then((res) => {
-      console.log(res);
       setProductPageProduct((prevState) => {
         return { ...prevState, is_favorite: false, favorite_id: null };
       });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -36,7 +34,6 @@ export const addCartProduct = (productPageProductId, setProductPageProduct) => {
       product: productPageProductId,
     })
     .then((res) => {
-      console.log(res.data);
       setProductPageProduct((prevState) => {
         return {
           ...prevState,
@@ -46,6 +43,6 @@ export const addCartProduct = (productPageProductId, setProductPageProduct) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };

@@ -15,7 +15,6 @@ function CartPage() {
 
   useEffect(() => {
     getCart(setCart);
-    console.log(appData);
   }, []);
 
   return (

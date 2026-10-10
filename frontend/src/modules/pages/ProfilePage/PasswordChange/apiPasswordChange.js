@@ -24,7 +24,6 @@ export const changePassword = (
         if (res.status === 200) {
           localStorage.clear();
           navigate("/login");
-          console.log("Пароль успешно изменён.");
         } else alert("Ошибка при попытке изменения пароля.");
       })
       .catch((error) => alert(error));

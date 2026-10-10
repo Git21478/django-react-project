@@ -4,11 +4,10 @@ export const getCart = (setCart) => {
   api
     .get("api/cart/")
     .then((res) => {
-      console.log(res.data);
       setCart(res.data);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -24,7 +23,6 @@ export const deleteMultipleCartProducts = (
       },
     })
     .then((res) => {
-      console.log(res);
       setSelectedCartProductIds([]);
 
       if (res.data) {
@@ -33,6 +31,6 @@ export const deleteMultipleCartProducts = (
       getCart(setCart);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };

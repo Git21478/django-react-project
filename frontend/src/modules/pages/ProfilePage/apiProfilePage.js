@@ -1,4 +1,6 @@
 import api from "../../../api";
+import { getUser } from "../../AppProvider/apiAppProvider";
+import { getProfile } from "../../components/Header/HeaderRight/apiHeaderRight";
 
 // User
 export const updateUser = (
@@ -14,12 +16,10 @@ export const updateUser = (
       email: email,
     })
     .then((res) => {
-      if (res.status === 200) console.log("User updated.");
-      else console.log("Failed to update user.");
       getUser(setUser);
       getProfile(setProfile);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
   setEditing(false);
 };
 
@@ -31,9 +31,8 @@ export const getProfile = (setProfile) => {
       setProfile({
         ...res.data[0],
       });
-      console.log(res.data);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 export const updateProfile = (
@@ -49,23 +48,18 @@ export const updateProfile = (
     phone: phone,
     city: city,
   };
-  console.log(phone);
-  if (avatarFile != "") {
+  if (avatarFile instanceof File) {
     profileObject["avatar"] = avatarFile;
-    console.log("Profile Object");
-    console.log(profileObject);
   }
 
   api
     .patch(`/api/profile/${user_id}/`, profileObject, {
       headers: { "Content-Type": "multipart/form-data" },
     })
-    .then((res) => {
-      if (res.status === 200) console.log("Profile changed.");
-      else console.log("Failed to change profile.");
+    .then(() => {
       getUser(setUser);
       getProfile(setProfile);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
   setEditing(false);
 };

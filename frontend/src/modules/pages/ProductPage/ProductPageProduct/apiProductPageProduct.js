@@ -2,7 +2,7 @@ import api from "../../../../api";
 
 export const addFavorite = (productPageProductId, setProductPageProduct) => {
   api
-    .post("/api/favorites/", {
+    .post("favorites/", {
       product: productPageProductId,
     })
     .then((res) => {
@@ -17,7 +17,7 @@ export const addFavorite = (productPageProductId, setProductPageProduct) => {
 
 export const deleteFavorite = (favoriteId, setProductPageProduct) => {
   api
-    .delete(`/api/favorites/${favoriteId}/`)
+    .delete(`favorites/${favoriteId}/`)
     .then((res) => {
       setProductPageProduct((prevState) => {
         return { ...prevState, is_favorite: false, favorite_id: null };
@@ -30,7 +30,7 @@ export const deleteFavorite = (favoriteId, setProductPageProduct) => {
 
 export const addCartProduct = (productPageProductId, setProductPageProduct) => {
   api
-    .post("/api/cart/", {
+    .post("cart/", {
       product: productPageProductId,
     })
     .then((res) => {

@@ -11,7 +11,7 @@ export const createReview = (
 ) => {
   e.preventDefault();
   api
-    .post(`/api/products/${product_id}/reviews/`, {
+    .post(`products/${product_id}/reviews/`, {
       title: title.value,
       content: content.value,
       rating: rating.value,
@@ -32,7 +32,7 @@ export const createReview = (
 
 export const deleteReview = (review, reviewsOrdering, setReviews) => {
   api
-    .delete(`/api/products/reviews/${review.id}/`)
+    .delete(`products/reviews/${review.id}/`)
     .then((res) => {
       setReviews(res.data);
     })

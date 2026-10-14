@@ -99,21 +99,38 @@ services:
   redis:
     container_name: redis-container
     image: redis:8.10-alpine
+    restart: always
     command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
-    ports:
-      - "6379:6379"
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDISCLI_AUTH=${REDIS_PASSWORD}
     networks:
       - app-network
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 15s
       timeout: 3s
       retries: 3
       start_period: 10s
+    expose:
+      - 6379
+ 
+
+  redisinsight:
+    container_name: redisinsight-container
+    image: redis/redisinsight:latest
+    restart: always
+    ports:
+      - "127.0.0.1:5540:5540"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+    volumes:
+      - redisinsight_data:/data
     
   nginx:
     container_name: nginx-container
@@ -144,4 +161,5 @@ volumes:
   postgres_data:
   minio_data:
   redis_data:
+  redisinsight_data:
   

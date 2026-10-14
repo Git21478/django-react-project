@@ -2,7 +2,7 @@ import api from "../../../../api";
 
 export const changeCartProductQuantity = (product_id, quantity, setCart) => {
   api
-    .patch(`/api/cart/update/${product_id}/`, {
+    .patch(`cart/update/${product_id}/`, {
       quantity,
     })
     .then((res) => {
@@ -15,7 +15,7 @@ export const changeCartProductQuantity = (product_id, quantity, setCart) => {
 
 export const addFavorite = (product_id, setCart) => {
   api
-    .post("/api/favorites/", {
+    .post("favorites/", {
       product_id,
     })
     .then((res) => {
@@ -44,7 +44,7 @@ export const addFavorite = (product_id, setCart) => {
 
 export const deleteFavorite = (favoriteId, setCart) => {
   api
-    .delete(`/api/favorites/${favoriteId}/`)
+    .delete(`favorites/${favoriteId}/`)
     .then((res) => {
       setCart((prevState) => {
         const cart_products = prevState.cart_products.map((cartProduct) => {
@@ -71,7 +71,7 @@ export const deleteFavorite = (favoriteId, setCart) => {
 
 export const deleteCartProduct = (product_id, setCart) => {
   api
-    .delete(`/api/cart/remove/${product_id}/`)
+    .delete(`cart/remove/${product_id}/`)
     .then((res) => {
       setCart(res.data);
     })

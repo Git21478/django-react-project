@@ -1,14 +1,15 @@
 import api from "../../api";
 
-export const getUser = async (setUser, setIsAuthenticated) => {
+export const getUser = (setUser, setIsAuthenticated) => {
   api
-    .get("/api/user/")
+    .get("user/me/")
     .then((res) => {
-      setUser({...res.data[0]});
+      setUser(res.data);
       setIsAuthenticated(true);
     })
     .catch((error) => {
+      setUser(null);
       setIsAuthenticated(false);
-      alert(error);
+      console.error(error);
     });
 };

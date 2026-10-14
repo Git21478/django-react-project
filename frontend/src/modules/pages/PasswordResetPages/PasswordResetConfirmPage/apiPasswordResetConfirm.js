@@ -15,7 +15,7 @@ export const resetPasswordConfirm = (
     );
   } else {
     api
-      .post("/api/password-reset/confirm/", {
+      .post("password-reset/confirm/", {
         password: newPassword1,
         token: token,
       })

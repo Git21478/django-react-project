@@ -6,7 +6,7 @@ import {
 import { getCategories } from "../components/Sidebar/apiSidebar";
 import { createPages } from "./utilsAppProvider";
 import { getUser } from "./apiAppProvider";
-import { getProfile } from "../components/Header/HeaderRight/apiHeaderRight";
+import { getProfile } from "../pages/ProfilePage/apiProfilePage";
 
 export const AppContext = React.createContext();
 

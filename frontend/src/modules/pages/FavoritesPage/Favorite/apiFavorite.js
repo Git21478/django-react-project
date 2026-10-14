@@ -2,7 +2,7 @@ import api from "../../../../api";
 
 export const deleteFavorite = (favoriteId, setFavorites) => {
   api
-    .delete(`/api/favorites/${favoriteId}/`)
+    .delete(`favorites/${favoriteId}/`)
     .then((res) => {
       setFavorites((prevState) => {
         const favorites = prevState.filter((favorite) => {
@@ -18,7 +18,7 @@ export const deleteFavorite = (favoriteId, setFavorites) => {
 
 export const addCartProduct = (product_id, setFavorites) => {
   api
-    .post("/api/cart/add/", {
+    .post("cart/add/", {
       product_id: product_id,
     })
     .then((res) => {

@@ -10,7 +10,7 @@ export const getProducts = (
 ) => {
   api
     .get(
-      `/api/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${productsOrdering}&search=${search}`,
+      `products/?pageSize=${pageSize}&page=${currentPage}&ordering=${productsOrdering}&search=${search}`,
     )
     .then((res) => {
       setProducts(res.data.results);
@@ -30,7 +30,7 @@ export const getCategoryProducts = (
 ) => {
   api
     .get(
-      `/api/catalog/${categoryId}/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${productsOrdering}&search=${search}`,
+      `catalog/${categoryId}/products/?pageSize=${pageSize}&page=${currentPage}&ordering=${productsOrdering}&search=${search}`,
     )
     .then((res) => {
       setProducts(res.data.results);
@@ -44,7 +44,7 @@ export const getFilteredProducts = (appData, priceMin, priceMax, brands) => {
     .filter((brand) => brand.checked === true)
     .map((brand) => brand.id);
 
-  let url = `/api/catalog/${appData.currentCategory.id}/products/?pageSize=${appData.pageSize}&page=${appData.currentPage}&ordering=${appData.productsOrdering}&search=${appData.search}`;
+  let url = `catalog/${appData.currentCategory.id}/products/?pageSize=${appData.pageSize}&page=${appData.currentPage}&ordering=${appData.productsOrdering}&search=${appData.search}`;
   if (priceMin !== "") url += `&price_min=${priceMin}`;
   if (priceMax !== "") url += `&price_max=${priceMax}`;
   if (selectedBrandsIds.length > 0) {

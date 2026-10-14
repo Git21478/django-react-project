@@ -2,7 +2,7 @@ import api from "../../../api";
 
 export const getCategories = (setCategories) => {
   api
-    .get("/api/categories/")
+    .get("categories/")
     .then((res) => {
       setCategories(res.data);
     })
@@ -11,7 +11,7 @@ export const getCategories = (setCategories) => {
 
 export const getCategoryName = (categorySlug, setCategoryName) => {
   api
-    .get("/api/categories/")
+    .get("categories/")
     .then((res) => {
       const categories = res.data;
       const categoryName = categories.find(

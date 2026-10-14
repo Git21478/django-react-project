@@ -7,7 +7,6 @@ from health_check.views import HealthCheckView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api-auth/", include("rest_framework.urls")),
     path("api/", include("users.urls")),
     path("api/", include("products.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

@@ -30,7 +30,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const isUnauthorized = error.response?.status === 401;
-    const isAuthCheckUrl = error.config?.url?.includes("/api/user/");
+    const isAuthCheckUrl = error.config?.url?.includes("user/me");
 
     if (isUnauthorized && !isAuthCheckUrl) {
       window.location.href = "/login";

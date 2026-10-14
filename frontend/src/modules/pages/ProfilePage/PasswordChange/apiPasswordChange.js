@@ -16,7 +16,7 @@ export const changePassword = (
     );
   } else {
     api
-      .put("/api/password-change/", {
+      .put("password-change/", {
         old_password: oldPassword,
         new_password: newPassword1,
       })

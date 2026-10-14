@@ -3,7 +3,7 @@ import api from "../../../../api";
 export const resetPassword = (e, email) => {
   e.preventDefault();
   api
-    .post("/api/password-reset/", {
+    .post("password-reset/", {
       email: email,
     })
     .then((res) => {

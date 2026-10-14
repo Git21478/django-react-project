@@ -20,11 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_admin(self, obj):
         return obj.is_staff or obj.is_superuser
 
-    # def validate(self, data):
-    #     if data["password"] == "asd":
-    #         raise serializers.ValidationError("Password should not be 'asd'")
-    #     return data
-
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:

@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404
 from django_rest_passwordreset.views import (
     ResetPasswordConfirm,
     ResetPasswordRequestToken,
@@ -13,7 +14,6 @@ from rest_framework import generics, serializers, status
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,46 +30,30 @@ from .serializers import (
 
 # User
 @extend_schema(tags=["Пользователи"])
-class CreateUserView(generics.CreateAPIView):
+class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
 
 @extend_schema(tags=["Пользователи"])
-class UserList(generics.ListCreateAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)
-    
-
-@extend_schema(tags=["Пользователи"])
-class UserRetrieveUpdate(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
+class CurrentUserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 
 # Profile
 @extend_schema(tags=["Профили пользователей"])
-class ProfileList(generics.ListCreateAPIView):
+class CurrentProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Profile.objects.filter(user=self.request.user.id)
+    def get_object(self):
+        return get_object_or_404(Profile, user=self.request.user)
 
-
-@extend_schema(tags=["Профили пользователей"])
-class ProfileUpdate(generics.UpdateAPIView):
-    serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Profile.objects.all()
-    
 
 # Auth
 @extend_schema(tags=["Аутентификация"])
@@ -102,7 +86,7 @@ class LogoutView(APIView):
         logout(request)
         return Response({"detail": "OK"})
 
-    
+
 @extend_schema(tags=["Аутентификация"])
 class PasswordChangeView(generics.UpdateAPIView):
     serializer_class = PasswordChangeSerializer
@@ -141,13 +125,16 @@ class PasswordChangeView(generics.UpdateAPIView):
         name="PasswordResetRequest",
         fields={"email": serializers.EmailField()},
     ),
-    responses={200: inline_serializer(
-        name="PasswordResetResponse",
-        fields={"status": serializers.CharField()},
-    )},
+    responses={
+        200: inline_serializer(
+            name="PasswordResetResponse",
+            fields={"status": serializers.CharField()},
+        )
+    },
 )
-class CustomResetPasswordRequestToken(ResetPasswordRequestToken):
+class CustomResetPasswordRequestTokenView(ResetPasswordRequestToken):
     pass
+
 
 @extend_schema(
     tags=["Аутентификация"],
@@ -160,8 +147,9 @@ class CustomResetPasswordRequestToken(ResetPasswordRequestToken):
     ),
     responses={200: None},
 )
-class CustomResetPasswordConfirm(ResetPasswordConfirm):
+class CustomResetPasswordConfirmView(ResetPasswordConfirm):
     pass
+
 
 @extend_schema(
     tags=["Аутентификация"],
@@ -169,12 +157,14 @@ class CustomResetPasswordConfirm(ResetPasswordConfirm):
         name="PasswordResetValidateToken",
         fields={"token": serializers.CharField()},
     ),
-    responses={200: inline_serializer(
-        name="PasswordResetValidateTokenResponse",
-        fields={"status": serializers.CharField()},
-    )},
+    responses={
+        200: inline_serializer(
+            name="PasswordResetValidateTokenResponse",
+            fields={"status": serializers.CharField()},
+        )
+    },
 )
-class CustomResetPasswordValidateToken(ResetPasswordValidateToken):
+class CustomResetPasswordValidateTokenView(ResetPasswordValidateToken):
     pass
 
 

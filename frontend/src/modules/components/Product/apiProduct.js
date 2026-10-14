@@ -2,7 +2,7 @@ import api from "../../../api";
 
 export const addFavorite = (productId, setProducts) => {
   api
-    .post("/api/favorites/", {
+    .post("favorites/", {
       product_id: productId,
     })
     .then((res) => {
@@ -27,7 +27,7 @@ export const addFavorite = (productId, setProducts) => {
 
 export const deleteFavorite = (favoriteId, setProducts) => {
   api
-    .delete(`/api/favorites/${favoriteId}/`)
+    .delete(`favorites/${favoriteId}/`)
     .then((res) => {
       setProducts((prevState) => {
         return prevState.map((product) => {
@@ -50,7 +50,7 @@ export const deleteFavorite = (favoriteId, setProducts) => {
 
 export const addCartProduct = (productId, setProducts) => {
   api
-    .post("/api/cart/add/", {
+    .post("cart/add/", {
       product_id: productId,
     })
     .then((res) => {

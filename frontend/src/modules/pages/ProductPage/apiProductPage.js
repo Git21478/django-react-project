@@ -5,7 +5,7 @@ export const getProductPageProduct = (
   setProductPageProduct,
 ) => {
   api
-    .get(`/api/products/${productPageProductId}/`)
+    .get(`products/${productPageProductId}/`)
     .then((res) => {
       setProductPageProduct(res.data);
     })
@@ -19,7 +19,7 @@ export const getReviews = (
 ) => {
   api
     .get(
-      `/api/products/${productPageProductId}/reviews/?ordering=${reviewsOrdering}`,
+      `products/${productPageProductId}/reviews/?ordering=${reviewsOrdering}`,
     )
     .then((res) => {
       setReviews(res.data.results);

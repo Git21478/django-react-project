@@ -1,6 +1,5 @@
 import styles from "./SearchBar.module.css";
-import { useContext, useEffect, useRef } from "react";
-import { getProducts } from "../../../pages/HomePage/apiHomePage";
+import { useContext } from "react";
 import { AppContext } from "../../../AppProvider/AppProvider";
 import { useNavigate } from "react-router-dom";
 import search_icon from "../../../../assets/icons/search.png";
@@ -8,17 +7,11 @@ import search_icon from "../../../../assets/icons/search.png";
 function SearchBar() {
   const appData = useContext(AppContext);
   const navigate = useNavigate();
-  const searchInputRef = useRef(null);
-  const searchButtonRef = useRef(null);
 
-  useEffect(() => {
-    searchInputRef.current.addEventListener("keyup", (event) => {
-      event.preventDefault();
-      if (event.key === "Enter") {
-        searchButtonRef.current.click();
-      }
-    });
-  }, []);
+  const handleSearch = () => {
+    appData.applySearch();
+    navigate("/");
+  };
 
   return (
     <div className={`${styles.search_bar} ${styles.header_element}`}>
@@ -26,27 +19,22 @@ function SearchBar() {
         className={styles.search_bar_element}
         type="text"
         placeholder="Поиск"
-        value={appData.search}
-        onChange={(e) => appData.setSearch(e.target.value)}
-        ref={searchInputRef}
-      />
-      <img
-        className={`${styles.header_icon} ${styles.search_bar_icon}`}
-        src={search_icon}
-        alt="Search"
-        onClick={() => {
-          getProducts(
-            appData.setProducts,
-            appData.setProductsCount,
-            appData.currentPage,
-            appData.pageSize,
-            appData.ordering,
-            appData.search,
-          );
-          navigate("/");
+        value={appData.searchInput}
+        onChange={(e) => appData.setSearchInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleSearch();
+          }
         }}
-        ref={searchButtonRef}
       />
+      <button type="button" onClick={handleSearch} aria-label="Поиск">
+        <img
+          className={`${styles.header_icon} ${styles.search_bar_icon}`}
+          src={search_icon}
+          alt=""
+        />
+      </button>
     </div>
   );
 }

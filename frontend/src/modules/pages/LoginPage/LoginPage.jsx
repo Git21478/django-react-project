@@ -20,7 +20,7 @@ function LoginPage() {
         <form
           className={styles.auth_form}
           onSubmit={(e) => {
-            login(e, email, password, setIsAuthenticated, navigate);
+            login(e, email.value, password.value, setIsAuthenticated, navigate);
           }}
         >
           <h2 className={styles.auth_header}>Вход в аккаунт</h2>

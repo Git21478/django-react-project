@@ -3,7 +3,7 @@ import { getCurrentCategoryBrands } from "./apiSortBarLeft";
 import { useContext, useEffect, useState } from "react";
 import { useInput } from "../../../hooks/useInput";
 import { AppContext } from "../../AppProvider/AppProvider";
-import { getFilteredProducts } from "../../pages/HomePage/apiHomePage";
+import { getProducts } from "../../AppProvider/apiAppProvider";
 import { clearFilters } from "./utilsSortBarLeft";
 
 function SortBarLeft() {
@@ -69,14 +69,21 @@ function SortBarLeft() {
           <input
             type="submit"
             value="Применить"
-            onClick={() =>
-              getFilteredProducts(
-                appData,
-                priceMin.value,
-                priceMax.value,
-                brands,
-              )
-            }
+            onClick={() => {
+              getProducts(
+                {
+                  page: appData.currentPage,
+                  pageSize: appData.pageSize,
+                  ordering: appData.productsOrdering,
+                  search: appData.search,
+                  categoryId: appData.currentCategory?.id,
+                  priceMin: priceMin.value,
+                  priceMax: priceMax.value,
+                  brandIds: brands,
+                },
+                { setProducts: appData.setProducts, setProductsCount: appData.setProductsCount },
+              );
+            }}
           />
           <input
             type="submit"

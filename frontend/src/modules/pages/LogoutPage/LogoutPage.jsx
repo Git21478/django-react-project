@@ -4,10 +4,10 @@ import { logout } from "./apiLogoutPage";
 import { useContext, useEffect } from "react";
 
 function LogoutPage() {
-  const { setIsAuthenticated } = useContext(AppContext);
+  const { setUser, setIsAuthenticated } = useContext(AppContext);
 
   useEffect(() => {
-    logout(setIsAuthenticated);
+    logout(setUser, setIsAuthenticated);
   }, [setIsAuthenticated]);
 
   return <Navigate to="/login" replace />;

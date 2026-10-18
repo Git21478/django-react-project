@@ -37,26 +37,28 @@ MEDIA_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/media/"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv("REDIS_LOCATION_DEFAULT", None),
+        "LOCATION": os.getenv("REDIS_LOCATION_DEFAULT"),
+        "KEY_PREFIX": "default",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PASSWORD": os.getenv("REDIS_PASSWORD", None),
+            "PASSWORD": os.getenv("REDIS_PASSWORD"),
             "SOCKET_CONNECTION_TIMEOUT": 5,
             "SOCKET_TIMEOUT": 5,
             "RETRY_ON_TIMEOUT": True,
-            "MAX_CONNECTIONS": 1000,
+            "MAX_CONNECTIONS": 100,
         },
     },
     "sessions": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv("REDIS_LOCATION_SESSIONS", None),
+        "LOCATION": os.getenv("REDIS_LOCATION_SESSIONS"),
+        "KEY_PREFIX": "sessions",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PASSWORD": os.getenv("REDIS_PASSWORD", None),
+            "PASSWORD": os.getenv("REDIS_PASSWORD"),
             "SOCKET_CONNECTION_TIMEOUT": 5,
             "SOCKET_TIMEOUT": 5,
             "RETRY_ON_TIMEOUT": True,
-            "MAX_CONNECTIONS": 1000,
+            "MAX_CONNECTIONS": 100,
         },
     },
 }

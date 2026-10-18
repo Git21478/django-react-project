@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  getCategoryProducts,
-  getProducts,
-} from "../pages/HomePage/apiHomePage";
 import { getCategories } from "../components/Sidebar/apiSidebar";
-import { createPages } from "./utilsAppProvider";
-import { getUser } from "./apiAppProvider";
+import { applySearch, createPages } from "./utilsAppProvider";
+import { getUser, getProducts } from "./apiAppProvider";
 import { getProfile } from "../pages/ProfilePage/apiProfilePage";
 
 export const AppContext = React.createContext();
@@ -14,7 +10,6 @@ function AppProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [profile, setProfile] = useState("");
-  const [isGetFilteredProducts, setIsGetFilteredProducts] = useState(false);
   const [categories, setCategories] = useState([]);
   const [currentCategorySlug, setCurrentCategorySlug] = useState("");
   const [currentCategory, setCurrentCategory] = useState(null);
@@ -33,13 +28,20 @@ function AppProvider({ children }) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([1]);
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
+
+  const applySearch = () => {
+    setAppliedSearch(searchInput.trim());
+    setCurrentPage(1);
+    setCurrentCategory(null);
+    setCurrentCategorySlug("");
+  };
 
   const contextObject = {
     user,
     isAuthenticated,
     profile,
-    isGetFilteredProducts,
     categories,
     currentCategorySlug,
     currentCategory,
@@ -54,12 +56,12 @@ function AppProvider({ children }) {
     currentPage,
     pageSize,
     pages,
-    search,
+    searchInput,
+    appliedSearch,
 
     setUser,
     setIsAuthenticated,
     setProfile,
-    setIsGetFilteredProducts,
     setCategories,
     setCurrentCategorySlug,
     setCurrentCategory,
@@ -73,7 +75,9 @@ function AppProvider({ children }) {
     setCart,
     setCurrentPage,
     setPages,
-    setSearch,
+    setSearchInput,
+    setAppliedSearch,
+    applySearch,
   };
 
   useEffect(() => {
@@ -96,31 +100,21 @@ function AppProvider({ children }) {
   }, [categories, currentCategorySlug]);
 
   useEffect(() => {
-    !currentCategory
-      ? getProducts(
-          setProducts,
-          setProductsCount,
-          currentPage,
-          pageSize,
-          productsOrdering,
-          search,
-        )
-      : !isGetFilteredProducts
-        ? getCategoryProducts(
-            setProducts,
-            setProductsCount,
-            currentPage,
-            pageSize,
-            productsOrdering,
-            search,
-            currentCategory.id,
-          )
-        : setIsGetFilteredProducts(false);
-  }, [
-    currentPage,
-    productsOrdering,
-    currentCategory?.id,
-  ]);
+    setCurrentPage(1);
+  }, [currentCategory?.id]);
+
+  useEffect(() => {
+    getProducts(
+      {
+        page: currentPage,
+        pageSize,
+        ordering: productsOrdering,
+        search: appliedSearch,
+        categoryId: currentCategory?.id,
+      },
+      { setProducts, setProductsCount },
+    );
+  }, [appliedSearch, currentPage, productsOrdering, currentCategory?.id]);
 
   return (
     <>

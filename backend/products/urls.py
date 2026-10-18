@@ -16,11 +16,6 @@ urlpatterns = [
     path("categories/", views.CategoryList.as_view(), name="category-list"),
     path("products/", views.ProductList.as_view(), name="product-list"),
     path(
-        "categories/<int:pk>/products/",
-        views.ProductCategoryList.as_view(),
-        name="product-category-list",
-    ),
-    path(
         "products/<int:pk>/",
         views.ProductRetrieveUpdateDestroy.as_view(),
         name="product-retrieve-change-delete",

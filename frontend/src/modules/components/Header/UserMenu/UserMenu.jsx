@@ -25,7 +25,7 @@ function UserMenu() {
                 />
                 <Link to="/profile">Профиль</Link>
               </li>
-              {appData.user.is_admin && (
+              {appData.user?.is_admin && (
                 <li className={styles.user_menu_section}>
                   <img
                     className={styles.user_menu_section_icon}

@@ -1,11 +1,11 @@
 import uuid
 
+from django.core.cache import cache
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import (
@@ -13,6 +13,7 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from .models import (
@@ -49,28 +50,40 @@ class BrandCategoryList(generics.ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        return Brand.objects.filter(categories__id=self.kwargs["category"]).prefetch_related("categories")
+        return Brand.objects.filter(
+            categories__id=self.kwargs["category"]
+        ).prefetch_related("categories")
 
 
 # Category
+CATEGORY_CACHE_KEY = "categories:all:v1"
+CATEGORY_CACHE_TTL = 60 * 60
+
+
 @extend_schema(tags=["Категории"])
-class CategoryList(generics.ListAPIView):
-    serializer_class = CategorySerializer
+class CategoryList(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get_queryset(self):
-        return Category.objects.all()
+    def get(self, request):
+        data = cache.get(CATEGORY_CACHE_KEY)
+        if data is None:
+            categories = Category.objects.all()
+            serializer = CategorySerializer(categories, many=True)
+            data = serializer.data
+            cache.set(CATEGORY_CACHE_KEY, data, CATEGORY_CACHE_TTL)
+        return Response(data)
 
 
 # Product
 class ProductPaginationPages(PageNumberPagination):
     page_query_param = "page"
     page_size = 10
-    page_size_query_param = "pageSize"
+    page_size_query_param = "page_size"
     max_page_size = 100
 
 
-class BaseProductListView(generics.ListAPIView):
+@extend_schema(tags=["Товары"])
+class ProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
@@ -84,34 +97,33 @@ class BaseProductListView(generics.ListAPIView):
         context["request"] = self.request
         return context
 
-
-@extend_schema(tags=["Товары"])
-class ProductList(BaseProductListView):
     def get_queryset(self):
-        return Product.objects.select_related("brand", "category").order_by("id")
+        queryset = (
+            Product.objects.select_related("category", "brand")
+            .prefetch_related("reviews")
+            .order_by("id")
+        )
+        params = self.request.query_params
 
+        category_id = params.get("category_id")
+        if category_id is not None:
+            queryset = queryset.filter(category_id=category_id)
 
-@extend_schema(tags=["Товары"])
-class ProductCategoryList(BaseProductListView):
-    def get_queryset(self):
-        price_min = self.request.query_params.get("price_min", 0)
-        price_max = self.request.query_params.get("price_max", 1000000000)
-        selected_brands_ids = self.request.query_params.get("selected_brands_ids")
-        
-        try:
-            selected_brands_ids = [int(i) for i in selected_brands_ids.split(",")]
-            queryset = Product.objects.select_related(
-                "brand", "category"
-            ).prefetch_related(
-                "reviews"
-            ).filter(
-                category=self.kwargs["pk"],
-                price__range=(price_min, price_max),
-            ).order_by("id")
-            if selected_brands_ids:
-                return queryset.filter(brand__in=selected_brands_ids)
-        except (ValueError, AttributeError):
-            raise DRFValidationError("Некорректные данные")
+        price_min = params.get("price_min")
+        price_max = params.get("price_max")
+
+        if price_min is not None:
+            queryset = queryset.filter(price__gte=price_min)
+
+        if price_max is not None:
+            queryset = queryset.filter(price__lte=price_max)
+
+        brand_ids = params.get("brand_ids")
+        if brand_ids:
+            brand_ids = [i for i in brand_ids.split(",")]
+            queryset = queryset.filter(brand_id__in=brand_ids)
+
+        return queryset
 
 
 @extend_schema(tags=["Товары"])

@@ -1,11 +1,13 @@
 from django.contrib.sessions.models import Session
+from django.core.cache import cache
 from django.db.models import Avg, Count
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
 from users.models import User
 
-from .models import AnonymousCart, Cart, Product, Review
+from .models import AnonymousCart, Cart, Category, Product, Review
+from .views import CATEGORY_CACHE_KEY
 
 
 @receiver(post_save, sender=User)
@@ -38,6 +40,11 @@ def delete_category_brand(sender, instance, **kwargs):
             category = instance.category
             category.brands.remove(instance.brand)
             category.save()
+
+
+@receiver([post_save, post_delete], sender=Category)
+def invalidate_categories_cache(sender, **kwargs):
+    cache.delete(CATEGORY_CACHE_KEY)
 
 
 @receiver([post_save, post_delete], sender=Review)

@@ -3,8 +3,8 @@ services:
     container_name: frontend-container
     build:
       context: ./frontend
-    environment:
-      - VITE_BACKEND_BASE_URL=${VITE_BACKEND_BASE_URL}
+      args:
+        - VITE_BACKEND_BASE_URL
     depends_on:
       backend:
         condition: service_healthy
@@ -68,16 +68,17 @@ services:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      - MINIO_ROOT_USER=${AWS_ACCESS_KEY_ID}
+      - MINIO_ROOT_PASSWORD=${AWS_SECRET_ACCESS_KEY}
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "mc", "ready", "local"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
     networks:
       - app-network
 
@@ -86,9 +87,12 @@ services:
     depends_on:
       minio:
         condition: service_healthy
+    environment:
+      - MINIO_ROOT_USER=${AWS_ACCESS_KEY_ID}
+      - MINIO_ROOT_PASSWORD=${AWS_SECRET_ACCESS_KEY}
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc alias set myminio http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD;
       /usr/bin/mc mb --ignore-existing myminio/my-dev-bucket;
       /usr/bin/mc anonymous set public myminio/my-dev-bucket;
       exit 0;

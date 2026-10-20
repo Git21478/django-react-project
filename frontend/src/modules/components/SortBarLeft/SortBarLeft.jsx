@@ -4,21 +4,17 @@ import { useContext, useEffect, useState } from "react";
 import { useInput } from "../../../hooks/useInput";
 import { AppContext } from "../../AppProvider/AppProvider";
 import { getProducts } from "../../AppProvider/apiAppProvider";
-import { clearFilters } from "./utilsSortBarLeft";
+import {
+  handleCheckboxChange,
+  applyFilters,
+  clearFilters,
+} from "./utilsSortBarLeft";
 
 function SortBarLeft() {
   const appData = useContext(AppContext);
   const priceMin = useInput("");
   const priceMax = useInput("");
   const [brands, setBrands] = useState([]);
-
-  const handleCheckboxChange = (id) => {
-    setBrands((prev) =>
-      prev.map((brand) =>
-        brand.id === id ? { ...brand, checked: !brand.checked } : brand,
-      ),
-    );
-  };
 
   useEffect(() => {
     if (appData.currentCategory) {
@@ -55,7 +51,7 @@ function SortBarLeft() {
                     <input
                       type="checkbox"
                       checked={brand.checked}
-                      onChange={() => handleCheckboxChange(brand.id)}
+                      onChange={() => handleCheckboxChange(brand.id, setBrands)}
                     />
                     {brand.name}
                   </label>
@@ -70,25 +66,24 @@ function SortBarLeft() {
             type="submit"
             value="Применить"
             onClick={() => {
-              getProducts(
-                {
-                  page: appData.currentPage,
-                  pageSize: appData.pageSize,
-                  ordering: appData.productsOrdering,
-                  search: appData.search,
-                  categoryId: appData.currentCategory?.id,
-                  priceMin: priceMin.value,
-                  priceMax: priceMax.value,
-                  brandIds: brands,
-                },
-                { setProducts: appData.setProducts, setProductsCount: appData.setProductsCount },
-              );
+              applyFilters({
+                getProducts,
+                appData,
+                priceMin: priceMin.value,
+                priceMax: priceMax.value,
+                brandIds: brands
+                  .filter((brand) => brand.checked)
+                  .map((brand) => brand.id),
+              });
             }}
           />
           <input
             type="submit"
             value="Сбросить"
-            onClick={() => clearFilters(priceMin, priceMax)}
+            onClick={() => {
+              clearFilters(priceMin, priceMax, setBrands, appData.setCurrentPage);
+              applyFilters({ getProducts, appData });
+            }}
           />
         </div>
       </div>

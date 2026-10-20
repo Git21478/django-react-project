@@ -106,16 +106,15 @@ class ProductList(generics.ListAPIView):
         params = self.request.query_params
 
         category_id = params.get("category_id")
-        if category_id is not None:
+        if category_id not in (None, ""):
             queryset = queryset.filter(category_id=category_id)
 
-        price_min = params.get("price_min")
-        price_max = params.get("price_max")
-
-        if price_min is not None:
+        price_min = params.get("price_min") 
+        if price_min not in (None, ""):
             queryset = queryset.filter(price__gte=price_min)
 
-        if price_max is not None:
+        price_max = params.get("price_max")
+        if price_max not in (None, ""):
             queryset = queryset.filter(price__lte=price_max)
 
         brand_ids = params.get("brand_ids")

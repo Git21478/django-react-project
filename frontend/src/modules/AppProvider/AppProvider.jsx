@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCategories } from "../components/Sidebar/apiSidebar";
-import { applySearch, createPages } from "./utilsAppProvider";
+import { createPages } from "./utilsAppProvider";
 import { getUser, getProducts } from "./apiAppProvider";
 import { getProfile } from "../pages/ProfilePage/apiProfilePage";
 

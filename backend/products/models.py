@@ -119,6 +119,7 @@ class Product(models.Model):
                 return AnonymousFavorite.objects.filter(
                     session_key=session_key, product=self.id
                 ).exists()
+        return False
 
     def get_is_cart_product(self, current_user):
         if current_user.is_authenticated:
@@ -135,6 +136,7 @@ class Product(models.Model):
         return CartProduct.objects.filter(
             user=current_user.id, product=self.id
         ).exists()
+        return False
 
 
 

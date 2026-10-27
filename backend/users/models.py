@@ -43,7 +43,8 @@ class Profile(models.Model):
 
         constraints = [
             models.CheckConstraint(
-                condition=models.Q(phone__lte=12), name="phone_lte_12"
+                name="phone_lte_12",
+                condition=models.Q(phone__lte=12)
             )
         ]
 

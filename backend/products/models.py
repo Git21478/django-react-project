@@ -64,7 +64,6 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
-
         constraints = [
             models.CheckConstraint(condition=models.Q(price__gt=0), name="price_gt_0")
         ]
@@ -76,68 +75,50 @@ class Product(models.Model):
         if self.price <= 0:
             raise ValidationError("Price should be a positive number")
 
-    def get_favorite_id(self, current_user):
-        if current_user.is_authenticated:
+    def _get_session_key(self, request):
+        if request and request.session:
+            return request.session.session_key
+        return None
+
+    def get_favorite_id(self, request):
+        if not request:
+            return None
+        
+        if request.user.is_authenticated:
+            favorite = Favorite.objects.filter(user=request.user, product=self).first()
+            return favorite.id if favorite else None
+
+        session_key = self._get_session_key(request)
+        if session_key:
             favorite = Favorite.objects.filter(
-                user=current_user.id, product=self.id
+                session_key=session_key, user__isnull=True, product=self
             ).first()
             return favorite.id if favorite else None
-        else:
-            session_key = self.request.session.session_key
-            if session_key:
-                favorite = AnonymousFavorite.objects.filter(
-                    session_key=session_key, product=self.id
-                ).first()
-                return favorite.id if favorite else None
-            else:
-                return None
+        return None
 
-    def get_cart_product_id(self, current_user):
-        if current_user.is_authenticated:
+    def get_cart_product_id(self, request):
+        if not request:
+            return None
+        
+        if request.user.is_authenticated:
             cart_product = CartProduct.objects.filter(
-                cart__user=current_user.id, product=self.id
+                cart__user=request.user, product=self
             ).first()
             return cart_product.id if cart_product else None
-        else:
-            session_key = self.request.session.session_key
-            if session_key:
-                cart_product = CartProduct.objects.filter(
-                    anonymous_cart__session_key=session_key, product=self.id
-                ).first()
-                return cart_product.id if cart_product else None
-            else:
-                return None
 
-    def get_is_favorite(self, current_user):
-        if current_user.is_authenticated:
-            return Favorite.objects.filter(
-                user=current_user.id, product=self.id
-            ).exists()
-        else:
-            session_key = self.request.session.session_key
-            if session_key:
-                return AnonymousFavorite.objects.filter(
-                    session_key=session_key, product=self.id
-                ).exists()
-        return False
+        session_key = self._get_session_key(request)
+        if session_key:
+            cart_product = CartProduct.objects.filter(
+                cart__session_key=session_key, cart__user__isnull=True, product=self
+            ).first()
+            return cart_product.id if cart_product else None
+        return None
 
-    def get_is_cart_product(self, current_user):
-        if current_user.is_authenticated:
-            return CartProduct.objects.filter(
-                cart__user=current_user.id, product=self.id
-            ).exists()
-        else:
-            session_key = self.request.session.session_key
-            if session_key:
-                return CartProduct.objects.filter(
-                    anonymous_cart__session_key=session_key, product=self.id
-                ).exists()
+    def get_is_favorite(self, request):
+        return self.get_favorite_id(request) is not None
 
-        return CartProduct.objects.filter(
-            user=current_user.id, product=self.id
-        ).exists()
-        return False
-
+    def get_is_cart_product(self, request):
+        return self.get_cart_product_id(request) is not None
 
 
 class Review(models.Model):
@@ -167,31 +148,29 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
-        unique_together = ["product", "author"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product", "author"],
+                name="unique_product_author_review",
+            )
+        ]
 
     def __str__(self):
         return self.title
 
 
 # Favorites
-class BaseFavorite(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        abstract = True
-        verbose_name = "Избранный товар"
-        verbose_name_plural = "Избранные товары"
-
-    def __str__(self):
-        return self.product.name
-
-
-class Favorite(BaseFavorite):
+class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="favorites",
         verbose_name="Пользователь",
+        null=True,
+        blank=True,
+    )
+    session_key = models.CharField(
+        max_length=40, db_index=True, null=True, blank=True, verbose_name="Сессия"
     )
     product = models.ForeignKey(
         Product,
@@ -199,35 +178,52 @@ class Favorite(BaseFavorite):
         related_name="favorites",
         verbose_name="Товар",
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Избранный товар"
         verbose_name_plural = "Избранные товары"
-        unique_together = ["user", "product"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "product"],
+                name="unique_user_product",
+                condition=models.Q(user__isnull=False),
+            ),
+            models.UniqueConstraint(
+                fields=["session_key", "product"],
+                name="unique_session_product",
+                condition=models.Q(user__isnull=True),
+            ),
+        ]
 
-
-class AnonymousFavorite(BaseFavorite):
-    session_key = models.CharField(max_length=40, db_index=True)
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name="anonymous_favorites",
-        verbose_name="Товар",
-    )
-
-    class Meta:
-        verbose_name = "Избранный товар (неавторизованные пользователи)"
-        verbose_name_plural = "Избранные товары (неавторизованные пользователи)"
-        unique_together = ["session_key", "product"]
+    def __str__(self):
+        return self.product.name
 
 
 # Cart
-class BaseCart(models.Model):
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name="cart")
+    session_key = models.CharField(
+        max_length=40, db_index=True, null=True, blank=True, verbose_name="Сессия"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        abstract = True
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзины"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["session_key"],
+                name="unique_session_cart",
+                condition=models.Q(user__isnull=True),
+            ),
+            models.CheckConstraint(
+                condition=models.Q(user__isnull=False)
+                | models.Q(session_key__isnull=False),
+                name="cart_has_user_or_session",
+            ),
+        ]
 
     @property
     def total_price(self):
@@ -237,32 +233,16 @@ class BaseCart(models.Model):
     def total_quantity(self):
         return sum(product.quantity for product in self.products.all())
 
-
-class Cart(BaseCart):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
-
-    class Meta:
-        verbose_name = "Корзина"
-        verbose_name_plural = "Корзины"
-
-
-class AnonymousCart(BaseCart):
-    session_key = models.CharField(max_length=40, unique=True, db_index=True)
-
-    class Meta:
-        verbose_name = "Корзина (неавторизованный пользователь)"
-        verbose_name_plural = "Корзины (неавторизованные пользователи)"
+    def __str__(self):
+        if self.user:
+            return f"Корзина пользователя {self.user.username}"
+        return f"Корзина анонимного пользователя {self.session_key[:8]}..."
 
 
 class CartProduct(models.Model):
     cart = models.ForeignKey(
-        Cart, on_delete=models.CASCADE, null=True, blank=True, related_name="products"
-    )
-    anonymous_cart = models.ForeignKey(
-        AnonymousCart,
+        Cart,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
         related_name="products",
     )
     product = models.ForeignKey(
@@ -279,11 +259,11 @@ class CartProduct(models.Model):
     class Meta:
         verbose_name = "Товар в корзине"
         verbose_name_plural = "Товары в корзине"
-        unique_together = [["cart", "product"], ["anonymous_cart", "product"]]
+        unique_together = ["cart", "product"]
         ordering = ["-created_at"]
 
     def __str__(self):
-        return Product.objects.get(id=self.product.id).name
+        return self.product.name
 
     @property
     def total_price(self):

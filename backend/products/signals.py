@@ -1,4 +1,3 @@
-from django.contrib.sessions.models import Session
 from django.core.cache import cache
 from django.db.models import Avg, Count
 from django.db.models.signals import post_delete, post_save
@@ -6,7 +5,7 @@ from django.dispatch import receiver
 
 from users.models import User
 
-from .models import AnonymousCart, Cart, Category, Product, Review
+from .models import Cart, Category, Product, Review
 from .views import CATEGORY_CACHE_KEY
 
 
@@ -14,12 +13,6 @@ from .views import CATEGORY_CACHE_KEY
 def create_cart(sender, instance, created, **kwargs):
     if created:
         Cart.objects.create(user=instance)
-
-
-@receiver(post_save, sender=Session)
-def create_anonymous_cart(sender, instance, created, **kwargs):
-    if created:
-        AnonymousCart.objects.get_or_create(session_key=instance.session_key)
 
 
 @receiver(post_save, sender=Product)

@@ -1,8 +1,7 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
 
 from .models import (
-    AnonymousCart,
-    AnonymousFavorite,
     Brand,
     Cart,
     CartProduct,
@@ -52,58 +51,28 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_favorite_id(self, obj):
         request = self.context.get("request")
-        if request and request.user.is_authenticated:
-            return obj.get_favorite_id(request.user)
-
-        session_key = request.headers.get("X-Session-Key") if request else None
-        if session_key:
-            favorite = AnonymousFavorite.objects.filter(
-                session_key=session_key, product=obj
-            ).first()
-            return favorite.id if favorite else None
-        return None
+        return obj.get_favorite_id(request) if request else None
 
     def get_cart_product_id(self, obj):
         request = self.context.get("request")
-        if request and request.user.is_authenticated:
-            return obj.get_cart_product_id(request.user)
-
-        session_key = request.headers.get("X-Session-Key") if request else None
-        if session_key:
-            cart_product = CartProduct.objects.filter(
-                anonymous_cart__session_key=session_key, product=obj
-            ).first()
-            return cart_product.id if cart_product else None
-        return None
+        return obj.get_cart_product_id(request) if request else None
 
     def get_is_favorite(self, obj):
         request = self.context.get("request")
-
-        if request and request.user.is_authenticated:
-            exists = obj.get_is_favorite(request.user)
-            return exists
-
-        session_key = request.headers.get("X-Session-Key") if request else None
-        if session_key:
-            return AnonymousFavorite.objects.filter(
-                session_key=session_key, product=obj
-            ).exists()
-        return False
+        return obj.get_is_favorite(request) if request else False
 
     def get_is_cart_product(self, obj):
         request = self.context.get("request")
-        if request and request.user.is_authenticated:
-            return obj.get_is_cart_product(request.user)
-
-        session_key = request.headers.get("X-Session-Key") if request else None
-        if session_key:
-            return CartProduct.objects.filter(
-                anonymous_cart__session_key=session_key, product=obj
-            ).exists()
-        return False
+        return obj.get_is_cart_product(request) if request else False
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    rating = serializers.IntegerField(
+        validators=[
+            MinValueValidator(1, "Рейтинг не может быть меньше 1"),
+            MaxValueValidator(5, "Рейтинг не может быть больше 5"),
+        ]
+    )
     author_id = serializers.IntegerField(source="author.id", read_only=True)
     author = serializers.CharField(source="author.username", read_only=True)
 
@@ -120,14 +89,6 @@ class ReviewSerializer(serializers.ModelSerializer):
             "product_id",
         ]
 
-    def validate_rating(self, rating):
-        if rating is not None:
-            if rating > 5:
-                raise serializers.ValidationError("Rating can't be higher than 5")
-            if rating < 1:
-                raise serializers.ValidationError("Rating can't be lower than 1")
-        return rating
-
 
 # Favorite
 class FavoriteSerializer(serializers.ModelSerializer):
@@ -135,14 +96,6 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Favorite
-        fields = ["id", "product", "created_at"]
-
-
-class AnonymousFavoriteSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
-
-    class Meta:
-        model = AnonymousFavorite
         fields = ["id", "product", "created_at"]
 
 
@@ -161,76 +114,55 @@ class FavoriteCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         request = self.context.get("request")
-        product = data.get("product")
-
         if not request:
             raise serializers.ValidationError("Request не найден")
 
-        elif request.user.is_authenticated:
+        product = data.get("product")
+
+        if request.user.is_authenticated:
             if Favorite.objects.filter(product=product, user=request.user).exists():
                 raise serializers.ValidationError(
                     {"product": "Этот товар уже добавлен в избранное"}
                 )
-        else:
-            if request.headers.get("X-Session-Key"):
-                if AnonymousFavorite.objects.filter(
-                    product=product, session_key=request.headers.get("X-Session-Key")
-                ).exists():
-                    raise serializers.ValidationError(
-                        {"product": "Этот товар уже добавлен в избранное"}
-                    )
+            return data
+
+        session_key = request.session.session_key
+        if (
+            session_key
+            and Favorite.objects.filter(
+                product=product, session_key=session_key, user__isnull=True
+            ).exists()
+        ):
+            raise serializers.ValidationError(
+                {"product": "Этот товар уже добавлен в избранное"}
+            )
 
         return data
-
-    def create(self, validated_data):
-        request = self.context.get("request")
-        product = validated_data.get("product")
-
-        if request.user.is_authenticated:
-            favorite, created = Favorite.objects.get_or_create(
-                user=request.user, product=product
-            )
-            return favorite
-
-        else:
-            if not request.headers.get("X-Session-Key"):
-                self.request.session.create()
-
-            favorite, created = AnonymousFavorite.objects.get_or_create(
-                session_key=request.headers.get("X-Session-Key"), product=product
-            )
-            return favorite
 
 
 # Cart
 class CartProductSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
-    total_price = serializers.SerializerMethodField()
+    total_price = serializers.ReadOnlyField()
 
     class Meta:
         model = CartProduct
         fields = ["id", "product", "quantity", "total_price"]
-
-    def get_total_price(self, obj):
-        return obj.total_price
 
 
 class AddToCartSerializer(serializers.Serializer):
     product_id = serializers.IntegerField(write_only=True, min_value=1)
     quantity = serializers.IntegerField(write_only=True, min_value=1, default=1)
 
-    def validate_product_id(self, value):
-        try:
-            return value
-        except Product.DoesNotExist:
-            raise serializers.ValidationError("Товар не найден")
-
     def validate(self, data):
         request = self.context.get("request")
-        product = Product.objects.get(id=data.get("product_id"))
+        if not request:
+            raise serializers.ValidationError("Контекст запроса (request) не найден.")
 
-        if not request or not product:
-            return data
+        try:
+            product = Product.objects.get(id=data.get("product_id"))
+        except Product.DoesNotExist:
+            raise serializers.ValidationError({"product_id": "Товар не найден"})
 
         if request.user.is_authenticated:
             if CartProduct.objects.filter(
@@ -240,19 +172,31 @@ class AddToCartSerializer(serializers.Serializer):
                     {"product_id": "Этот товар уже есть в корзине"}
                 )
 
+        else:
+            session_key = request.session.session_key
+            if (
+                session_key
+                and CartProduct.objects.filter(
+                    product=product,
+                    cart__session_key=session_key,
+                    cart__user__isnull=True,
+                ).exists()
+            ):
+                raise serializers.ValidationError(
+                    {"product_id": "Этот товар уже есть в корзине"}
+                )
+
         data["product"] = product
         return data
 
 
-class BaseCartSerializer(serializers.ModelSerializer):
-    cart_products = serializers.SerializerMethodField()
-    total_quantity = serializers.IntegerField(read_only=True)
-    total_price = serializers.DecimalField(
-        max_digits=10, decimal_places=2, read_only=True
-    )
+class CartSerializer(serializers.ModelSerializer):
+    cart_products = CartProductSerializer(source="products", many=True, readonly=True)
+    total_quantity = serializers.ReadOnlyField()
+    total_price = serializers.ReadOnlyField()
 
     class Meta:
-        abstract = True
+        model = Cart
         fields = [
             "id",
             "cart_products",
@@ -261,21 +205,3 @@ class BaseCartSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-
-    def get_cart_products(self, obj):
-        from .serializers import CartProductSerializer
-
-        products = obj.products.all()
-        return CartProductSerializer(products, many=True, context=self.context).data
-
-
-class CartSerializer(BaseCartSerializer):
-    class Meta:
-        model = Cart
-        fields = BaseCartSerializer.Meta.fields
-
-
-class AnonymousCartSerializer(BaseCartSerializer):
-    class Meta:
-        model = AnonymousCart
-        fields = BaseCartSerializer.Meta.fields

@@ -17,8 +17,6 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from .models import (
-    AnonymousCart,
-    AnonymousFavorite,
     Brand,
     Cart,
     CartProduct,
@@ -30,8 +28,6 @@ from .models import (
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     AddToCartSerializer,
-    AnonymousCartSerializer,
-    AnonymousFavoriteSerializer,
     BrandSerializer,
     CartProductSerializer,
     CartSerializer,
@@ -109,7 +105,7 @@ class ProductList(generics.ListAPIView):
         if category_id not in (None, ""):
             queryset = queryset.filter(category_id=category_id)
 
-        price_min = params.get("price_min") 
+        price_min = params.get("price_min")
         if price_min not in (None, ""):
             queryset = queryset.filter(price__gte=price_min)
 
@@ -206,19 +202,16 @@ class FavoriteViewSet(ModelViewSet):
         if self.request.user.is_authenticated:
             return Favorite.objects.filter(user=self.request.user)
 
-        session_key = self.request.headers.get("X-Session-Key")
+        session_key = self.request.session.session_key
         if session_key:
-            return AnonymousFavorite.objects.filter(session_key=session_key)
+            return Favorite.objects.filter(session_key=session_key, user__isnull=True)
 
-        return AnonymousFavorite.objects.none()
+        return Favorite.objects.none()
 
     def get_serializer_class(self):
         if self.action == "create":
             return FavoriteCreateSerializer
-        elif self.request.user.is_authenticated:
-            return FavoriteSerializer
-        else:
-            return AnonymousFavoriteSerializer
+        return FavoriteSerializer
 
     def get_serializer_context(self):
         return {"request": self.request}
@@ -229,9 +222,9 @@ class FavoriteViewSet(ModelViewSet):
         if request.user.is_authenticated:
             serializer.save(user=request.user)
         else:
-            if not request.headers.get("X-Session-Key"):
-                request.session.save()
-            serializer.save(session_key=request.headers.get("X-Session-Key"))
+            if not request.session.session_key:
+                request.session.create()
+            serializer.save(session_key=request.session.session_key)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -292,16 +285,16 @@ class FavoriteViewSet(ModelViewSet):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        session_key = request.headers.get("X-Session-Key")
+        session_key = request.session.session_key
         if not session_key:
             return Response(
                 {"message": "Нет анонимного пользователя для переноса"},
                 status=status.HTTP_200_OK,
             )
 
-        anonymous_favorites = AnonymousFavorite.objects.filter(
-            session_key=session_key
-        ).only("product_id")
+        anonymous_favorites = Favorite.objects.filter(
+            session_key=session_key, user__isnull=True
+        )
         if not anonymous_favorites.exists():
             return Response(
                 {"message": "Нет избранного для переноса"},
@@ -310,13 +303,19 @@ class FavoriteViewSet(ModelViewSet):
 
         with transaction.atomic():
             for favorite in anonymous_favorites:
-                Favorite.objects.get_or_create(
-                    user=request.user,
-                    product_id=favorite.product_id,
-                )
-            AnonymousFavorite.objects.filter(session_key=session_key).delete()
+                if Favorite.objects.filter(
+                    user=request.user, product=favorite.product_id
+                ).exists():
+                    favorite.delete()
+                else:
+                    favorite.user = request.user
+                    favorite.session_key = None
+                    favorite.save()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Избранные товары успешно перенесены"},
+            status=status.HTTP_200_OK,
+        )
 
 
 # Cart

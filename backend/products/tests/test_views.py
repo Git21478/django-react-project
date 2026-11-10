@@ -112,7 +112,7 @@ class TestCategoryList:
 
 class TestProductViews:
     def product1_list_pagination(self, api_client, url_product_list):
-        response = api_client.get(url_product_list, {"page": 1, "pageSize": 5})
+        response = api_client.get(url_product_list, {"page": 1, "page_size": 5})
         assert response.status_code == status.HTTP_200_OK
         assert "results" in response.data
         assert "count" in response.data
@@ -163,7 +163,7 @@ class TestReviewPagination:
         pagination = ReviewPaginationPages()
         assert pagination.page_query_param == "page"
         assert pagination.page_size == 10
-        assert pagination.page_size_query_param == "pageSize"
+        assert pagination.page_size_query_param == "page_size"
         assert pagination.max_page_size == 100
 
 class TestReviewListCreate:

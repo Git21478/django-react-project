@@ -1,8 +1,6 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Profile, User
-from .utils import merge_carts, merge_favorites
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,22 +35,3 @@ class PasswordChangeSerializer(serializers.Serializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True, style={"input_type": "password"})
-
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-
-        request = self.context.get("request")
-        session_key = request.headers.get("X-Session-Key") if request else None
-
-        if session_key and session_key.strip():
-            cart_merged = merge_carts(self.user, session_key)
-            if cart_merged:
-                data["cart_merged"] = True
-
-            favorites_merged = merge_favorites(self.user, session_key)
-            if favorites_merged:
-                data["favorites_merged"] = True
-
-        return data

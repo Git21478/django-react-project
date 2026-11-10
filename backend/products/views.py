@@ -1,5 +1,3 @@
-import uuid
-
 from django.core.cache import cache
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -16,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from .constants import CATEGORY_CACHE_KEY, CATEGORY_CACHE_TTL
 from .models import (
     Brand,
     Cart,
@@ -51,11 +50,6 @@ class BrandCategoryList(generics.ListAPIView):
         ).prefetch_related("categories")
 
 
-# Category
-CATEGORY_CACHE_KEY = "categories:all:v1"
-CATEGORY_CACHE_TTL = 60 * 60
-
-
 @extend_schema(tags=["Категории"])
 class CategoryList(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -71,7 +65,7 @@ class CategoryList(APIView):
 
 
 # Product
-class ProductPaginationPages(PageNumberPagination):
+class ProductPagination(PageNumberPagination):
     page_query_param = "page"
     page_size = 10
     page_size_query_param = "page_size"
@@ -83,7 +77,7 @@ class ProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
-    pagination_class = ProductPaginationPages
+    pagination_class = ProductPagination
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ["name", "description"]
     ordering_fields = ["price", "rating"]
@@ -136,10 +130,10 @@ class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 
 # Review
-class ReviewPaginationPages(PageNumberPagination):
+class ReviewPagination(PageNumberPagination):
     page_query_param = "page"
     page_size = 10
-    page_size_query_param = "pageSize"
+    page_size_query_param = "page_size"
     max_page_size = 100
 
 
@@ -148,7 +142,7 @@ class ReviewListCreate(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    pagination_class = ReviewPaginationPages
+    pagination_class = ReviewPagination
     filter_backends = [OrderingFilter]
     ordering_fields = ["created_at", "rating"]
     ordering = ["-created_at", "id"]
@@ -274,7 +268,7 @@ class FavoriteViewSet(ModelViewSet):
 
         return Response(
             {"message": f"Товаров удалено: {deleted_count}"},
-            status=status.HTTP_204_NO_CONTENT,
+            status=status.HTTP_200_OK,
         )
 
     @action(detail=False, methods=["post"], url_path="migrate")
@@ -322,34 +316,32 @@ class FavoriteViewSet(ModelViewSet):
 @extend_schema(tags=["Корзины"])
 class CartViewSet(ModelViewSet):
     permission_classes = [AllowAny]
+    serializer_class = CartSerializer
 
     def get_queryset(self):
+        base_queryset = Cart.objects.prefetch_related(
+            "products__product__brand", "products__product__category"
+        )
         if self.request.user.is_authenticated:
-            return Cart.objects.filter(user=self.request.user)
+            return base_queryset.filter(user=self.request.user)
 
-        session_key = self.request.headers.get("X-Session-Key")
+        session_key = self.request.session.session_key
         if session_key:
-            return AnonymousCart.objects.filter(session_key=session_key)
-        else:
-            return AnonymousCart.objects.none()
-
-    def get_serializer_class(self):
-        if self.request.user.is_authenticated:
-            return CartSerializer
-        else:
-            return AnonymousCartSerializer
+            return base_queryset.filter(session_key=session_key, user__isnull=True)
+        return Cart.objects.none()
 
     def get_object(self):
-        if self.request.user.is_authenticated:
-            cart, _ = Cart.objects.get_or_create(user=self.request.user)
+        request = self.request
+        if request.user.is_authenticated:
+            cart, _ = Cart.objects.get_or_create(user=request.user)
             return cart
 
-        session_key = self.request.headers.get("X-Session-Key")
+        if not request.session.session_key:
+            request.session.create()
 
-        if not session_key:
-            session_key = str(uuid.uuid4())
-
-        cart, created = AnonymousCart.objects.get_or_create(session_key=session_key)
+        cart, _ = Cart.objects.get_or_create(
+            session_key=request.session.session_key, user__isnull=True
+        )
         return cart
 
     def list(self, request, *args, **kwargs):
@@ -369,18 +361,11 @@ class CartViewSet(ModelViewSet):
             product = serializer.validated_data.get("product")
             quantity = serializer.validated_data.get("quantity", 1)
 
-            if request.user.is_authenticated:
-                cart_product, created = CartProduct.objects.get_or_create(
-                    cart=cart,
-                    product=product,
-                    defaults={"quantity": quantity},
-                )
-            else:
-                cart_product, created = CartProduct.objects.get_or_create(
-                    anonymous_cart=cart,
-                    product=product,
-                    defaults={"quantity": quantity},
-                )
+            cart_product, created = CartProduct.objects.get_or_create(
+                cart=cart,
+                product=product,
+                defaults={"quantity": quantity},
+            )
 
             if not created:
                 cart_product.quantity += quantity
@@ -396,19 +381,11 @@ class CartViewSet(ModelViewSet):
     @action(detail=False, methods=["patch"], url_path="update/(?P<product_id>\\d+)")
     def update_product(self, request, product_id=None):
         cart = self.get_object()
-
-        if request.user.is_authenticated:
-            cart_product = get_object_or_404(
-                CartProduct,
-                cart=cart,
-                product_id=product_id,
-            )
-        else:
-            cart_product = get_object_or_404(
-                CartProduct,
-                anonymous_cart=cart,
-                product_id=product_id,
-            )
+        cart_product = get_object_or_404(
+            CartProduct,
+            cart=cart,
+            product_id=product_id,
+        )
 
         quantity = request.data.get("quantity")
         if quantity is not None and int(quantity) > 0:
@@ -426,40 +403,24 @@ class CartViewSet(ModelViewSet):
     @action(detail=False, methods=["delete"], url_path="remove/(?P<product_id>\\d+)")
     def remove_product(self, request, product_id=None):
         cart = self.get_object()
-
-        if request.user.is_authenticated:
-            cart_product = get_object_or_404(
-                CartProduct,
-                cart=cart,
-                product_id=product_id,
-            )
-        else:
-            cart_product = get_object_or_404(
-                CartProduct,
-                anonymous_cart=cart,
-                product_id=product_id,
-            )
-
+        cart_product = get_object_or_404(
+            CartProduct,
+            cart=cart,
+            product_id=product_id,
+        )
         cart_product.delete()
 
-        serializer = self.get_serializer(cart)
+        serializer = self.get_serializer(cart, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["delete"], url_path="delete-multiple")
     def delete_multiple(self, request):
         cart_product_ids = request.data.get("cart_product_ids", [])
         cart = self.get_object()
-
-        if request.user.is_authenticated:
-            CartProduct.objects.filter(
-                cart=cart,
-                id__in=cart_product_ids,
-            ).delete()
-        else:
-            CartProduct.objects.filter(
-                anonymous_cart=cart,
-                id__in=cart_product_ids,
-            ).delete()
+        CartProduct.objects.filter(
+            cart=cart,
+            id__in=cart_product_ids,
+        ).delete()
 
         serializer = self.get_serializer(cart, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -467,11 +428,57 @@ class CartViewSet(ModelViewSet):
     @action(detail=False, methods=["delete"], url_path="clear")
     def clear_cart(self, request):
         cart = self.get_object()
-
-        if request.user.is_authenticated:
-            CartProduct.objects.filter(cart=cart).delete()
-        else:
-            CartProduct.objects.filter(anonymous_cart=cart).delete()
+        CartProduct.objects.filter(cart=cart).delete()
 
         serializer = self.get_serializer(cart, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["post"], url_path="migrate")
+    def migrate_to_user(self, request):
+        if not request.user.is_authenticated:
+            return Response(
+                {"error": "Пользователь не авторизован"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        session_key = request.session.session_key
+        if not session_key:
+            return Response(
+                {"message": "Нет сессии пользователя"},
+                status=status.HTTP_200_OK,
+            )
+
+        try:
+            anonymous_cart = Cart.objects.get(
+                session_key=session_key, user__isnull=True
+            )
+        except Cart.DoesNotExist:
+            return Response(
+                {"cart": "Гостевая корзина не существует"},
+                status=status.HTTP_200_OK,
+            )
+
+        anonymous_products = anonymous_cart.products.all()
+        if not anonymous_products:
+            return Response(
+                {"message": "Нет товаров для переноса"},
+                status=status.HTTP_200_OK,
+            )
+
+        with transaction.atomic():
+            user_cart, _ = Cart.objects.get_or_create(user=request.user)
+            for anonymous_product in anonymous_products:
+                user_product = CartProduct.objects.filter(
+                    product=anonymous_product.product, cart=user_cart
+                ).first()
+                if user_product:
+                    user_product.quantity += anonymous_product.quantity
+                    user_product.save()
+                    anonymous_product.delete()
+                else:
+                    anonymous_product.cart = user_cart
+                    anonymous_product.save()
+            anonymous_cart.delete()
+
+        serializer = self.get_serializer(user_cart, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)

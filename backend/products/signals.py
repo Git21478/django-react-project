@@ -5,8 +5,8 @@ from django.dispatch import receiver
 
 from users.models import User
 
+from .constants import CATEGORY_CACHE_KEY
 from .models import Cart, Category, Product, Review
-from .views import CATEGORY_CACHE_KEY
 
 
 @receiver(post_save, sender=User)

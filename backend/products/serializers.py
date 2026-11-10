@@ -191,7 +191,7 @@ class AddToCartSerializer(serializers.Serializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
-    cart_products = CartProductSerializer(source="products", many=True, readonly=True)
+    cart_products = CartProductSerializer(source="products", many=True, read_only=True)
     total_quantity = serializers.ReadOnlyField()
     total_price = serializers.ReadOnlyField()
 

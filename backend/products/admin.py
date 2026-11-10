@@ -1,8 +1,6 @@
 from django.contrib import admin
 
 from .models import (
-    AnonymousCart,
-    AnonymousFavorite,
     Brand,
     Cart,
     CartProduct,
@@ -69,10 +67,6 @@ class FavoriteAdmin(admin.ModelAdmin):
     list_display = ["product", "user"]
 
 
-class AnonymousFavoriteAdmin(admin.ModelAdmin):
-    list_display = ["product", "session_key", "created_at"]
-
-
 class CartProductAdmin(admin.ModelAdmin):
     list_display = ["product", "quantity", "total_price", "created_at"]
 
@@ -81,16 +75,10 @@ class CartAdmin(admin.ModelAdmin):
     pass
 
 
-class AnonymousCartAdmin(admin.ModelAdmin):
-    pass
-
-
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Favorite, FavoriteAdmin)
-admin.site.register(AnonymousFavorite, AnonymousFavoriteAdmin)
 admin.site.register(CartProduct, CartProductAdmin)
 admin.site.register(Cart, CartAdmin)
-admin.site.register(AnonymousCart, AnonymousCartAdmin)

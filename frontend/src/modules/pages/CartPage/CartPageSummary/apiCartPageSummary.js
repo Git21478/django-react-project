@@ -2,7 +2,7 @@ import api from "../../../../api";
 
 export const handleCheckout = (cartProducts, setCart) => {
   api
-    .delete("api/cart/clear/")
+    .delete("cart/clear/")
     .then((res) => {
       setCart(res.data);
       alert("Заказ оформлен");

@@ -11,7 +11,7 @@ export const register = (
   e.preventDefault();
   if (password.value === confirmPassword.value) {
     api
-      .post("api/user/registration/", {
+      .post("user/registration/", {
         email: email.value,
         username: username.value,
         password: password.value,

@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+if [ "$#" -gt 0 ]; then
+    exec "$@"
+fi
+
 python manage.py collectstatic --noinput
 
 ls -la db_dumps || echo "Папка db_dumps не найдена!"
@@ -9,6 +13,8 @@ TABLE_COUNT=$(psql -h database -U ${POSTGRES_USER} -d ${POSTGRES_DB} -t -c "SELE
 TABLE_COUNT=$(echo $TABLE_COUNT | tr -d '[:space:]')
 
 echo "Результат TABLE_COUNT: '$TABLE_COUNT'"
+
+python manage.py migrate --noinput
 
 # Загрузка дампа БД
 if [ -f db_dumps/db_dump_for_quickstart.sql ] && [ "$TABLE_COUNT" -eq 0 ]; then
@@ -20,5 +26,5 @@ if [ -f db_dumps/db_dump_for_quickstart.sql ] && [ "$TABLE_COUNT" -eq 0 ]; then
     fi
 fi
 
-python manage.py migrate --noinput
+
 gunicorn -c gunicorn.py --bind 0.0.0.0:8000 backend.wsgi:application

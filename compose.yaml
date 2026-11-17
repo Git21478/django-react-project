@@ -31,6 +31,7 @@ services:
     networks:
       - app-network
     volumes:
+      - ./backend:/app 
       - static_volume:/app/staticfiles
       - media_volume:/app/media
       - ./backend/db_dumps:/app/db_dumps:ro
@@ -94,6 +95,8 @@ services:
     environment:
       - MINIO_ROOT_USER=${AWS_ACCESS_KEY_ID}
       - MINIO_ROOT_PASSWORD=${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - ./media_dumps/media_for_quickstart:/seed-data:ro
     networks:
       - app-network
     entrypoint: >
@@ -101,6 +104,13 @@ services:
       /usr/bin/mc alias set myminio http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD;
       /usr/bin/mc mb --ignore-existing myminio/my-dev-bucket;
       /usr/bin/mc anonymous set public myminio/my-dev-bucket;
+      if ! /usr/bin/mc stat myminio/my-dev-bucket/media/product_images/product_image.jpg > /dev/null 2>&1; then
+        echo 'Uploading seed images...';
+        /usr/bin/mc cp --recursive /seed-data/ myminio/my-dev-bucket/media/;
+        echo 'Seed upload complete.';
+      else
+        echo 'Seed images already present, skipping.';
+      fi;
       exit 0;
       "
     
@@ -168,6 +178,6 @@ volumes:
   media_volume:
   postgres_data:
   minio_data:
+  seed-data:
   redis_data:
   redisinsight_data:
-  

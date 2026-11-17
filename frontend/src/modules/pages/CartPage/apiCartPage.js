@@ -2,7 +2,7 @@ import api from "../../../api";
 
 export const getCart = (setCart) => {
   api
-    .get("api/cart/")
+    .get("cart/")
     .then((res) => {
       setCart(res.data);
     })
@@ -17,7 +17,7 @@ export const deleteMultipleCartProducts = (
   setCart,
 ) => {
   api
-    .delete("api/cart/delete-multiple/", {
+    .delete("cart/delete-multiple/", {
       data: {
         cart_product_ids: selectedCartProductIds,
       },

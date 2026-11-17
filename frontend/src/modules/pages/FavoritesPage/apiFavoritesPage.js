@@ -2,7 +2,7 @@ import api from "../../../api";
 
 export const getFavorites = (setFavorites) => {
   api
-    .get("api/favorites/")
+    .get("favorites/")
     .then((res) => {
       setFavorites(res.data);
     })
@@ -19,7 +19,7 @@ export const deleteMultipleFavorites = (
   const idsParam = selectedFavoritesIds.join(",");
 
   api
-    .delete(`api/favorites/delete-multiple/?ids=${idsParam}`)
+    .delete(`favorites/delete-multiple/?ids=${idsParam}`)
     .then((res) => {
       setSelectedFavoritesIds((prevData) => {
         return prevData.filter((id) => {

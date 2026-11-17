@@ -17,721 +17,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_permissions_user_id_20aca447_fk_users_user_id;
-ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_perm_permission_id_0b93982e_fk_auth_perm;
-ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_user_id_5f6f5a90_fk_users_user_id;
-ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_group_id_9afc8d0e_fk_auth_group_id;
-ALTER TABLE IF EXISTS ONLY public.users_profile DROP CONSTRAINT IF EXISTS users_profile_user_id_2112e78d_fk_users_user_id;
-ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_product_id_d933ffa7_fk_products_product_id;
-ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_author_id_cca533e8_fk_users_user_id;
-ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_category_id_9b594869_fk_products_category_id;
-ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_brand_id_3e2e8fd1_fk_products_brand_id;
-ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_user_id_cd8466da_fk_users_user_id;
-ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_product_id_f8265054_fk_products_product_id;
-ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_brands_brand_id_fc34923b_fk_products_brand_id;
-ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_br_category_id_f3697e5d_fk_products_;
-ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_product_id_215977e5_fk_products_product_id;
-ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_cart_id_74762181_fk_products_cart_id;
-ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_anonymous_cart_id_bb328bc7_fk_products_;
-ALTER TABLE IF EXISTS ONLY public.products_cart DROP CONSTRAINT IF EXISTS products_cart_user_id_d53bf7cf_fk_users_user_id;
-ALTER TABLE IF EXISTS ONLY public.products_anonymousfavorite DROP CONSTRAINT IF EXISTS products_anonymousfa_product_id_c52b0f7c_fk_products_;
-ALTER TABLE IF EXISTS ONLY public.django_rest_passwordreset_resetpasswordtoken DROP CONSTRAINT IF EXISTS django_rest_password_user_id_e8015b11_fk_users_use;
-ALTER TABLE IF EXISTS ONLY public.django_admin_log DROP CONSTRAINT IF EXISTS django_admin_log_user_id_c564eba6_fk_users_user_id;
-ALTER TABLE IF EXISTS ONLY public.django_admin_log DROP CONSTRAINT IF EXISTS django_admin_log_content_type_id_c4bce8eb_fk_django_co;
-ALTER TABLE IF EXISTS ONLY public.auth_permission DROP CONSTRAINT IF EXISTS auth_permission_content_type_id_2f476e4b_fk_django_co;
-ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissions_group_id_b120cbf9_fk_auth_group_id;
-ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissio_permission_id_84c5c92e_fk_auth_perm;
-DROP INDEX IF EXISTS public.users_user_username_06e46fe6_like;
-DROP INDEX IF EXISTS public.users_user_user_permissions_user_id_20aca447;
-DROP INDEX IF EXISTS public.users_user_user_permissions_permission_id_0b93982e;
-DROP INDEX IF EXISTS public.users_user_groups_user_id_5f6f5a90;
-DROP INDEX IF EXISTS public.users_user_groups_group_id_9afc8d0e;
-DROP INDEX IF EXISTS public.users_user_email_243f6e77_like;
-DROP INDEX IF EXISTS public.users_profile_phone_0ff15728_like;
-DROP INDEX IF EXISTS public.products_review_product_id_d933ffa7;
-DROP INDEX IF EXISTS public.products_review_author_id_cca533e8;
-DROP INDEX IF EXISTS public.products_product_slug_70d3148d_like;
-DROP INDEX IF EXISTS public.products_product_category_id_9b594869;
-DROP INDEX IF EXISTS public.products_product_brand_id_3e2e8fd1;
-DROP INDEX IF EXISTS public.products_favorite_user_id_cd8466da;
-DROP INDEX IF EXISTS public.products_favorite_product_id_f8265054;
-DROP INDEX IF EXISTS public.products_category_slug_c558efae_like;
-DROP INDEX IF EXISTS public.products_category_brands_category_id_f3697e5d;
-DROP INDEX IF EXISTS public.products_category_brands_brand_id_fc34923b;
-DROP INDEX IF EXISTS public.products_cartproduct_product_id_215977e5;
-DROP INDEX IF EXISTS public.products_cartproduct_cart_id_74762181;
-DROP INDEX IF EXISTS public.products_cartproduct_anonymous_cart_id_bb328bc7;
-DROP INDEX IF EXISTS public.products_anonymousfavorite_session_key_3720dbc2_like;
-DROP INDEX IF EXISTS public.products_anonymousfavorite_session_key_3720dbc2;
-DROP INDEX IF EXISTS public.products_anonymousfavorite_product_id_c52b0f7c;
-DROP INDEX IF EXISTS public.products_anonymouscart_session_key_0bb7c619_like;
-DROP INDEX IF EXISTS public.drpr_token_created_at_idx;
-DROP INDEX IF EXISTS public.django_session_session_key_c0390e0f_like;
-DROP INDEX IF EXISTS public.django_session_expire_date_a5c62663;
-DROP INDEX IF EXISTS public.django_rest_passwordreset_resetpasswordtoken_user_id_e8015b11;
-DROP INDEX IF EXISTS public.django_rest_passwordreset_resetpasswordtoken_key_f1b65873_like;
-DROP INDEX IF EXISTS public.django_admin_log_user_id_c564eba6;
-DROP INDEX IF EXISTS public.django_admin_log_content_type_id_c4bce8eb;
-DROP INDEX IF EXISTS public.auth_permission_content_type_id_2f476e4b;
-DROP INDEX IF EXISTS public.auth_group_permissions_permission_id_84c5c92e;
-DROP INDEX IF EXISTS public.auth_group_permissions_group_id_b120cbf9;
-DROP INDEX IF EXISTS public.auth_group_name_a6ea08ec_like;
-ALTER TABLE IF EXISTS ONLY public.users_user DROP CONSTRAINT IF EXISTS users_user_username_key;
-ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_permissions_user_id_permission_id_43338c45_uniq;
-ALTER TABLE IF EXISTS ONLY public.users_user_user_permissions DROP CONSTRAINT IF EXISTS users_user_user_permissions_pkey;
-ALTER TABLE IF EXISTS ONLY public.users_user DROP CONSTRAINT IF EXISTS users_user_pkey;
-ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_user_id_group_id_b88eab82_uniq;
-ALTER TABLE IF EXISTS ONLY public.users_user_groups DROP CONSTRAINT IF EXISTS users_user_groups_pkey;
-ALTER TABLE IF EXISTS ONLY public.users_user DROP CONSTRAINT IF EXISTS users_user_email_key;
-ALTER TABLE IF EXISTS ONLY public.users_profile DROP CONSTRAINT IF EXISTS users_profile_pkey;
-ALTER TABLE IF EXISTS ONLY public.users_profile DROP CONSTRAINT IF EXISTS users_profile_phone_key;
-ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_product_id_author_id_a42e638b_uniq;
-ALTER TABLE IF EXISTS ONLY public.products_review DROP CONSTRAINT IF EXISTS products_review_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_slug_key;
-ALTER TABLE IF EXISTS ONLY public.products_product DROP CONSTRAINT IF EXISTS products_product_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_user_id_product_id_daf9efdd_uniq;
-ALTER TABLE IF EXISTS ONLY public.products_favorite DROP CONSTRAINT IF EXISTS products_favorite_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_category DROP CONSTRAINT IF EXISTS products_category_slug_c558efae_uniq;
-ALTER TABLE IF EXISTS ONLY public.products_category DROP CONSTRAINT IF EXISTS products_category_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_brands_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_category_brands DROP CONSTRAINT IF EXISTS products_category_brands_category_id_brand_id_cb11283c_uniq;
-ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_cart_id_product_id_413a637d_uniq;
-ALTER TABLE IF EXISTS ONLY public.products_cartproduct DROP CONSTRAINT IF EXISTS products_cartproduct_anonymous_cart_id_product_id_c29582ef_uniq;
-ALTER TABLE IF EXISTS ONLY public.products_cart DROP CONSTRAINT IF EXISTS products_cart_user_id_key;
-ALTER TABLE IF EXISTS ONLY public.products_cart DROP CONSTRAINT IF EXISTS products_cart_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_brand DROP CONSTRAINT IF EXISTS products_brand_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_anonymousfavorite DROP CONSTRAINT IF EXISTS products_anonymousfavorite_session_key_product_id_9a58c8c8_uniq;
-ALTER TABLE IF EXISTS ONLY public.products_anonymousfavorite DROP CONSTRAINT IF EXISTS products_anonymousfavorite_pkey;
-ALTER TABLE IF EXISTS ONLY public.products_anonymouscart DROP CONSTRAINT IF EXISTS products_anonymouscart_session_key_key;
-ALTER TABLE IF EXISTS ONLY public.products_anonymouscart DROP CONSTRAINT IF EXISTS products_anonymouscart_pkey;
-ALTER TABLE IF EXISTS ONLY public.health_check_db_testmodel DROP CONSTRAINT IF EXISTS health_check_db_testmodel_pkey;
-ALTER TABLE IF EXISTS ONLY public.django_session DROP CONSTRAINT IF EXISTS django_session_pkey;
-ALTER TABLE IF EXISTS ONLY public.django_rest_passwordreset_resetpasswordtoken DROP CONSTRAINT IF EXISTS django_rest_passwordreset_resetpasswordtoken_pkey;
-ALTER TABLE IF EXISTS ONLY public.django_rest_passwordreset_resetpasswordtoken DROP CONSTRAINT IF EXISTS django_rest_passwordreset_resetpasswordtoken_key_f1b65873_uniq;
-ALTER TABLE IF EXISTS ONLY public.django_migrations DROP CONSTRAINT IF EXISTS django_migrations_pkey;
-ALTER TABLE IF EXISTS ONLY public.django_content_type DROP CONSTRAINT IF EXISTS django_content_type_pkey;
-ALTER TABLE IF EXISTS ONLY public.django_content_type DROP CONSTRAINT IF EXISTS django_content_type_app_label_model_76bd3d3b_uniq;
-ALTER TABLE IF EXISTS ONLY public.django_admin_log DROP CONSTRAINT IF EXISTS django_admin_log_pkey;
-ALTER TABLE IF EXISTS ONLY public.auth_permission DROP CONSTRAINT IF EXISTS auth_permission_pkey;
-ALTER TABLE IF EXISTS ONLY public.auth_permission DROP CONSTRAINT IF EXISTS auth_permission_content_type_id_codename_01ab375a_uniq;
-ALTER TABLE IF EXISTS ONLY public.auth_group DROP CONSTRAINT IF EXISTS auth_group_pkey;
-ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissions_pkey;
-ALTER TABLE IF EXISTS ONLY public.auth_group_permissions DROP CONSTRAINT IF EXISTS auth_group_permissions_group_id_permission_id_0cd325b0_uniq;
-ALTER TABLE IF EXISTS ONLY public.auth_group DROP CONSTRAINT IF EXISTS auth_group_name_key;
-DROP TABLE IF EXISTS public.users_user_user_permissions;
-DROP TABLE IF EXISTS public.users_user_groups;
-DROP TABLE IF EXISTS public.users_user;
-DROP TABLE IF EXISTS public.users_profile;
-DROP TABLE IF EXISTS public.products_review;
-DROP TABLE IF EXISTS public.products_product;
-DROP TABLE IF EXISTS public.products_favorite;
-DROP TABLE IF EXISTS public.products_category_brands;
-DROP TABLE IF EXISTS public.products_category;
-DROP TABLE IF EXISTS public.products_cartproduct;
-DROP TABLE IF EXISTS public.products_cart;
-DROP TABLE IF EXISTS public.products_brand;
-DROP TABLE IF EXISTS public.products_anonymousfavorite;
-DROP TABLE IF EXISTS public.products_anonymouscart;
-DROP TABLE IF EXISTS public.health_check_db_testmodel;
-DROP TABLE IF EXISTS public.django_session;
-DROP TABLE IF EXISTS public.django_rest_passwordreset_resetpasswordtoken;
-DROP TABLE IF EXISTS public.django_migrations;
-DROP TABLE IF EXISTS public.django_content_type;
-DROP TABLE IF EXISTS public.django_admin_log;
-DROP TABLE IF EXISTS public.auth_permission;
-DROP TABLE IF EXISTS public.auth_group_permissions;
-DROP TABLE IF EXISTS public.auth_group;
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- Name: auth_group; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_group (
-    id integer NOT NULL,
-    name character varying(150) NOT NULL
-);
-
-
---
--- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.auth_group ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.auth_group_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_group_permissions (
-    id bigint NOT NULL,
-    group_id integer NOT NULL,
-    permission_id integer NOT NULL
-);
-
-
---
--- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.auth_group_permissions ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.auth_group_permissions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: auth_permission; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_permission (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL,
-    content_type_id integer NOT NULL,
-    codename character varying(100) NOT NULL
-);
-
-
---
--- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.auth_permission ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.auth_permission_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: django_admin_log; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_admin_log (
-    id integer NOT NULL,
-    action_time timestamp with time zone NOT NULL,
-    object_id text,
-    object_repr character varying(200) NOT NULL,
-    action_flag smallint NOT NULL,
-    change_message text NOT NULL,
-    content_type_id integer,
-    user_id bigint NOT NULL,
-    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
-);
-
-
---
--- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.django_admin_log ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.django_admin_log_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: django_content_type; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_content_type (
-    id integer NOT NULL,
-    app_label character varying(100) NOT NULL,
-    model character varying(100) NOT NULL
-);
-
-
---
--- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.django_content_type ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.django_content_type_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: django_migrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_migrations (
-    id bigint NOT NULL,
-    app character varying(255) NOT NULL,
-    name character varying(255) NOT NULL,
-    applied timestamp with time zone NOT NULL
-);
-
-
---
--- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.django_migrations ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.django_migrations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: django_rest_passwordreset_resetpasswordtoken; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_rest_passwordreset_resetpasswordtoken (
-    created_at timestamp with time zone NOT NULL,
-    key character varying(64) NOT NULL,
-    ip_address inet,
-    user_agent character varying(512) NOT NULL,
-    user_id bigint NOT NULL,
-    id integer NOT NULL
-);
-
-
---
--- Name: django_rest_passwordreset_resetpasswordtoken_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.django_rest_passwordreset_resetpasswordtoken ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.django_rest_passwordreset_resetpasswordtoken_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: django_session; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_session (
-    session_key character varying(40) NOT NULL,
-    session_data text NOT NULL,
-    expire_date timestamp with time zone NOT NULL
-);
-
-
---
--- Name: health_check_db_testmodel; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.health_check_db_testmodel (
-    id integer NOT NULL,
-    title character varying(128) NOT NULL
-);
-
-
---
--- Name: health_check_db_testmodel_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.health_check_db_testmodel ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.health_check_db_testmodel_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_anonymouscart; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_anonymouscart (
-    id bigint NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    session_key character varying(40) NOT NULL
-);
-
-
---
--- Name: products_anonymouscart_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_anonymouscart ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_anonymouscart_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_anonymousfavorite; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_anonymousfavorite (
-    id bigint NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    session_key character varying(40) NOT NULL,
-    product_id bigint NOT NULL
-);
-
-
---
--- Name: products_anonymousfavorite_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_anonymousfavorite ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_anonymousfavorite_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_brand; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_brand (
-    id bigint NOT NULL,
-    name character varying(100) NOT NULL
-);
-
-
---
--- Name: products_brand_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_brand ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_brand_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_cart; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_cart (
-    id bigint NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    user_id bigint NOT NULL
-);
-
-
---
--- Name: products_cart_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_cart ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_cart_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_cartproduct; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_cartproduct (
-    id bigint NOT NULL,
-    quantity smallint NOT NULL,
-    product_id bigint NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    anonymous_cart_id bigint,
-    cart_id bigint,
-    CONSTRAINT products_cartproduct_quantity_check CHECK ((quantity >= 0))
-);
-
-
---
--- Name: products_cartproduct_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_cartproduct ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_cartproduct_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_category; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_category (
-    id bigint NOT NULL,
-    name character varying(100) NOT NULL,
-    slug character varying(100) NOT NULL
-);
-
-
---
--- Name: products_category_brands; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_category_brands (
-    id bigint NOT NULL,
-    category_id bigint NOT NULL,
-    brand_id bigint NOT NULL
-);
-
-
---
--- Name: products_category_brands_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_category_brands ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_category_brands_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_category_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_category ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_category_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_favorite; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_favorite (
-    id bigint NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    product_id bigint NOT NULL,
-    user_id bigint NOT NULL
-);
-
-
---
--- Name: products_favorite_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_favorite ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_favorite_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_product; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_product (
-    id bigint NOT NULL,
-    image character varying(100) NOT NULL,
-    name character varying(100) NOT NULL,
-    description text NOT NULL,
-    price numeric(10,2) NOT NULL,
-    brand_id bigint,
-    category_id bigint,
-    slug character varying(100) NOT NULL,
-    rating numeric(2,1),
-    review_count integer NOT NULL,
-    CONSTRAINT price_gt_0 CHECK ((price > (0)::numeric))
-);
-
-
---
--- Name: products_product_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_product ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_product_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: products_review; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.products_review (
-    id bigint NOT NULL,
-    title character varying(100) NOT NULL,
-    content text NOT NULL,
-    rating smallint NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    author_id bigint NOT NULL,
-    product_id bigint NOT NULL,
-    CONSTRAINT products_review_rating_check CHECK ((rating >= 0))
-);
-
-
---
--- Name: products_review_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.products_review ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.products_review_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: users_profile; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users_profile (
-    user_id bigint NOT NULL,
-    avatar character varying(100) NOT NULL,
-    phone character varying,
-    city character varying(100) NOT NULL,
-    CONSTRAINT phone_lte_12 CHECK (((phone)::text <= '12'::text))
-);
-
-
---
--- Name: users_user; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users_user (
-    id bigint NOT NULL,
-    password character varying(128) NOT NULL,
-    last_login timestamp with time zone,
-    is_superuser boolean NOT NULL,
-    username character varying(150) NOT NULL,
-    first_name character varying(150) NOT NULL,
-    last_name character varying(150) NOT NULL,
-    is_staff boolean NOT NULL,
-    is_active boolean NOT NULL,
-    date_joined timestamp with time zone NOT NULL,
-    email character varying(100) NOT NULL
-);
-
-
---
--- Name: users_user_groups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users_user_groups (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    group_id integer NOT NULL
-);
-
-
---
--- Name: users_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.users_user_groups ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.users_user_groups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.users_user ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.users_user_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: users_user_user_permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users_user_user_permissions (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    permission_id integer NOT NULL
-);
-
-
---
--- Name: users_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.users_user_user_permissions ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.users_user_user_permissions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
 --
 -- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -741,10 +26,29 @@ COPY public.auth_group (id, name) FROM stdin;
 
 
 --
--- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+COPY public.django_content_type (id, app_label, model) FROM stdin;
+1	admin	logentry
+2	auth	permission
+3	auth	group
+4	contenttypes	contenttype
+5	sessions	session
+6	users	user
+7	users	profile
+8	products	brand
+9	products	category
+10	products	product
+11	products	review
+12	products	cartproduct
+13	products	favoriteproduct
+14	django_rest_passwordreset	resetpasswordtoken
+15	db	testmodel
+16	products	anonymouscart
+17	products	anonymousfavorite
+18	products	cart
+19	products	favorite
 \.
 
 
@@ -829,6 +133,24 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 74	Can change favorite	19	change_favorite
 75	Can delete favorite	19	delete_favorite
 76	Can view favorite	19	view_favorite
+\.
+
+
+--
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users_user; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users_user (id, password, last_login, is_superuser, username, first_name, last_name, is_staff, is_active, date_joined, email) FROM stdin;
+1	pbkdf2_sha256$1500000$xPTrhfVKcl79JLRX9jejc9$+WkVznOJ0UMkdorNP2wg0GmASNheoNyAFAI7fuT23rs=	\N	f	test_user			f	t	2025-11-24 15:47:03+00	test_user@mail.ru
+2	pbkdf2_sha256$1500000$GgfTxpmG1k9nGabeP2ldWl$zvlbOtkAgx26wX8gumgUd5piCv8IZHcOLsfvNl9u2oY=	2026-09-05 08:02:32.848722+00	t	test_admin			t	t	2025-11-24 15:58:13+00	test_admin@mail.ru
 \.
 
 
@@ -1003,33 +325,6 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 
 
 --
--- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.django_content_type (id, app_label, model) FROM stdin;
-1	admin	logentry
-2	auth	permission
-3	auth	group
-4	contenttypes	contenttype
-5	sessions	session
-6	users	user
-7	users	profile
-8	products	brand
-9	products	category
-10	products	product
-11	products	review
-12	products	cartproduct
-13	products	favoriteproduct
-14	django_rest_passwordreset	resetpasswordtoken
-15	db	testmodel
-16	products	anonymouscart
-17	products	anonymousfavorite
-18	products	cart
-19	products	favorite
-\.
-
-
---
 -- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -1121,16 +416,6 @@ COPY public.products_anonymouscart (id, created_at, updated_at, session_key) FRO
 
 
 --
--- Data for Name: products_anonymousfavorite; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.products_anonymousfavorite (id, created_at, session_key, product_id) FROM stdin;
-3	2026-05-23 07:24:14.775207+00	uvwn84f5tn45uld420ul0srh8avg97yw	41
-5	2026-05-23 07:24:27.37095+00	uvwn84f5tn45uld420ul0srh8avg97yw	32
-\.
-
-
---
 -- Data for Name: products_brand; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -1166,29 +451,6 @@ COPY public.products_brand (id, name) FROM stdin;
 
 
 --
--- Data for Name: products_cart; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.products_cart (id, created_at, updated_at, user_id) FROM stdin;
-1	2026-05-23 07:25:04.489942+00	2026-05-23 07:25:04.489971+00	1
-8	2026-05-27 06:48:32.945156+00	2026-05-27 06:48:32.945172+00	2
-\.
-
-
---
--- Data for Name: products_cartproduct; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.products_cartproduct (id, quantity, product_id, created_at, anonymous_cart_id, cart_id) FROM stdin;
-6	1	41	2026-03-12 18:49:53.746896+00	\N	\N
-37	1	41	2026-05-27 06:46:56.370011+00	\N	8
-38	1	42	2026-05-27 06:48:37.679969+00	\N	8
-39	1	41	2026-05-30 06:10:24.257099+00	\N	1
-40	1	42	2026-05-30 06:10:24.953345+00	\N	1
-\.
-
-
---
 -- Data for Name: products_category; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -1203,64 +465,6 @@ COPY public.products_category (id, name, slug) FROM stdin;
 5	Корпуса	korpusa
 6	Блоки питания	bloki-pitaniya
 8	Твердотельные накопители SSD	tverdotelnye-nakopiteli-ssd
-\.
-
-
---
--- Data for Name: products_category_brands; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.products_category_brands (id, category_id, brand_id) FROM stdin;
-1	1	1
-3	1	2
-14	2	3
-16	2	4
-20	2	5
-21	3	3
-22	3	6
-24	3	1
-26	3	7
-28	4	8
-29	4	9
-33	4	10
-35	5	11
-37	5	12
-38	5	13
-39	5	16
-40	5	17
-41	6	18
-44	6	11
-46	6	12
-48	6	19
-50	7	18
-52	7	20
-56	7	2
-57	7	21
-59	9	22
-61	8	22
-64	8	23
-65	8	9
-67	8	24
-68	9	25
-69	9	26
-70	9	29
-74	10	3
-75	10	30
-76	10	13
-78	10	17
-80	10	31
-\.
-
-
---
--- Data for Name: products_favorite; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.products_favorite (id, created_at, product_id, user_id) FROM stdin;
-32	2026-05-27 05:57:38.390373+00	34	1
-33	2026-05-27 06:48:35.613693+00	41	2
-34	2026-05-27 06:48:37.19725+00	42	2
-35	2026-05-30 06:10:23.769729+00	41	1
 \.
 
 
@@ -1329,6 +533,97 @@ COPY public.products_product (id, image, name, description, price, brand_id, cat
 
 
 --
+-- Data for Name: products_anonymousfavorite; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.products_anonymousfavorite (id, created_at, session_key, product_id) FROM stdin;
+3	2026-05-23 07:24:14.775207+00	uvwn84f5tn45uld420ul0srh8avg97yw	41
+5	2026-05-23 07:24:27.37095+00	uvwn84f5tn45uld420ul0srh8avg97yw	32
+\.
+
+
+--
+-- Data for Name: products_cart; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.products_cart (id, created_at, updated_at, user_id) FROM stdin;
+1	2026-05-23 07:25:04.489942+00	2026-05-23 07:25:04.489971+00	1
+8	2026-05-27 06:48:32.945156+00	2026-05-27 06:48:32.945172+00	2
+\.
+
+
+--
+-- Data for Name: products_cartproduct; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.products_cartproduct (id, quantity, product_id, created_at, anonymous_cart_id, cart_id) FROM stdin;
+6	1	41	2026-03-12 18:49:53.746896+00	\N	\N
+37	1	41	2026-05-27 06:46:56.370011+00	\N	8
+38	1	42	2026-05-27 06:48:37.679969+00	\N	8
+39	1	41	2026-05-30 06:10:24.257099+00	\N	1
+40	1	42	2026-05-30 06:10:24.953345+00	\N	1
+\.
+
+
+--
+-- Data for Name: products_category_brands; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.products_category_brands (id, category_id, brand_id) FROM stdin;
+1	1	1
+3	1	2
+14	2	3
+16	2	4
+20	2	5
+21	3	3
+22	3	6
+24	3	1
+26	3	7
+28	4	8
+29	4	9
+33	4	10
+35	5	11
+37	5	12
+38	5	13
+39	5	16
+40	5	17
+41	6	18
+44	6	11
+46	6	12
+48	6	19
+50	7	18
+52	7	20
+56	7	2
+57	7	21
+59	9	22
+61	8	22
+64	8	23
+65	8	9
+67	8	24
+68	9	25
+69	9	26
+70	9	29
+74	10	3
+75	10	30
+76	10	13
+78	10	17
+80	10	31
+\.
+
+
+--
+-- Data for Name: products_favorite; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.products_favorite (id, created_at, product_id, user_id) FROM stdin;
+32	2026-05-27 05:57:38.390373+00	34	1
+33	2026-05-27 06:48:35.613693+00	41	2
+34	2026-05-27 06:48:37.19725+00	42	2
+35	2026-05-30 06:10:23.769729+00	41	1
+\.
+
+
+--
 -- Data for Name: products_review; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -1347,16 +642,6 @@ COPY public.products_review (id, title, content, rating, created_at, author_id, 
 COPY public.users_profile (user_id, avatar, phone, city) FROM stdin;
 2	profile_avatars/uploaded/marrakesh-amanjena-hotel-picture-24_ADwSKkN.jpg	\N	
 1	profile_avatars/uploaded/20200205115553_Priroda_10-236.jpg	\N	
-\.
-
-
---
--- Data for Name: users_user; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.users_user (id, password, last_login, is_superuser, username, first_name, last_name, is_staff, is_active, date_joined, email) FROM stdin;
-1	pbkdf2_sha256$1500000$xPTrhfVKcl79JLRX9jejc9$+WkVznOJ0UMkdorNP2wg0GmASNheoNyAFAI7fuT23rs=	\N	f	test_user			f	t	2025-11-24 15:47:03+00	test_user@mail.ru
-2	pbkdf2_sha256$1500000$GgfTxpmG1k9nGabeP2ldWl$zvlbOtkAgx26wX8gumgUd5piCv8IZHcOLsfvNl9u2oY=	2026-09-05 08:02:32.848722+00	t	test_admin			t	t	2025-11-24 15:58:13+00	test_admin@mail.ru
 \.
 
 
@@ -1521,787 +806,6 @@ SELECT pg_catalog.setval('public.users_user_id_seq', 3, true);
 --
 
 SELECT pg_catalog.setval('public.users_user_user_permissions_id_seq', 1, false);
-
-
---
--- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group
-    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
-
-
---
--- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
-
-
---
--- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group
-    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_permission
-    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
-
-
---
--- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_permission
-    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_admin_log
-    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_content_type
-    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
-
-
---
--- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_content_type
-    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_migrations
-    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_rest_passwordreset_resetpasswordtoken django_rest_passwordreset_resetpasswordtoken_key_f1b65873_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_rest_passwordreset_resetpasswordtoken
-    ADD CONSTRAINT django_rest_passwordreset_resetpasswordtoken_key_f1b65873_uniq UNIQUE (key);
-
-
---
--- Name: django_rest_passwordreset_resetpasswordtoken django_rest_passwordreset_resetpasswordtoken_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_rest_passwordreset_resetpasswordtoken
-    ADD CONSTRAINT django_rest_passwordreset_resetpasswordtoken_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_session
-    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
-
-
---
--- Name: health_check_db_testmodel health_check_db_testmodel_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.health_check_db_testmodel
-    ADD CONSTRAINT health_check_db_testmodel_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_anonymouscart products_anonymouscart_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_anonymouscart
-    ADD CONSTRAINT products_anonymouscart_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_anonymouscart products_anonymouscart_session_key_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_anonymouscart
-    ADD CONSTRAINT products_anonymouscart_session_key_key UNIQUE (session_key);
-
-
---
--- Name: products_anonymousfavorite products_anonymousfavorite_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_anonymousfavorite
-    ADD CONSTRAINT products_anonymousfavorite_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_anonymousfavorite products_anonymousfavorite_session_key_product_id_9a58c8c8_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_anonymousfavorite
-    ADD CONSTRAINT products_anonymousfavorite_session_key_product_id_9a58c8c8_uniq UNIQUE (session_key, product_id);
-
-
---
--- Name: products_brand products_brand_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_brand
-    ADD CONSTRAINT products_brand_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_cart products_cart_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cart
-    ADD CONSTRAINT products_cart_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_cart products_cart_user_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cart
-    ADD CONSTRAINT products_cart_user_id_key UNIQUE (user_id);
-
-
---
--- Name: products_cartproduct products_cartproduct_anonymous_cart_id_product_id_c29582ef_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cartproduct
-    ADD CONSTRAINT products_cartproduct_anonymous_cart_id_product_id_c29582ef_uniq UNIQUE (anonymous_cart_id, product_id);
-
-
---
--- Name: products_cartproduct products_cartproduct_cart_id_product_id_413a637d_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cartproduct
-    ADD CONSTRAINT products_cartproduct_cart_id_product_id_413a637d_uniq UNIQUE (cart_id, product_id);
-
-
---
--- Name: products_cartproduct products_cartproduct_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cartproduct
-    ADD CONSTRAINT products_cartproduct_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_category_brands products_category_brands_category_id_brand_id_cb11283c_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_category_brands
-    ADD CONSTRAINT products_category_brands_category_id_brand_id_cb11283c_uniq UNIQUE (category_id, brand_id);
-
-
---
--- Name: products_category_brands products_category_brands_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_category_brands
-    ADD CONSTRAINT products_category_brands_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_category products_category_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_category
-    ADD CONSTRAINT products_category_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_category products_category_slug_c558efae_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_category
-    ADD CONSTRAINT products_category_slug_c558efae_uniq UNIQUE (slug);
-
-
---
--- Name: products_favorite products_favorite_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_favorite
-    ADD CONSTRAINT products_favorite_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_favorite products_favorite_user_id_product_id_daf9efdd_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_favorite
-    ADD CONSTRAINT products_favorite_user_id_product_id_daf9efdd_uniq UNIQUE (user_id, product_id);
-
-
---
--- Name: products_product products_product_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_product
-    ADD CONSTRAINT products_product_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_product products_product_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_product
-    ADD CONSTRAINT products_product_slug_key UNIQUE (slug);
-
-
---
--- Name: products_review products_review_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_review
-    ADD CONSTRAINT products_review_pkey PRIMARY KEY (id);
-
-
---
--- Name: products_review products_review_product_id_author_id_a42e638b_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_review
-    ADD CONSTRAINT products_review_product_id_author_id_a42e638b_uniq UNIQUE (product_id, author_id);
-
-
---
--- Name: users_profile users_profile_phone_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_profile
-    ADD CONSTRAINT users_profile_phone_key UNIQUE (phone);
-
-
---
--- Name: users_profile users_profile_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_profile
-    ADD CONSTRAINT users_profile_pkey PRIMARY KEY (user_id);
-
-
---
--- Name: users_user users_user_email_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user
-    ADD CONSTRAINT users_user_email_key UNIQUE (email);
-
-
---
--- Name: users_user_groups users_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_groups
-    ADD CONSTRAINT users_user_groups_pkey PRIMARY KEY (id);
-
-
---
--- Name: users_user_groups users_user_groups_user_id_group_id_b88eab82_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_groups
-    ADD CONSTRAINT users_user_groups_user_id_group_id_b88eab82_uniq UNIQUE (user_id, group_id);
-
-
---
--- Name: users_user users_user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user
-    ADD CONSTRAINT users_user_pkey PRIMARY KEY (id);
-
-
---
--- Name: users_user_user_permissions users_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_user_permissions
-    ADD CONSTRAINT users_user_user_permissions_pkey PRIMARY KEY (id);
-
-
---
--- Name: users_user_user_permissions users_user_user_permissions_user_id_permission_id_43338c45_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_user_permissions
-    ADD CONSTRAINT users_user_user_permissions_user_id_permission_id_43338c45_uniq UNIQUE (user_id, permission_id);
-
-
---
--- Name: users_user users_user_username_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user
-    ADD CONSTRAINT users_user_username_key UNIQUE (username);
-
-
---
--- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
-
-
---
--- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
-
-
---
--- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
-
-
---
--- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
-
-
---
--- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
-
-
---
--- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
-
-
---
--- Name: django_rest_passwordreset_resetpasswordtoken_key_f1b65873_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_rest_passwordreset_resetpasswordtoken_key_f1b65873_like ON public.django_rest_passwordreset_resetpasswordtoken USING btree (key varchar_pattern_ops);
-
-
---
--- Name: django_rest_passwordreset_resetpasswordtoken_user_id_e8015b11; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_rest_passwordreset_resetpasswordtoken_user_id_e8015b11 ON public.django_rest_passwordreset_resetpasswordtoken USING btree (user_id);
-
-
---
--- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
-
-
---
--- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
-
-
---
--- Name: drpr_token_created_at_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX drpr_token_created_at_idx ON public.django_rest_passwordreset_resetpasswordtoken USING btree (created_at);
-
-
---
--- Name: products_anonymouscart_session_key_0bb7c619_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_anonymouscart_session_key_0bb7c619_like ON public.products_anonymouscart USING btree (session_key varchar_pattern_ops);
-
-
---
--- Name: products_anonymousfavorite_product_id_c52b0f7c; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_anonymousfavorite_product_id_c52b0f7c ON public.products_anonymousfavorite USING btree (product_id);
-
-
---
--- Name: products_anonymousfavorite_session_key_3720dbc2; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_anonymousfavorite_session_key_3720dbc2 ON public.products_anonymousfavorite USING btree (session_key);
-
-
---
--- Name: products_anonymousfavorite_session_key_3720dbc2_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_anonymousfavorite_session_key_3720dbc2_like ON public.products_anonymousfavorite USING btree (session_key varchar_pattern_ops);
-
-
---
--- Name: products_cartproduct_anonymous_cart_id_bb328bc7; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_cartproduct_anonymous_cart_id_bb328bc7 ON public.products_cartproduct USING btree (anonymous_cart_id);
-
-
---
--- Name: products_cartproduct_cart_id_74762181; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_cartproduct_cart_id_74762181 ON public.products_cartproduct USING btree (cart_id);
-
-
---
--- Name: products_cartproduct_product_id_215977e5; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_cartproduct_product_id_215977e5 ON public.products_cartproduct USING btree (product_id);
-
-
---
--- Name: products_category_brands_brand_id_fc34923b; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_category_brands_brand_id_fc34923b ON public.products_category_brands USING btree (brand_id);
-
-
---
--- Name: products_category_brands_category_id_f3697e5d; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_category_brands_category_id_f3697e5d ON public.products_category_brands USING btree (category_id);
-
-
---
--- Name: products_category_slug_c558efae_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_category_slug_c558efae_like ON public.products_category USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: products_favorite_product_id_f8265054; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_favorite_product_id_f8265054 ON public.products_favorite USING btree (product_id);
-
-
---
--- Name: products_favorite_user_id_cd8466da; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_favorite_user_id_cd8466da ON public.products_favorite USING btree (user_id);
-
-
---
--- Name: products_product_brand_id_3e2e8fd1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_product_brand_id_3e2e8fd1 ON public.products_product USING btree (brand_id);
-
-
---
--- Name: products_product_category_id_9b594869; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_product_category_id_9b594869 ON public.products_product USING btree (category_id);
-
-
---
--- Name: products_product_slug_70d3148d_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_product_slug_70d3148d_like ON public.products_product USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: products_review_author_id_cca533e8; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_review_author_id_cca533e8 ON public.products_review USING btree (author_id);
-
-
---
--- Name: products_review_product_id_d933ffa7; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX products_review_product_id_d933ffa7 ON public.products_review USING btree (product_id);
-
-
---
--- Name: users_profile_phone_0ff15728_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_profile_phone_0ff15728_like ON public.users_profile USING btree (phone varchar_pattern_ops);
-
-
---
--- Name: users_user_email_243f6e77_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_user_email_243f6e77_like ON public.users_user USING btree (email varchar_pattern_ops);
-
-
---
--- Name: users_user_groups_group_id_9afc8d0e; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_user_groups_group_id_9afc8d0e ON public.users_user_groups USING btree (group_id);
-
-
---
--- Name: users_user_groups_user_id_5f6f5a90; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_user_groups_user_id_5f6f5a90 ON public.users_user_groups USING btree (user_id);
-
-
---
--- Name: users_user_user_permissions_permission_id_0b93982e; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_user_user_permissions_permission_id_0b93982e ON public.users_user_user_permissions USING btree (permission_id);
-
-
---
--- Name: users_user_user_permissions_user_id_20aca447; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_user_user_permissions_user_id_20aca447 ON public.users_user_user_permissions USING btree (user_id);
-
-
---
--- Name: users_user_username_06e46fe6_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_user_username_06e46fe6_like ON public.users_user USING btree (username varchar_pattern_ops);
-
-
---
--- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_permission
-    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_admin_log
-    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_admin_log
-    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_users_user_id FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: django_rest_passwordreset_resetpasswordtoken django_rest_password_user_id_e8015b11_fk_users_use; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_rest_passwordreset_resetpasswordtoken
-    ADD CONSTRAINT django_rest_password_user_id_e8015b11_fk_users_use FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_anonymousfavorite products_anonymousfa_product_id_c52b0f7c_fk_products_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_anonymousfavorite
-    ADD CONSTRAINT products_anonymousfa_product_id_c52b0f7c_fk_products_ FOREIGN KEY (product_id) REFERENCES public.products_product(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_cart products_cart_user_id_d53bf7cf_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cart
-    ADD CONSTRAINT products_cart_user_id_d53bf7cf_fk_users_user_id FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_cartproduct products_cartproduct_anonymous_cart_id_bb328bc7_fk_products_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cartproduct
-    ADD CONSTRAINT products_cartproduct_anonymous_cart_id_bb328bc7_fk_products_ FOREIGN KEY (anonymous_cart_id) REFERENCES public.products_anonymouscart(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_cartproduct products_cartproduct_cart_id_74762181_fk_products_cart_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cartproduct
-    ADD CONSTRAINT products_cartproduct_cart_id_74762181_fk_products_cart_id FOREIGN KEY (cart_id) REFERENCES public.products_cart(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_cartproduct products_cartproduct_product_id_215977e5_fk_products_product_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_cartproduct
-    ADD CONSTRAINT products_cartproduct_product_id_215977e5_fk_products_product_id FOREIGN KEY (product_id) REFERENCES public.products_product(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_category_brands products_category_br_category_id_f3697e5d_fk_products_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_category_brands
-    ADD CONSTRAINT products_category_br_category_id_f3697e5d_fk_products_ FOREIGN KEY (category_id) REFERENCES public.products_category(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_category_brands products_category_brands_brand_id_fc34923b_fk_products_brand_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_category_brands
-    ADD CONSTRAINT products_category_brands_brand_id_fc34923b_fk_products_brand_id FOREIGN KEY (brand_id) REFERENCES public.products_brand(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_favorite products_favorite_product_id_f8265054_fk_products_product_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_favorite
-    ADD CONSTRAINT products_favorite_product_id_f8265054_fk_products_product_id FOREIGN KEY (product_id) REFERENCES public.products_product(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_favorite products_favorite_user_id_cd8466da_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_favorite
-    ADD CONSTRAINT products_favorite_user_id_cd8466da_fk_users_user_id FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_product products_product_brand_id_3e2e8fd1_fk_products_brand_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_product
-    ADD CONSTRAINT products_product_brand_id_3e2e8fd1_fk_products_brand_id FOREIGN KEY (brand_id) REFERENCES public.products_brand(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_product products_product_category_id_9b594869_fk_products_category_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_product
-    ADD CONSTRAINT products_product_category_id_9b594869_fk_products_category_id FOREIGN KEY (category_id) REFERENCES public.products_category(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_review products_review_author_id_cca533e8_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_review
-    ADD CONSTRAINT products_review_author_id_cca533e8_fk_users_user_id FOREIGN KEY (author_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: products_review products_review_product_id_d933ffa7_fk_products_product_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products_review
-    ADD CONSTRAINT products_review_product_id_d933ffa7_fk_products_product_id FOREIGN KEY (product_id) REFERENCES public.products_product(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: users_profile users_profile_user_id_2112e78d_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_profile
-    ADD CONSTRAINT users_profile_user_id_2112e78d_fk_users_user_id FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: users_user_groups users_user_groups_group_id_9afc8d0e_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_groups
-    ADD CONSTRAINT users_user_groups_group_id_9afc8d0e_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: users_user_groups users_user_groups_user_id_5f6f5a90_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_groups
-    ADD CONSTRAINT users_user_groups_user_id_5f6f5a90_fk_users_user_id FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: users_user_user_permissions users_user_user_perm_permission_id_0b93982e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_user_permissions
-    ADD CONSTRAINT users_user_user_perm_permission_id_0b93982e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: users_user_user_permissions users_user_user_permissions_user_id_20aca447_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_user_user_permissions
-    ADD CONSTRAINT users_user_user_permissions_user_id_20aca447_fk_users_user_id FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
